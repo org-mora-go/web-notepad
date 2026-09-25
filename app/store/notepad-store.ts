@@ -32,6 +32,7 @@ type NotepadState = {
   snapshotTab: (tabId: string) => void;
   restoreSnapshot: (snapshotId: string) => void;
   deleteSnapshot: (snapshotId: string) => void;
+  clearHistory: () => void;
 };
 
 const createTab = (number: number): NoteTab => ({
@@ -176,6 +177,11 @@ export const useNotepadStore = create<NotepadState>()(
             unsavedSnapshots: state.unsavedSnapshots.filter(
               (snapshot) => snapshot.id !== snapshotId,
             ),
+          })),
+        clearHistory: () =>
+          set((state) => ({
+            unsavedSnapshots: [],
+            lastSnapshotByTab: { ...state.lastSnapshotByTab },
           })),
       };
     },

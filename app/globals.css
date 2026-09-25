@@ -360,8 +360,33 @@ button {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 12px;
   padding: 24px 22px;
   border-bottom: 1px solid var(--line);
+}
+
+.history-header-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+.history-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.clear-history-button {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
 }
 
 .eyebrow {
@@ -370,7 +395,7 @@ button {
 }
 
 .history-header h2 {
-  margin: 6px 0 0;
+  margin: 0;
   font-family: var(--font-geist-sans), sans-serif;
   font-size: 22px;
   font-weight: 500;
@@ -380,6 +405,53 @@ button {
   width: 36px;
   height: 36px;
   border: 1px solid var(--line);
+}
+
+.clear-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.clear-confirm-modal {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  z-index: 31;
+  width: min(360px, calc(100vw - 28px));
+  padding: 20px 18px 18px;
+  border: 1px solid var(--line);
+  background: #10100f;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+}
+
+.clear-confirm-modal p {
+  margin: 0 0 18px;
+  color: var(--ink);
+  font-size: 18px;
+  line-height: 1.4;
+}
+
+.clear-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.clear-confirm-actions button {
+  height: 34px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.clear-confirm-actions .confirm-delete {
+  background: #eeeeea;
+  border-color: #eeeeea;
+  color: #10100f;
 }
 
 .history-list {

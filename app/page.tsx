@@ -45,6 +45,7 @@ function useStoreHydrated() {
 export default function Home() {
   const hydrated = useStoreHydrated();
   const [historyOpen, setHistoryOpen] = useState(false);
+  const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const lineRailRef = useRef<HTMLDivElement>(null);
   const {
@@ -58,6 +59,7 @@ export default function Home() {
     closeTab,
     restoreSnapshot,
     deleteSnapshot,
+    clearHistory,
   } = useNotepadStore();
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
   const isDirty = activeTab?.content !== activeTab?.savedContent;
@@ -84,7 +86,15 @@ export default function Home() {
         return;
       }
 
-      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "n") {
+      if (
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        (event.key.toLowerCase() === "n" ||
+          event.code === "Backquote" ||
+          event.key === "`" ||          
+          event.key === "˜")
+      ) {
         event.preventDefault();
         state.addTab();
         return;
@@ -251,15 +261,52 @@ export default function Home() {
         onClick={() => setHistoryOpen(false)}
         aria-hidden="true"
       />
+      {clearConfirmOpen && (
+        <div
+          className="clear-confirm-backdrop"
+          onClick={() => setClearConfirmOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+      {clearConfirmOpen && (
+        <div className="clear-confirm-modal" role="dialog" aria-modal="true">
+          <p>Everything will be deleted.</p>
+          <div className="clear-confirm-actions">
+            <button type="button" onClick={() => setClearConfirmOpen(false)}>
+              Cancel
+            </button>
+            <button
+              type="button"
+              className="confirm-delete"
+              onClick={() => {
+                clearHistory();
+                setClearConfirmOpen(false);
+              }}
+            >
+              Confirm
+            </button>
+          </div>
+        </div>
+      )}
       <aside
         id="unsaved-history"
         className={`history-panel ${historyOpen ? "is-open" : ""}`}
         aria-hidden={!historyOpen}
       >
         <div className="history-header">
-          <div>
+          <div className="history-header-main">
             <span className="eyebrow">LOCAL ARCHIVE</span>
-            <h2>Unsaved history</h2>
+            <div className="history-title-row">
+              <h2>History</h2>
+              <button
+                className="clear-history-button"
+                type="button"
+                onClick={() => setClearConfirmOpen(true)}
+                aria-label="기록 전체 삭제"
+              >
+                Clear
+              </button>
+            </div>
           </div>
           <button
             className="panel-close"
