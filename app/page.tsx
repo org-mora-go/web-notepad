@@ -86,21 +86,24 @@ export default function Home() {
         return;
       }
 
-      if (
-        event.altKey &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        (event.key.toLowerCase() === "n" ||
-          event.code === "Backquote" ||
-          event.key === "`" ||          
-          event.key === "˜")
-      ) {
+      const shouldAddTab =
+        (event.metaKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "n") ||
+        (event.altKey && !event.ctrlKey && !event.metaKey &&
+          (event.key.toLowerCase() === "n" ||
+            event.code === "Backquote" ||
+            event.key === "`" ||
+            event.key === "˜"));
+
+      if (shouldAddTab) {
         event.preventDefault();
         state.addTab();
         return;
       }
 
-      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "w") {
+      const shouldCloseTab =
+        event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "w";
+
+      if (shouldCloseTab) {
         event.preventDefault();
         state.closeTab(activeTabId);
         return;
