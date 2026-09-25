@@ -65,18 +65,47 @@ export default function Home() {
 
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
-      if (event.metaKey && event.key.toLowerCase() === "a") {
+      const state = useNotepadStore.getState();
+      const { tabs, activeTabId } = state;
+      const activeIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+
+      if ((event.metaKey || event.altKey) && !event.ctrlKey && event.key.toLowerCase() === "a") {
         event.preventDefault();
         editorRef.current?.focus();
         editorRef.current?.select();
         return;
       }
 
-      if (event.metaKey && event.key.toLowerCase() === "s") {
+      if ((event.metaKey || event.altKey) && !event.ctrlKey && event.key.toLowerCase() === "s") {
         event.preventDefault();
         const { activeTabId: currentTabId, saveTab: saveCurrentTab } =
           useNotepadStore.getState();
         saveCurrentTab(currentTabId);
+        return;
+      }
+
+      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "n") {
+        event.preventDefault();
+        state.addTab();
+        return;
+      }
+
+      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "w") {
+        event.preventDefault();
+        state.closeTab(activeTabId);
+        return;
+      }
+
+      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "Tab") {
+        if (tabs.length <= 1) {
+          return;
+        }
+
+        event.preventDefault();
+        const nextIndex = event.shiftKey
+          ? (activeIndex - 1 + tabs.length) % tabs.length
+          : (activeIndex + 1) % tabs.length;
+        state.selectTab(tabs[nextIndex].id);
       }
     };
 
@@ -197,7 +226,7 @@ export default function Home() {
                 lineRailRef.current.scrollTop = event.currentTarget.scrollTop;
               }
             }}
-            placeholder="기록을 시작하세요."
+            placeholder="Take a note.."
             autoFocus
             spellCheck={false}
             aria-label={`${activeTab.title} 메모 내용`}
