@@ -1,0 +1,34 @@
+@use "../../@shared/style/variable" as v;
+
+.notepad-shell {
+  min-height: 100vh;
+  overflow: hidden;
+  background-color: v.$pit;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
+  background-size: 28px 28px;
+
+  &.is-loading {
+    display: grid;
+    place-items: center;
+  }
+}
+
+.loading-mark {
+  color: v.$signal;
+  font-size: 13px;
+}
+
+.workspace {
+  width: 100%;
+  height: 100vh;
+  min-height: 500px;
+  display: grid;
+  grid-template-rows: 45px minmax(0, 1fr) 34px;
+  background: v.$panel;
+
+  @media (max-width: 640px) {
+    min-height: 420px;
+  }
+}

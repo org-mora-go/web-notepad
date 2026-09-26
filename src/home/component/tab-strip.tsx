@@ -36,17 +36,18 @@ export function TabStrip({
         ref={tabsScrollRef}
       >
         {tabs.map((tab) => {
+          const active = tab.id === activeTabId;
           const dirty = tab.content.trim() !== "" && tab.content !== tab.savedContent;
           return (
             <div
-              className={`tab-item ${tab.id === activeTabId ? "is-active" : ""} ${dirty ? "is-dirty" : ""}`}
+              className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""}`}
               key={tab.id}
             >
               <button
                 className="tab-select"
                 type="button"
                 role="tab"
-                aria-selected={tab.id === activeTabId}
+                aria-selected={active}
                 onClick={() => onSelect(tab.id)}
               >
                 <span className={`dirty-dot ${dirty ? "is-dirty" : ""}`} />
@@ -90,11 +91,15 @@ export function TabStrip({
           {tabListOpen && (
             <ul id="tab-list-menu" className="tab-list-menu" role="menu">
               {tabs.map((tab) => (
-                <li key={tab.id} role="none">
+                <li
+                  key={tab.id}
+                  role="none"
+                  className={tab.id === activeTabId ? "is-active" : ""}
+                >
                   <button
                     type="button"
                     role="menuitem"
-                    className={`tab-list-select ${tab.id === activeTabId ? "is-active" : ""}`}
+                    className="tab-list-select"
                     onClick={() => {
                       onSelect(tab.id);
                       setTabListOpen(false);

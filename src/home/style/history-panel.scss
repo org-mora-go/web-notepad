@@ -1,0 +1,246 @@
+@use "../../@shared/style/variable" as v;
+
+.history-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 10;
+  background: rgba(0, 0, 0, 0.58);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 180ms ease;
+
+  &.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.history-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  z-index: 20;
+  width: min(420px, 100vw);
+  height: 100vh;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  border-left: 1px solid #3a3a35;
+  background: #10100f;
+  box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+  transform: translateX(102%);
+  transition: transform 220ms ease;
+
+  &.is-open {
+    transform: translateX(0);
+  }
+}
+
+.history-header {
+  min-height: 105px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 24px 22px;
+  border-bottom: 1px solid v.$line;
+
+  h2 {
+    margin: 0;
+    font-family: v.$sans;
+    font-size: 22px;
+    font-weight: 500;
+  }
+}
+
+.history-header-main {
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.eyebrow {
+  color: v.$signal;
+  font-size: 9px;
+}
+
+.history-title-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 6px;
+}
+
+.clear-history-button {
+  height: 30px;
+  padding: 0 10px;
+  border: 1px solid v.$line;
+  background: transparent;
+  color: v.$ink;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.panel-close {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  border: 1px solid v.$line;
+  background: transparent;
+  color: v.$dim;
+  cursor: pointer;
+
+  &:hover {
+    color: v.$ink;
+  }
+}
+
+.clear-confirm-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 30;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.clear-confirm-modal {
+  position: fixed;
+  inset: 50% auto auto 50%;
+  z-index: 31;
+  width: min(360px, calc(100vw - 28px));
+  padding: 20px 18px 18px;
+  border: 1px solid v.$line;
+  background: #10100f;
+  box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45);
+  transform: translate(-50%, -50%);
+
+  p {
+    margin: 0 0 18px;
+    color: v.$ink;
+    font-size: 18px;
+    line-height: 1.4;
+  }
+}
+
+.clear-confirm-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+
+  button {
+    height: 34px;
+    padding: 0 16px;
+    border: 1px solid v.$line;
+    background: transparent;
+    color: v.$ink;
+    cursor: pointer;
+  }
+
+  .confirm-delete {
+    border-color: #eeeeea;
+    background: #eeeeea;
+    color: #10100f;
+  }
+}
+
+.history-list {
+  min-height: 0;
+  padding: 14px;
+  overflow-y: auto;
+}
+
+.history-item {
+  margin-bottom: 10px;
+  padding: 16px;
+  border: 1px solid v.$line;
+  background: #151514;
+
+  p {
+    margin: 18px 0;
+    display: -webkit-box;
+    overflow: hidden;
+    color: v.$saved;
+    font-family: v.$sans;
+    font-size: 13px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+  }
+}
+
+.history-item-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+
+  strong {
+    color: v.$signal;
+    font-size: 12px;
+  }
+
+  time {
+    color: #6f6f69;
+    font-size: 9px;
+  }
+}
+
+.history-source {
+  display: block;
+  margin-top: 6px;
+  overflow: hidden;
+  color: #6f6f69;
+  font-size: 9px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.history-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  button {
+    height: 30px;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 0 9px;
+    border: 1px solid v.$line;
+    background: transparent;
+    color: #a9a9a2;
+    font-size: 10px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: v.$hover-line;
+      color: v.$ink;
+    }
+  }
+
+  .delete-history {
+    width: 30px;
+    padding: 0;
+    justify-content: center;
+  }
+}
+
+.history-empty {
+  min-height: 280px;
+  display: grid;
+  place-content: center;
+  justify-items: center;
+  gap: 14px;
+  color: #555550;
+  text-align: center;
+
+  p {
+    max-width: 220px;
+    margin: 0;
+    font-family: v.$sans;
+    font-size: 13px;
+    line-height: 1.5;
+  }
+}

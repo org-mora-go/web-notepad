@@ -1,0 +1,70 @@
+@use "../../@shared/style/variable" as v;
+
+.statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 14px;
+  border-top: 1px solid v.$line;
+  background: v.$strip;
+  color: v.$muted;
+  font-size: 9px;
+}
+
+.save-state {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.status-light {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  background: v.$saved;
+}
+
+.status-meta {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.status-lines {
+  @media (max-width: 640px) {
+    display: none;
+  }
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-command {
+  height: 24px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  padding: 0 7px;
+  border: 1px solid v.$line;
+  background: transparent;
+  color: #bcbcb5;
+  cursor: pointer;
+
+  &:hover,
+  &.is-active {
+    border-color: v.$hover-line;
+    background: v.$raised;
+    color: v.$ink;
+  }
+
+  > span {
+    font-size: 8px;
+
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+}

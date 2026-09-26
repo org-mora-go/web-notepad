@@ -1,0 +1,175 @@
+@use "../../@shared/style/variable" as v;
+
+.tab-strip {
+  position: relative;
+  min-width: 0;
+  display: flex;
+  border-bottom: 1px solid v.$line;
+  background: v.$strip;
+}
+
+.tabs-scroll {
+  min-width: 0;
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+
+  &.is-overflowing {
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+}
+
+.tab-item {
+  width: 190px;
+  min-width: 140px;
+  display: flex;
+  align-items: center;
+  border-right: 1px solid v.$line;
+  color: v.$muted;
+
+  &.is-active {
+    background: v.$panel;
+    color: v.$ink;
+    box-shadow: inset 0 2px v.$saved;
+
+    &.is-dirty {
+      box-shadow: inset 0 2px v.$signal;
+    }
+  }
+
+  @media (max-width: 640px) {
+    width: 155px;
+  }
+}
+
+.tab-select {
+  min-width: 0;
+  flex: 1;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  padding: 0 6px 0 14px;
+  border: 0;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.dirty-dot {
+  width: 6px;
+  height: 6px;
+  flex: 0 0 auto;
+  background: v.$saved;
+
+  &.is-dirty {
+    background: v.$signal;
+    box-shadow: 0 0 8px rgba(143, 227, 176, 0.55);
+  }
+}
+
+.tab-title {
+  overflow: hidden;
+  font-size: 11px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tab-close,
+.add-tab,
+.tab-list-toggle,
+.tab-list-close {
+  display: grid;
+  place-items: center;
+  border: 0;
+  background: transparent;
+  color: v.$dim;
+  cursor: pointer;
+
+  &:hover {
+    color: v.$ink;
+  }
+}
+
+.tab-close {
+  width: 34px;
+  height: 44px;
+}
+
+.add-tab {
+  width: 46px;
+  min-width: 46px;
+  height: 44px;
+  border-right: 1px solid v.$line;
+}
+
+.tab-list-wrap {
+  margin-left: auto;
+  border-left: 1px solid v.$line;
+}
+
+.tab-list-toggle {
+  width: 46px;
+  height: 44px;
+
+  &:hover,
+  &.is-active {
+    background: v.$raised;
+    color: v.$ink;
+  }
+}
+
+.tab-list-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  z-index: 20;
+  width: 260px;
+  max-height: 360px;
+  margin: 0;
+  padding: 4px 0;
+  overflow-y: auto;
+  list-style: none;
+  border: 1px solid v.$line;
+  background: v.$raised;
+  box-shadow: 8px 8px 0 #050505;
+
+  li {
+    display: flex;
+    align-items: center;
+
+    &:hover,
+    &.is-active {
+      background: v.$panel;
+
+      .tab-list-select {
+        color: v.$ink;
+      }
+    }
+  }
+}
+
+.tab-list-select {
+  min-width: 0;
+  flex: 1;
+  padding: 9px 14px;
+  overflow: hidden;
+  border: 0;
+  background: transparent;
+  color: v.$muted;
+  font-size: 11px;
+  text-align: left;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.tab-list-close {
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
+}

@@ -18,10 +18,10 @@ export function StatusBar({ charCount, lineCount, historyOpen, onToggleHistory }
       </div>
       <div className="status-meta">
         <span>{charCount} CHARS</span>
-        <span>{lineCount} LINES</span>
+        <span className="status-lines">{lineCount} LINES</span>
         <div className="status-actions">
           <button
-            className={`icon-command status-command ${historyOpen ? "is-active" : ""}`}
+            className={`status-command ${historyOpen ? "is-active" : ""}`}
             type="button"
             onClick={onToggleHistory}
             aria-expanded={historyOpen}

@@ -9,6 +9,7 @@ import {
 } from "@/src/home/hook";
 import { useNotepadStore } from "@/src/home/store";
 import { HistoryPanel, NoteEditor, StatusBar, TabStrip } from "./component";
+import "./style";
 
 export function Home() {
   const hydrated = useStoreHydrated();
@@ -36,7 +37,7 @@ export function Home() {
 
   if (!hydrated || !activeTab) {
     return (
-      <main className="notepad-shell loading-shell">
+      <main className="notepad-shell is-loading">
         <span className="loading-mark">NOTEPAD_</span>
       </main>
     );
