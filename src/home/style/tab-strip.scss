@@ -31,6 +31,15 @@
   border-right: 1px solid v.$line;
   color: v.$muted;
 
+  &.is-dragging {
+    opacity: 0.4;
+  }
+
+  &.is-drop-target {
+    background: v.$raised;
+    box-shadow: inset 2px 0 v.$signal;
+  }
+
   &.is-active {
     background: v.$panel;
     color: v.$ink;
@@ -58,6 +67,10 @@
   background: transparent;
   color: inherit;
   cursor: pointer;
+}
+
+.tab-item[draggable="true"] .tab-title {
+  cursor: grab;
 }
 
 .dirty-dot {

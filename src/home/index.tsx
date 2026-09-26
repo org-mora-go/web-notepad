@@ -23,6 +23,7 @@ export function Home() {
     addTab,
     selectTab,
     updateTab,
+    moveTab,
     closeTab,
     restoreSnapshot,
     deleteSnapshot,
@@ -56,6 +57,7 @@ export function Home() {
           setTabListOpen={tabStrip.setTabListOpen}
           onSelect={selectTab}
           onClose={closeTab}
+          onMove={moveTab}
           onAdd={addTab}
         />
 

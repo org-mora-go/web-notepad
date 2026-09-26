@@ -26,6 +26,7 @@ type NotepadState = {
   addTab: () => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
+  moveTab: (fromTabId: string, toTabId: string) => void;
   closeTab: (tabId: string) => void;
   restoreSnapshot: (snapshotId: string) => void;
   deleteSnapshot: (snapshotId: string) => void;
@@ -106,6 +107,17 @@ export const useNotepadStore = create<NotepadState>()(
                 : tab,
             ),
           })),
+        moveTab: (fromTabId, toTabId) =>
+          set((state) => {
+            const from = state.tabs.findIndex((tab) => tab.id === fromTabId);
+            const to = state.tabs.findIndex((tab) => tab.id === toTabId);
+            if (from < 0 || to < 0 || from === to) return state;
+
+            const tabs = [...state.tabs];
+            const [moved] = tabs.splice(from, 1);
+            tabs.splice(to, 0, moved);
+            return { tabs };
+          }),
         closeTab: (tabId) => {
           const state = get();
           const tab = state.tabs.find((item) => item.id === tabId);

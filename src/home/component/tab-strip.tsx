@@ -1,6 +1,6 @@
 "use client";
 
-import type { Dispatch, RefObject, SetStateAction } from "react";
+import { useState, type Dispatch, type RefObject, type SetStateAction } from "react";
 import { Menu, Plus, X } from "lucide-react";
 import type { NoteTab } from "@/src/home/store";
 
@@ -14,6 +14,7 @@ type Props = {
   setTabListOpen: Dispatch<SetStateAction<boolean>>;
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
+  onMove: (fromTabId: string, toTabId: string) => void;
   onAdd: () => void;
 };
 
@@ -27,8 +28,17 @@ export function TabStrip({
   setTabListOpen,
   onSelect,
   onClose,
+  onMove,
   onAdd,
 }: Props) {
+  const [draggingId, setDraggingId] = useState<string | null>(null);
+  const [dropTargetId, setDropTargetId] = useState<string | null>(null);
+
+  const endDrag = () => {
+    setDraggingId(null);
+    setDropTargetId(null);
+  };
+
   return (
     <div className="tab-strip" role="tablist" aria-label="메모 탭">
       <div
@@ -40,8 +50,32 @@ export function TabStrip({
           const dirty = tab.content.trim() !== "" && tab.content !== tab.savedContent;
           return (
             <div
-              className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""}`}
+              className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""} ${
+                draggingId === tab.id ? "is-dragging" : ""
+              } ${dropTargetId === tab.id ? "is-drop-target" : ""}`}
               key={tab.id}
+              draggable
+              onDragStart={(event) => {
+                event.dataTransfer.effectAllowed = "move";
+                event.dataTransfer.setData("text/plain", tab.id);
+                setDraggingId(tab.id);
+              }}
+              onDragOver={(event) => {
+                if (!draggingId || draggingId === tab.id) return;
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                setDropTargetId(tab.id);
+              }}
+              onDragLeave={() => {
+                setDropTargetId((current) => (current === tab.id ? null : current));
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                const fromTabId = event.dataTransfer.getData("text/plain") || draggingId;
+                if (fromTabId && fromTabId !== tab.id) onMove(fromTabId, tab.id);
+                endDrag();
+              }}
+              onDragEnd={endDrag}
             >
               <button
                 className="tab-select"
