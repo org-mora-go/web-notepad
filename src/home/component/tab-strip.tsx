@@ -15,6 +15,7 @@ type Props = {
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onMove: (fromTabId: string, toTabId: string) => void;
+  onToggleUrgent: (tabId: string) => void;
   onAdd: () => void;
 };
 
@@ -29,6 +30,7 @@ export function TabStrip({
   onSelect,
   onClose,
   onMove,
+  onToggleUrgent,
   onAdd,
 }: Props) {
   const [draggingId, setDraggingId] = useState<string | null>(null);
@@ -51,8 +53,10 @@ export function TabStrip({
           return (
             <div
               className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""} ${
-                draggingId === tab.id ? "is-dragging" : ""
-              } ${dropTargetId === tab.id ? "is-drop-target" : ""}`}
+                tab.urgent ? "is-urgent" : ""
+              } ${draggingId === tab.id ? "is-dragging" : ""} ${
+                dropTargetId === tab.id ? "is-drop-target" : ""
+              }`}
               key={tab.id}
               draggable
               onDragStart={(event) => {
@@ -78,13 +82,22 @@ export function TabStrip({
               onDragEnd={endDrag}
             >
               <button
+                className={`dirty-dot ${dirty ? "is-dirty" : ""} ${
+                  tab.urgent ? "is-urgent" : ""
+                }`}
+                type="button"
+                onClick={() => onToggleUrgent(tab.id)}
+                aria-pressed={tab.urgent}
+                aria-label={`${tab.title} 긴급 표시`}
+                title="긴급 표시"
+              />
+              <button
                 className="tab-select"
                 type="button"
                 role="tab"
                 aria-selected={active}
                 onClick={() => onSelect(tab.id)}
               >
-                <span className={`dirty-dot ${dirty ? "is-dirty" : ""}`} />
                 <span className="tab-title">{tab.title}</span>
               </button>
               <button

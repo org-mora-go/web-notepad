@@ -6,6 +6,7 @@ export type NoteTab = {
   title: string;
   content: string;
   savedContent: string;
+  urgent: boolean;
   updatedAt: number;
 };
 
@@ -27,6 +28,7 @@ type NotepadState = {
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
   moveTab: (fromTabId: string, toTabId: string) => void;
+  toggleUrgent: (tabId: string) => void;
   closeTab: (tabId: string) => void;
   restoreSnapshot: (snapshotId: string) => void;
   deleteSnapshot: (snapshotId: string) => void;
@@ -38,6 +40,7 @@ const createTab = (number: number): NoteTab => ({
   title: `Untitled ${number}`,
   content: "",
   savedContent: "",
+  urgent: false,
   updatedAt: 0,
 });
 
@@ -118,6 +121,12 @@ export const useNotepadStore = create<NotepadState>()(
             tabs.splice(to, 0, moved);
             return { tabs };
           }),
+        toggleUrgent: (tabId) =>
+          set((state) => ({
+            tabs: state.tabs.map((tab) =>
+              tab.id === tabId ? { ...tab, urgent: !tab.urgent } : tab,
+            ),
+          })),
         closeTab: (tabId) => {
           const state = get();
           const tab = state.tabs.find((item) => item.id === tabId);

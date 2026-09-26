@@ -50,6 +50,12 @@
     }
   }
 
+  &.is-urgent,
+  &.is-urgent.is-active,
+  &.is-urgent.is-active.is-dirty {
+    box-shadow: inset 0 2px v.$urgent;
+  }
+
   @media (max-width: 640px) {
     width: 155px;
   }
@@ -62,7 +68,7 @@
   display: flex;
   align-items: center;
   gap: 9px;
-  padding: 0 6px 0 14px;
+  padding: 0 6px 0 9px;
   border: 0;
   background: transparent;
   color: inherit;
@@ -74,14 +80,23 @@
 }
 
 .dirty-dot {
-  width: 6px;
-  height: 6px;
+  width: 9px;
+  height: 9px;
   flex: 0 0 auto;
+  margin-left: 14px;
+  padding: 0;
+  border: 0;
   background: v.$saved;
+  cursor: pointer;
 
   &.is-dirty {
     background: v.$signal;
     box-shadow: 0 0 8px rgba(143, 227, 176, 0.55);
+  }
+
+  &.is-urgent {
+    background: v.$urgent;
+    box-shadow: 0 0 8px rgba(224, 90, 90, 0.55);
   }
 }
 

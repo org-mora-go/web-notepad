@@ -24,6 +24,7 @@ export function Home() {
     selectTab,
     updateTab,
     moveTab,
+    toggleUrgent,
     closeTab,
     restoreSnapshot,
     deleteSnapshot,
@@ -58,6 +59,7 @@ export function Home() {
           onSelect={selectTab}
           onClose={closeTab}
           onMove={moveTab}
+          onToggleUrgent={toggleUrgent}
           onAdd={addTab}
         />
 
@@ -66,7 +68,7 @@ export function Home() {
           lineCount={lineCount}
           editorRef={editorRef}
           composingRef={composingRef}
-          onChange={(content) => updateTab(activeTab.id, content)}
+          onChange={(content: string) => updateTab(activeTab.id, content)}
         />
 
         <StatusBar
