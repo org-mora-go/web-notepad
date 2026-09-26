@@ -102,9 +102,8 @@ export default function Home() {
         !event.ctrlKey &&
         !event.metaKey &&
         (event.key.toLowerCase() === "w" ||
-          event.code === "Backquote" ||
-          event.key === "`" ||
-          event.key === "˜");
+          event.key === "Backspace" ||
+          event.code === "Backspace");
 
       if (shouldCloseTab) {
         event.preventDefault();
