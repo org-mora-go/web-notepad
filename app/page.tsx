@@ -71,10 +71,15 @@ export default function Home() {
       const { tabs, activeTabId } = state;
       const activeIndex = tabs.findIndex((tab) => tab.id === activeTabId);
 
-      if ((event.metaKey || event.altKey) && !event.ctrlKey && event.key.toLowerCase() === "a") {
+      if (
+        (event.metaKey || event.altKey) &&
+        !event.ctrlKey &&
+        (event.key.toLowerCase() === "a" || event.code === "KeyA")
+      ) {
         event.preventDefault();
-        editorRef.current?.focus();
-        editorRef.current?.select();
+        const editor = editorRef.current;
+        editor?.focus();
+        editor?.setSelectionRange(0, editor.value.length);
         return;
       }
 

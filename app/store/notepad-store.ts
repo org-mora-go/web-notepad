@@ -105,7 +105,14 @@ export const useNotepadStore = create<NotepadState>()(
         updateTab: (tabId, content) =>
           set((state) => ({
             tabs: state.tabs.map((tab) =>
-              tab.id === tabId ? { ...tab, content, updatedAt: Date.now() } : tab,
+              tab.id === tabId
+                ? {
+                    ...tab,
+                    title: getTitleFromContent(content, tab.title),
+                    content,
+                    updatedAt: Date.now(),
+                  }
+                : tab,
             ),
           })),
         saveTab: (tabId) =>
