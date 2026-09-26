@@ -155,7 +155,7 @@ button {
 
 .workspace {
   width: min(1180px, calc(100vw - 48px));
-  height: calc(100vh - 118px);
+  height: calc(100vh - 48px);
   min-height: 500px;
   margin: 24px auto;
   display: grid;
@@ -318,6 +318,22 @@ button {
 
 .status-meta {
   gap: 20px;
+}
+
+.status-actions {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.status-command {
+  height: 24px;
+  gap: 5px;
+  padding: 0 7px;
+}
+
+.status-command > span {
+  font-size: 8px;
 }
 
 .history-backdrop {

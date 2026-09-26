@@ -89,10 +89,7 @@ export default function Home() {
       const shouldAddTab =
         (event.metaKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "n") ||
         (event.altKey && !event.ctrlKey && !event.metaKey &&
-          (event.key.toLowerCase() === "n" ||
-            event.code === "Backquote" ||
-            event.key === "`" ||
-            event.key === "˜"));
+          event.key.toLowerCase() === "n");
 
       if (shouldAddTab) {
         event.preventDefault();
@@ -101,7 +98,13 @@ export default function Home() {
       }
 
       const shouldCloseTab =
-        event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "w";
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        (event.key.toLowerCase() === "w" ||
+          event.code === "Backquote" ||
+          event.key === "`" ||
+          event.key === "˜");
 
       if (shouldCloseTab) {
         event.preventDefault();
@@ -110,21 +113,49 @@ export default function Home() {
       }
 
       if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "Tab") {
+        event.preventDefault();
+        state.addTab();
+        return;
+      }
+
+      const isArrowLeft =
+        event.key === "ArrowLeft" || event.key === "Left" || event.code === "ArrowLeft";
+      const isArrowRight =
+        event.key === "ArrowRight" || event.key === "Right" || event.code === "ArrowRight";
+
+      if (event.altKey && !event.ctrlKey && !event.metaKey && (isArrowLeft || isArrowRight)) {
         if (tabs.length <= 1) {
           return;
         }
 
         event.preventDefault();
-        const nextIndex = event.shiftKey
-          ? (activeIndex - 1 + tabs.length) % tabs.length
-          : (activeIndex + 1) % tabs.length;
-        state.selectTab(tabs[nextIndex].id);
+        const nextIndex = isArrowLeft ? activeIndex - 1 : activeIndex + 1;
+        if (nextIndex >= 0 && nextIndex < tabs.length) {
+          state.selectTab(tabs[nextIndex].id);
+        }
       }
     };
 
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
   }, []);
+
+  useEffect(() => {
+    if (!hydrated) return;
+
+    const frame = window.requestAnimationFrame(() => {
+      const currentTab = useNotepadStore
+        .getState()
+        .tabs.find((tab) => tab.id === activeTabId);
+      const editor = editorRef.current;
+      if (!currentTab || !editor) return;
+
+      editor.focus();
+      editor.setSelectionRange(currentTab.content.length, currentTab.content.length);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [activeTabId, hydrated]);
 
   useEffect(() => {
     const interval = window.setInterval(() => {
@@ -145,40 +176,6 @@ export default function Home() {
 
   return (
     <main className="notepad-shell">
-      <header className="topbar">
-        <div className="brand">
-          <span className="brand-mark">N</span>
-          <div>
-            <strong>NOTEPAD</strong>
-            <span>LOCAL WORKSPACE</span>
-          </div>
-        </div>
-
-        <div className="topbar-actions">
-          <button
-            className={`icon-command save-command ${isDirty ? "is-dirty" : ""}`}
-            type="button"
-            onClick={() => saveTab(activeTab.id)}
-            aria-label="현재 탭 저장"
-            title="저장 (⌘S)"
-          >
-            <Save size={17} strokeWidth={1.8} />
-            <span>SAVE</span>
-          </button>
-          <button
-            className={`icon-command ${historyOpen ? "is-active" : ""}`}
-            type="button"
-            onClick={() => setHistoryOpen((open) => !open)}
-            aria-expanded={historyOpen}
-            aria-controls="unsaved-history"
-          >
-            <FileClock size={17} strokeWidth={1.8} />
-            <span>UNSAVED</span>
-            <span className="history-count">{unsavedSnapshots.length}</span>
-          </button>
-        </div>
-      </header>
-
       <section className="workspace">
         <div className="tab-strip" role="tablist" aria-label="메모 탭">
           <div className="tabs-scroll">
@@ -255,6 +252,28 @@ export default function Home() {
             <span>{activeTab.content.length} CHARS</span>
             <span>{lineCount} LINES</span>
             <span>UTF-8</span>
+            <div className="status-actions">
+              <button
+                className={`icon-command status-command save-command ${isDirty ? "is-dirty" : ""}`}
+                type="button"
+                onClick={() => saveTab(activeTab.id)}
+                aria-label="현재 탭 저장"
+                title="저장 (⌘S)"
+              >
+                <Save size={13} strokeWidth={1.8} />
+                <span>SAVE</span>
+              </button>
+              <button
+                className={`icon-command status-command ${historyOpen ? "is-active" : ""}`}
+                type="button"
+                onClick={() => setHistoryOpen((open) => !open)}
+                aria-expanded={historyOpen}
+                aria-controls="unsaved-history"
+              >
+                <FileClock size={13} strokeWidth={1.8} />
+                <span>UNSAVED</span>
+              </button>
+            </div>
           </div>
         </footer>
       </section>

@@ -93,11 +93,12 @@ export const useNotepadStore = create<NotepadState>()(
         lastSnapshotByTab: {},
         addTab: () => {
           const state = get();
-          const tab = createTab(state.nextTabNumber);
+          const tabNumber = Math.max(state.nextTabNumber, 2);
+          const tab = createTab(tabNumber);
           set({
             tabs: [...state.tabs, tab],
             activeTabId: tab.id,
-            nextTabNumber: state.nextTabNumber + 1,
+            nextTabNumber: tabNumber + 1,
           });
         },
         selectTab: (tabId) => set({ activeTabId: tabId }),
