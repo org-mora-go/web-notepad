@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useSyncExternalStore } from "react";
 import {
   Clock3,
   FileClock,
+  Menu,
   Plus,
   RotateCcw,
   Trash2,
@@ -43,6 +44,10 @@ export default function Home() {
   const hydrated = useStoreHydrated();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
+  const [tabsOverflowing, setTabsOverflowing] = useState(false);
+  const [tabListOpen, setTabListOpen] = useState(false);
+  const tabsScrollRef = useRef<HTMLDivElement>(null);
+  const tabListRef = useRef<HTMLDivElement>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const composingRef = useRef(false);
   const lineRailRef = useRef<HTMLDivElement>(null);
@@ -167,6 +172,44 @@ export default function Home() {
     return () => window.cancelAnimationFrame(frame);
   }, [activeTabId, hydrated]);
 
+  useEffect(() => {
+    const scroller = tabsScrollRef.current;
+    if (!scroller) return;
+
+    const update = () => {
+      const overflowing = scroller.scrollWidth > scroller.clientWidth;
+      setTabsOverflowing(overflowing);
+      if (!overflowing) setTabListOpen(false);
+    };
+    update();
+    const observer = new ResizeObserver(update);
+    observer.observe(scroller);
+    return () => observer.disconnect();
+  }, [tabs.length, hydrated]);
+
+  useEffect(() => {
+    tabsScrollRef.current
+      ?.querySelector(".tab-item.is-active")
+      ?.scrollIntoView({ block: "nearest", inline: "nearest" });
+  }, [activeTabId, hydrated]);
+
+  useEffect(() => {
+    if (!tabListOpen) return;
+
+    const handlePointerDown = (event: PointerEvent) => {
+      if (!tabListRef.current?.contains(event.target as Node)) setTabListOpen(false);
+    };
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") setTabListOpen(false);
+    };
+    document.addEventListener("pointerdown", handlePointerDown);
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("pointerdown", handlePointerDown);
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, [tabListOpen]);
+
   if (!hydrated || !activeTab) {
     return (
       <main className="notepad-shell loading-shell">
@@ -179,7 +222,10 @@ export default function Home() {
     <main className="notepad-shell">
       <section className="workspace">
         <div className="tab-strip" role="tablist" aria-label="메모 탭">
-          <div className="tabs-scroll">
+          <div
+            className={`tabs-scroll ${tabsOverflowing ? "is-overflowing" : ""}`}
+            ref={tabsScrollRef}
+          >
             {tabs.map((tab) => {
               const dirty = tab.content.trim() !== "" && tab.content !== tab.savedContent;
               return (
@@ -219,6 +265,49 @@ export default function Home() {
           >
             <Plus size={18} />
           </button>
+          {tabsOverflowing && (
+            <div className="tab-list-wrap" ref={tabListRef}>
+              <button
+                className={`tab-list-toggle ${tabListOpen ? "is-active" : ""}`}
+                type="button"
+                onClick={() => setTabListOpen((open) => !open)}
+                aria-label="탭 목록"
+                aria-expanded={tabListOpen}
+                aria-controls="tab-list-menu"
+                title="탭 목록"
+              >
+                <Menu size={16} />
+              </button>
+              {tabListOpen && (
+                <ul id="tab-list-menu" className="tab-list-menu" role="menu">
+                  {tabs.map((tab) => (
+                    <li key={tab.id} role="none">
+                      <button
+                        type="button"
+                        role="menuitem"
+                        className={`tab-list-select ${tab.id === activeTab.id ? "is-active" : ""}`}
+                        onClick={() => {
+                          selectTab(tab.id);
+                          setTabListOpen(false);
+                        }}
+                      >
+                        {tab.title}
+                      </button>
+                      <button
+                        type="button"
+                        className="tab-list-close"
+                        onClick={() => closeTab(tab.id)}
+                        aria-label={`${tab.title} 닫기`}
+                        title="탭 닫기"
+                      >
+                        <X size={13} />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="editor-wrap">
