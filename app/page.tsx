@@ -44,6 +44,7 @@ export default function Home() {
   const [historyOpen, setHistoryOpen] = useState(false);
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
   const editorRef = useRef<HTMLTextAreaElement>(null);
+  const composingRef = useRef(false);
   const lineRailRef = useRef<HTMLDivElement>(null);
   const {
     tabs,
@@ -65,29 +66,34 @@ export default function Home() {
       const state = useNotepadStore.getState();
       const { tabs, activeTabId } = state;
       const activeIndex = tabs.findIndex((tab) => tab.id === activeTabId);
+      const editor = editorRef.current;
+
+      // The Korean IME swallows the first shortcut key while composing, so commit as soon as a modifier is held.
+      if (
+        composingRef.current &&
+        (event.metaKey || event.altKey) &&
+        editor &&
+        document.activeElement === editor
+      ) {
+        composingRef.current = false;
+        editor.blur();
+        editor.focus();
+      }
 
       if (
         (event.metaKey || event.altKey) &&
         !event.ctrlKey &&
         (event.key.toLowerCase() === "a" || event.code === "KeyA")
       ) {
-        const editor = editorRef.current;
         if (!editor) return;
+        event.preventDefault();
         const selectAll = () => {
           editor.focus();
           editor.setSelectionRange(0, editor.value.length);
         };
-        // Committing a Korean IME composition resets the selection, so reselect afterwards.
-        const onCompositionEnd = () => window.requestAnimationFrame(selectAll);
-        editor.addEventListener("compositionend", onCompositionEnd, { once: true });
-        window.setTimeout(() => editor.removeEventListener("compositionend", onCompositionEnd), 500);
-
-        // Native ⌘A goes through the OS Select All command, which the Korean IME doesn't swallow.
-        if (event.metaKey && !event.altKey && document.activeElement === editor) return;
-
-        event.preventDefault();
         selectAll();
         window.requestAnimationFrame(selectAll);
+        window.setTimeout(selectAll, 50);
         return;
       }
 
@@ -226,6 +232,12 @@ export default function Home() {
             className="note-editor"
             value={activeTab.content}
             onChange={(event) => updateTab(activeTab.id, event.target.value)}
+            onCompositionStart={() => {
+              composingRef.current = true;
+            }}
+            onCompositionEnd={() => {
+              composingRef.current = false;
+            }}
             onScroll={(event) => {
               if (lineRailRef.current) {
                 lineRailRef.current.scrollTop = event.currentTarget.scrollTop;
