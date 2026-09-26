@@ -23,13 +23,10 @@ type NotepadState = {
   nextTabNumber: number;
   nextUnsavedNumber: number;
   unsavedSnapshots: UnsavedSnapshot[];
-  lastSnapshotByTab: Record<string, string>;
   addTab: () => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
-  saveTab: (tabId: string) => void;
   closeTab: (tabId: string) => void;
-  snapshotTab: (tabId: string) => void;
   restoreSnapshot: (snapshotId: string) => void;
   deleteSnapshot: (snapshotId: string) => void;
   clearHistory: () => void;
@@ -62,13 +59,12 @@ export const useNotepadStore = create<NotepadState>()(
       const addSnapshot = (tab: NoteTab) => {
         const state = get();
 
-        if (!tab.content.trim() || tab.content === tab.savedContent) return;
-        if (state.lastSnapshotByTab[tab.id] === tab.content) return;
+        if (!tab.content.trim()) return;
 
         const number = state.nextUnsavedNumber;
         const snapshot: UnsavedSnapshot = {
           id: `unsaved-${number}`,
-          name: `unsaved-${number}`,
+          name: getTitleFromContent(tab.content, tab.title),
           content: tab.content,
           sourceTitle: tab.title,
           capturedAt: Date.now(),
@@ -77,10 +73,6 @@ export const useNotepadStore = create<NotepadState>()(
         set({
           unsavedSnapshots: [snapshot, ...state.unsavedSnapshots],
           nextUnsavedNumber: number + 1,
-          lastSnapshotByTab: {
-            ...state.lastSnapshotByTab,
-            [tab.id]: tab.content,
-          },
         });
       };
 
@@ -90,7 +82,6 @@ export const useNotepadStore = create<NotepadState>()(
         nextTabNumber: 2,
         nextUnsavedNumber: 1,
         unsavedSnapshots: [],
-        lastSnapshotByTab: {},
         addTab: () => {
           const state = get();
           const tabNumber = Math.max(state.nextTabNumber, 2);
@@ -114,23 +105,6 @@ export const useNotepadStore = create<NotepadState>()(
                   }
                 : tab,
             ),
-          })),
-        saveTab: (tabId) =>
-          set((state) => ({
-            tabs: state.tabs.map((tab) =>
-              tab.id === tabId
-                ? {
-                    ...tab,
-                    title: getTitleFromContent(tab.content, tab.title),
-                    savedContent: tab.content,
-                    updatedAt: Date.now(),
-                  }
-                : tab,
-            ),
-            lastSnapshotByTab: {
-              ...state.lastSnapshotByTab,
-              [tabId]: state.tabs.find((tab) => tab.id === tabId)?.content ?? "",
-            },
           })),
         closeTab: (tabId) => {
           const state = get();
@@ -158,10 +132,6 @@ export const useNotepadStore = create<NotepadState>()(
               : currentState.activeTabId;
           set({ tabs: remainingTabs, activeTabId: nextActive });
         },
-        snapshotTab: (tabId) => {
-          const tab = get().tabs.find((item) => item.id === tabId);
-          if (tab) addSnapshot(tab);
-        },
         restoreSnapshot: (snapshotId) => {
           const state = get();
           const snapshot = state.unsavedSnapshots.find((item) => item.id === snapshotId);
@@ -172,6 +142,7 @@ export const useNotepadStore = create<NotepadState>()(
             ...tab,
             title: snapshot.name,
             content: snapshot.content,
+            savedContent: snapshot.content,
             updatedAt: Date.now(),
           };
           set({
@@ -186,11 +157,7 @@ export const useNotepadStore = create<NotepadState>()(
               (snapshot) => snapshot.id !== snapshotId,
             ),
           })),
-        clearHistory: () =>
-          set((state) => ({
-            unsavedSnapshots: [],
-            lastSnapshotByTab: { ...state.lastSnapshotByTab },
-          })),
+        clearHistory: () => set({ unsavedSnapshots: [] }),
       };
     },
     {

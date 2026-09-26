@@ -6,13 +6,10 @@ import {
   FileClock,
   Plus,
   RotateCcw,
-  Save,
   Trash2,
   X,
 } from "lucide-react";
 import { useNotepadStore } from "@/app/store/notepad-store";
-
-const AUTOSAVE_INTERVAL = 30_000;
 
 const formatDate = (timestamp: number) =>
   new Intl.DateTimeFormat("ko-KR", {
@@ -55,14 +52,12 @@ export default function Home() {
     addTab,
     selectTab,
     updateTab,
-    saveTab,
     closeTab,
     restoreSnapshot,
     deleteSnapshot,
     clearHistory,
   } = useNotepadStore();
   const activeTab = tabs.find((tab) => tab.id === activeTabId) ?? tabs[0];
-  const isDirty = activeTab?.content !== activeTab?.savedContent;
   const lineCount = activeTab?.content.split("\n").length ?? 1;
 
   useEffect(() => {
@@ -76,18 +71,23 @@ export default function Home() {
         !event.ctrlKey &&
         (event.key.toLowerCase() === "a" || event.code === "KeyA")
       ) {
-        event.preventDefault();
         const editor = editorRef.current;
-        editor?.focus();
-        editor?.setSelectionRange(0, editor.value.length);
-        return;
-      }
+        if (!editor) return;
+        const selectAll = () => {
+          editor.focus();
+          editor.setSelectionRange(0, editor.value.length);
+        };
+        // Committing a Korean IME composition resets the selection, so reselect afterwards.
+        const onCompositionEnd = () => window.requestAnimationFrame(selectAll);
+        editor.addEventListener("compositionend", onCompositionEnd, { once: true });
+        window.setTimeout(() => editor.removeEventListener("compositionend", onCompositionEnd), 500);
 
-      if ((event.metaKey || event.altKey) && !event.ctrlKey && event.key.toLowerCase() === "s") {
+        // Native ⌘A goes through the OS Select All command, which the Korean IME doesn't swallow.
+        if (event.metaKey && !event.altKey && document.activeElement === editor) return;
+
         event.preventDefault();
-        const { activeTabId: currentTabId, saveTab: saveCurrentTab } =
-          useNotepadStore.getState();
-        saveCurrentTab(currentTabId);
+        selectAll();
+        window.requestAnimationFrame(selectAll);
         return;
       }
 
@@ -161,15 +161,6 @@ export default function Home() {
     return () => window.cancelAnimationFrame(frame);
   }, [activeTabId, hydrated]);
 
-  useEffect(() => {
-    const interval = window.setInterval(() => {
-      const state = useNotepadStore.getState();
-      state.tabs.forEach((tab) => state.snapshotTab(tab.id));
-    }, AUTOSAVE_INTERVAL);
-
-    return () => window.clearInterval(interval);
-  }, []);
-
   if (!hydrated || !activeTab) {
     return (
       <main className="notepad-shell loading-shell">
@@ -184,7 +175,7 @@ export default function Home() {
         <div className="tab-strip" role="tablist" aria-label="메모 탭">
           <div className="tabs-scroll">
             {tabs.map((tab) => {
-              const dirty = tab.content !== tab.savedContent;
+              const dirty = tab.content.trim() !== "" && tab.content !== tab.savedContent;
               return (
                 <div
                   className={`tab-item ${tab.id === activeTab.id ? "is-active" : ""} ${dirty ? "is-dirty" : ""}`}
@@ -249,24 +240,14 @@ export default function Home() {
 
         <footer className="statusbar">
           <div className="save-state">
-            <span className={`status-light ${isDirty ? "is-dirty" : ""}`} />
-            {isDirty ? "UNSAVED CHANGES" : "SAVED LOCALLY"}
+            <span className="status-light" />
+            SAVED LOCALLY
           </div>
           <div className="status-meta">
             <span>{activeTab.content.length} CHARS</span>
             <span>{lineCount} LINES</span>
             <span>UTF-8</span>
             <div className="status-actions">
-              <button
-                className={`icon-command status-command save-command ${isDirty ? "is-dirty" : ""}`}
-                type="button"
-                onClick={() => saveTab(activeTab.id)}
-                aria-label="현재 탭 저장"
-                title="저장 (⌘S)"
-              >
-                <Save size={13} strokeWidth={1.8} />
-                <span>SAVE</span>
-              </button>
               <button
                 className={`icon-command status-command ${historyOpen ? "is-active" : ""}`}
                 type="button"
@@ -275,7 +256,7 @@ export default function Home() {
                 aria-controls="unsaved-history"
               >
                 <FileClock size={13} strokeWidth={1.8} />
-                <span>UNSAVED</span>
+                <span>HISTORY</span>
               </button>
             </div>
           </div>
@@ -324,14 +305,16 @@ export default function Home() {
             <span className="eyebrow">LOCAL ARCHIVE</span>
             <div className="history-title-row">
               <h2>History</h2>
-              <button
-                className="clear-history-button"
-                type="button"
-                onClick={() => setClearConfirmOpen(true)}
-                aria-label="기록 전체 삭제"
-              >
-                Clear
-              </button>
+              {unsavedSnapshots.length > 0 && (
+                <button
+                  className="clear-history-button"
+                  type="button"
+                  onClick={() => setClearConfirmOpen(true)}
+                  aria-label="기록 전체 삭제"
+                >
+                  Clear
+                </button>
+              )}
             </div>
           </div>
           <button
