@@ -688,8 +688,7 @@ button {
     font-size: 14px;
   }
 
-  .status-meta span:nth-child(2),
-  .status-meta span:nth-child(3) {
+  .status-meta span:nth-child(2) {
     display: none;
   }
 }
