@@ -133,18 +133,24 @@ export default function Home() {
         return;
       }
 
-      const isArrowLeft =
-        event.key === "ArrowLeft" || event.key === "Left" || event.code === "ArrowLeft";
-      const isArrowRight =
-        event.key === "ArrowRight" || event.key === "Right" || event.code === "ArrowRight";
+      const isArrowUp =
+        event.key === "ArrowUp" || event.key === "Up" || event.code === "ArrowUp";
+      const isArrowDown =
+        event.key === "ArrowDown" || event.key === "Down" || event.code === "ArrowDown";
 
-      if (event.altKey && !event.ctrlKey && !event.metaKey && (isArrowLeft || isArrowRight)) {
+      if (
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        (isArrowUp || isArrowDown)
+      ) {
         if (tabs.length <= 1) {
           return;
         }
 
         event.preventDefault();
-        const nextIndex = isArrowLeft ? activeIndex - 1 : activeIndex + 1;
+        const nextIndex = isArrowUp ? activeIndex - 1 : activeIndex + 1;
         if (nextIndex >= 0 && nextIndex < tabs.length) {
           state.selectTab(tabs[nextIndex].id);
         }
