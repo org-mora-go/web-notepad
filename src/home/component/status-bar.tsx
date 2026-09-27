@@ -11,7 +11,7 @@ type Props = {
 
 export function StatusBar({ charCount, lineCount, historyOpen, onToggleHistory }: Props) {
   return (
-    <footer className="statusbar">
+    <footer className="status-bar">
       <div className="save-state">
         <span className="status-light" />
         SAVED LOCALLY

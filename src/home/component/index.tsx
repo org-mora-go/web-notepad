@@ -8,8 +8,11 @@ import {
   useTabStrip,
 } from "@/src/home/hook";
 import { useNotepadStore } from "@/src/home/store";
-import { HistoryPanel, NoteEditor, StatusBar, TabStrip } from "./component";
-import "./style";
+import { HistoryPanel } from "./history-panel";
+import { NoteEditor } from "./note-editor";
+import { StatusBar } from "./status-bar";
+import { TabStrip } from "./tab-strip";
+import "../style";
 
 export function Home() {
   const hydrated = useStoreHydrated();
@@ -39,14 +42,14 @@ export function Home() {
 
   if (!hydrated || !activeTab) {
     return (
-      <main className="notepad-shell is-loading">
+      <main className="index is-loading">
         <span className="loading-mark">NOTEPAD_</span>
       </main>
     );
   }
 
   return (
-    <main className="notepad-shell">
+    <main className="index">
       <section className="workspace">
         <TabStrip
           tabs={tabs}

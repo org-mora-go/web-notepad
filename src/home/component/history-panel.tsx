@@ -32,7 +32,7 @@ export function HistoryPanel({
   const [clearConfirmOpen, setClearConfirmOpen] = useState(false);
 
   return (
-    <>
+    <div className="history-panel">
       <div
         className={`history-backdrop ${open ? "is-visible" : ""}`}
         onClick={onClose}
@@ -67,7 +67,7 @@ export function HistoryPanel({
       )}
       <aside
         id="unsaved-history"
-        className={`history-panel ${open ? "is-open" : ""}`}
+        className={`history-drawer ${open ? "is-open" : ""}`}
         aria-hidden={!open}
       >
         <div className="history-header">
@@ -140,6 +140,6 @@ export function HistoryPanel({
           )}
         </div>
       </aside>
-    </>
+    </div>
   );
 }

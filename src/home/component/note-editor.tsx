@@ -15,7 +15,7 @@ export function NoteEditor({ tab, lineCount, editorRef, composingRef, onChange }
   const lineRailRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="editor-wrap">
+    <div className="note-editor">
       <div className="line-rail" ref={lineRailRef} aria-hidden="true">
         {Array.from({ length: lineCount }, (_, index) => (
           <span key={index}>{String(index + 1).padStart(2, "0")}</span>
@@ -23,7 +23,7 @@ export function NoteEditor({ tab, lineCount, editorRef, composingRef, onChange }
       </div>
       <textarea
         ref={editorRef}
-        className="note-editor"
+        className="note-area"
         value={tab.content}
         onChange={(event) => onChange(event.target.value)}
         onCompositionStart={() => {
