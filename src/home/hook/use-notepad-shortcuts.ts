@@ -92,10 +92,9 @@ export function useNotepadShortcuts({ editorRef, composingRef }: Options) {
         }
 
         event.preventDefault();
-        const nextIndex = isArrowUp ? activeIndex - 1 : activeIndex + 1;
-        if (nextIndex >= 0 && nextIndex < tabs.length) {
-          state.selectTab(tabs[nextIndex].id);
-        }
+        const offset = isArrowUp ? -1 : 1;
+        const nextIndex = (activeIndex + offset + tabs.length) % tabs.length;
+        state.selectTab(tabs[nextIndex].id);
       }
     };
 

@@ -8,11 +8,8 @@ import {
   useTabStrip,
 } from "@/src/home/hook";
 import { useNotepadStore } from "@/src/home/store";
-import { HistoryPanel } from "./history-panel";
-import { NoteEditor } from "./note-editor";
-import { StatusBar } from "./status-bar";
-import { TabStrip } from "./tab-strip";
-import "../style";
+import { HistoryPanel, NoteEditor, StatusBar, TabStrip } from "./component";
+import "./style/index.scss";
 
 export function Home() {
   const hydrated = useStoreHydrated();

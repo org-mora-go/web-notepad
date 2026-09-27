@@ -1,4 +1,8 @@
 @use "../../@shared/style/variable" as v;
+@use "./tab-strip";
+@use "./note-editor";
+@use "./status-bar";
+@use "./history-panel";
 
 .index {
   min-height: 100vh;
