@@ -1,6 +1,5 @@
 @use "../../@shared/style/variable" as v;
-@use "./tab-strip";
-@use "./note-editor";
+@use "./note-pane";
 @use "./status-bar";
 @use "./history-panel";
 
@@ -28,11 +27,35 @@
     height: 100vh;
     min-height: 500px;
     display: grid;
-    grid-template-rows: 45px minmax(0, 1fr) 34px;
+    grid-template-rows: minmax(0, 1fr) 34px;
     background: v.$panel;
 
     @media (max-width: 640px) {
       min-height: 420px;
+    }
+  }
+
+  .pane-group {
+    min-height: 0;
+    display: flex;
+  }
+
+  .pane-slot {
+    min-width: 0;
+    min-height: 0;
+    flex: 1;
+    display: grid;
+  }
+
+  .pane-divider {
+    width: 5px;
+    flex: 0 0 5px;
+    background: v.$line;
+    cursor: col-resize;
+    touch-action: none;
+
+    &:hover {
+      background: v.$hover-line;
     }
   }
 }

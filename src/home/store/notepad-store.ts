@@ -18,22 +18,32 @@ export type UnsavedSnapshot = {
   capturedAt: number;
 };
 
+export type PaneId = "left" | "right";
+
 type NotepadState = {
   tabs: NoteTab[];
   activeTabId: string;
+  rightTabIds: string[];
+  activeRightTabId: string | null;
+  splitRatio: number;
   nextTabNumber: number;
   nextUnsavedNumber: number;
   unsavedSnapshots: UnsavedSnapshot[];
-  addTab: () => void;
+  addTab: (pane?: PaneId) => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
   moveTab: (fromTabId: string, toTabId: string) => void;
+  moveTabToPane: (tabId: string, pane: PaneId) => void;
+  setSplitRatio: (ratio: number) => void;
   toggleUrgent: (tabId: string) => void;
   closeTab: (tabId: string) => void;
   restoreSnapshot: (snapshotId: string) => void;
   deleteSnapshot: (snapshotId: string) => void;
   clearHistory: () => void;
 };
+
+export const MIN_SPLIT_RATIO = 0.2;
+export const MAX_SPLIT_RATIO = 0.8;
 
 const createTab = (number: number): NoteTab => ({
   id: `tab-${number}`,
@@ -83,20 +93,31 @@ export const useNotepadStore = create<NotepadState>()(
       return {
         tabs: [createTab(1)],
         activeTabId: "tab-1",
+        rightTabIds: [],
+        activeRightTabId: null,
+        splitRatio: 0.5,
         nextTabNumber: 2,
         nextUnsavedNumber: 1,
         unsavedSnapshots: [],
-        addTab: () => {
+        addTab: (pane = "left") => {
           const state = get();
           const tabNumber = Math.max(state.nextTabNumber, 2);
           const tab = createTab(tabNumber);
+          const toRight = pane === "right" && state.rightTabIds.length > 0;
           set({
             tabs: [...state.tabs, tab],
-            activeTabId: tab.id,
+            rightTabIds: toRight ? [...state.rightTabIds, tab.id] : state.rightTabIds,
+            activeRightTabId: toRight ? tab.id : state.activeRightTabId,
+            activeTabId: toRight ? state.activeTabId : tab.id,
             nextTabNumber: tabNumber + 1,
           });
         },
-        selectTab: (tabId) => set({ activeTabId: tabId }),
+        selectTab: (tabId) =>
+          set((state) =>
+            state.rightTabIds.includes(tabId)
+              ? { activeRightTabId: tabId }
+              : { activeTabId: tabId },
+          ),
         updateTab: (tabId, content) =>
           set((state) => ({
             tabs: state.tabs.map((tab) =>
@@ -121,6 +142,45 @@ export const useNotepadStore = create<NotepadState>()(
             tabs.splice(to, 0, moved);
             return { tabs };
           }),
+        moveTabToPane: (tabId, pane) =>
+          set((state) => {
+            if (!state.tabs.some((tab) => tab.id === tabId)) return state;
+            const inRight = state.rightTabIds.includes(tabId);
+
+            if (pane === "right") {
+              if (inRight) return state;
+              // The left pane must always keep at least one tab.
+              if (state.tabs.length - state.rightTabIds.length <= 1) return state;
+
+              const rightTabIds = [...state.rightTabIds, tabId];
+              const leftTabs = state.tabs.filter((tab) => !rightTabIds.includes(tab.id));
+              return {
+                rightTabIds,
+                activeRightTabId: tabId,
+                activeTabId:
+                  state.activeTabId === tabId
+                    ? leftTabs[leftTabs.length - 1].id
+                    : state.activeTabId,
+              };
+            }
+
+            if (!inRight) return state;
+            const rightTabIds = state.rightTabIds.filter((id) => id !== tabId);
+            return {
+              rightTabIds,
+              activeTabId: tabId,
+              activeRightTabId:
+                rightTabIds.length === 0
+                  ? null
+                  : state.activeRightTabId === tabId
+                    ? rightTabIds[rightTabIds.length - 1]
+                    : state.activeRightTabId,
+            };
+          }),
+        setSplitRatio: (ratio) =>
+          set({
+            splitRatio: Math.min(MAX_SPLIT_RATIO, Math.max(MIN_SPLIT_RATIO, ratio)),
+          }),
         toggleUrgent: (tabId) =>
           set((state) => ({
             tabs: state.tabs.map((tab) =>
@@ -141,17 +201,53 @@ export const useNotepadStore = create<NotepadState>()(
             set({
               tabs: [replacement],
               activeTabId: replacement.id,
+              rightTabIds: [],
+              activeRightTabId: null,
               nextTabNumber: 2,
             });
             return;
           }
 
-          const closedIndex = currentState.tabs.findIndex((item) => item.id === tabId);
-          const nextActive =
-            currentState.activeTabId === tabId
-              ? remainingTabs[Math.min(closedIndex, remainingTabs.length - 1)].id
-              : currentState.activeTabId;
-          set({ tabs: remainingTabs, activeTabId: nextActive });
+          const wasRight = currentState.rightTabIds.includes(tabId);
+          const rightTabIds = currentState.rightTabIds.filter((id) => id !== tabId);
+          const paneIds = currentState.tabs
+            .filter((item) => currentState.rightTabIds.includes(item.id) === wasRight)
+            .map((item) => item.id);
+          const closedIndex = paneIds.indexOf(tabId);
+          const nextPaneIds = paneIds.filter((id) => id !== tabId);
+          const fallbackId = nextPaneIds[Math.min(closedIndex, nextPaneIds.length - 1)];
+
+          if (wasRight) {
+            set({
+              tabs: remainingTabs,
+              rightTabIds,
+              activeRightTabId:
+                rightTabIds.length === 0
+                  ? null
+                  : currentState.activeRightTabId === tabId
+                    ? fallbackId
+                    : currentState.activeRightTabId,
+            });
+            return;
+          }
+
+          // Closing the last left tab collapses the split and promotes the right pane.
+          if (nextPaneIds.length === 0) {
+            set({
+              tabs: remainingTabs,
+              rightTabIds: [],
+              activeRightTabId: null,
+              activeTabId: currentState.activeRightTabId ?? remainingTabs[0].id,
+            });
+            return;
+          }
+
+          set({
+            tabs: remainingTabs,
+            rightTabIds,
+            activeTabId:
+              currentState.activeTabId === tabId ? fallbackId : currentState.activeTabId,
+          });
         },
         restoreSnapshot: (snapshotId) => {
           const state = get();

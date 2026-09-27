@@ -8,10 +8,18 @@ type Props = {
   lineCount: number;
   editorRef: RefObject<HTMLTextAreaElement | null>;
   composingRef: RefObject<boolean>;
+  autoFocus?: boolean;
   onChange: (content: string) => void;
 };
 
-export function NoteEditor({ tab, lineCount, editorRef, composingRef, onChange }: Props) {
+export function NoteEditor({
+  tab,
+  lineCount,
+  editorRef,
+  composingRef,
+  autoFocus = false,
+  onChange,
+}: Props) {
   const lineRailRef = useRef<HTMLDivElement>(null);
 
   return (
@@ -38,7 +46,7 @@ export function NoteEditor({ tab, lineCount, editorRef, composingRef, onChange }
           }
         }}
         placeholder="Take a note.."
-        autoFocus
+        autoFocus={autoFocus}
         spellCheck={false}
         aria-label={`${tab.title} 메모 내용`}
       />

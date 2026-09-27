@@ -12,9 +12,12 @@ type Props = {
   tabsOverflowing: boolean;
   tabListOpen: boolean;
   setTabListOpen: Dispatch<SetStateAction<boolean>>;
+  draggingTabId: string | null;
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onMove: (fromTabId: string, toTabId: string) => void;
+  onAdopt: (tabId: string) => void;
+  onDragStateChange: (tabId: string | null) => void;
   onToggleUrgent: (tabId: string) => void;
   onAdd: () => void;
 };
@@ -27,22 +30,46 @@ export function TabStrip({
   tabsOverflowing,
   tabListOpen,
   setTabListOpen,
+  draggingTabId,
   onSelect,
   onClose,
   onMove,
+  onAdopt,
+  onDragStateChange,
   onToggleUrgent,
   onAdd,
 }: Props) {
-  const [draggingId, setDraggingId] = useState<string | null>(null);
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
+  const dragActive = draggingTabId !== null;
 
   const endDrag = () => {
-    setDraggingId(null);
     setDropTargetId(null);
+    onDragStateChange(null);
+  };
+
+  const applyDrop = (fromTabId: string, toTabId?: string) => {
+    if (!fromTabId) return;
+    if (!tabs.some((tab) => tab.id === fromTabId)) {
+      onAdopt(fromTabId);
+      return;
+    }
+    if (toTabId && fromTabId !== toTabId) onMove(fromTabId, toTabId);
   };
 
   return (
-    <div className="tab-strip" role="tablist" aria-label="메모 탭">
+    <div
+      className="tab-strip"
+      role="tablist"
+      aria-label="메모 탭"
+      onDragOver={(event) => {
+        if (dragActive) event.preventDefault();
+      }}
+      onDrop={(event) => {
+        event.preventDefault();
+        applyDrop(event.dataTransfer.getData("text/plain"));
+        endDrag();
+      }}
+    >
       <div
         className={`tabs-scroll ${tabsOverflowing ? "is-overflowing" : ""}`}
         ref={tabsScrollRef}
@@ -54,7 +81,7 @@ export function TabStrip({
             <div
               className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""} ${
                 tab.urgent ? "is-urgent" : ""
-              } ${draggingId === tab.id ? "is-dragging" : ""} ${
+              } ${draggingTabId === tab.id ? "is-dragging" : ""} ${
                 dropTargetId === tab.id ? "is-drop-target" : ""
               }`}
               key={tab.id}
@@ -62,10 +89,10 @@ export function TabStrip({
               onDragStart={(event) => {
                 event.dataTransfer.effectAllowed = "move";
                 event.dataTransfer.setData("text/plain", tab.id);
-                setDraggingId(tab.id);
+                onDragStateChange(tab.id);
               }}
               onDragOver={(event) => {
-                if (!draggingId || draggingId === tab.id) return;
+                if (!dragActive || draggingTabId === tab.id) return;
                 event.preventDefault();
                 event.dataTransfer.dropEffect = "move";
                 setDropTargetId(tab.id);
@@ -75,8 +102,8 @@ export function TabStrip({
               }}
               onDrop={(event) => {
                 event.preventDefault();
-                const fromTabId = event.dataTransfer.getData("text/plain") || draggingId;
-                if (fromTabId && fromTabId !== tab.id) onMove(fromTabId, tab.id);
+                event.stopPropagation();
+                applyDrop(event.dataTransfer.getData("text/plain"), tab.id);
                 endDrag();
               }}
               onDragEnd={endDrag}
