@@ -47,7 +47,7 @@
   h2 {
     margin: 0;
     font-family: v.$sans;
-    font-size: 22px;
+    font-size: 24px;
     font-weight: 500;
   }
 }
@@ -60,7 +60,7 @@
 
 .eyebrow {
   color: v.$signal;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .history-title-row {
@@ -76,7 +76,7 @@
   border: 1px solid v.$line;
   background: transparent;
   color: v.$ink;
-  font-size: 10px;
+  font-size: 11px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
@@ -118,7 +118,7 @@
   p {
     margin: 0 0 18px;
     color: v.$ink;
-    font-size: 18px;
+    font-size: 20px;
     line-height: 1.4;
   }
 }
@@ -162,7 +162,7 @@
     overflow: hidden;
     color: v.$saved;
     font-family: v.$sans;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5;
     white-space: pre-wrap;
     -webkit-box-orient: vertical;
@@ -178,12 +178,12 @@
 
   strong {
     color: v.$signal;
-    font-size: 12px;
+    font-size: 13px;
   }
 
   time {
     color: #6f6f69;
-    font-size: 9px;
+    font-size: 10px;
   }
 }
 
@@ -192,7 +192,7 @@
   margin-top: 6px;
   overflow: hidden;
   color: #6f6f69;
-  font-size: 9px;
+  font-size: 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
@@ -211,7 +211,7 @@
     border: 1px solid v.$line;
     background: transparent;
     color: #a9a9a2;
-    font-size: 10px;
+    font-size: 11px;
     cursor: pointer;
 
     &:hover {
@@ -240,7 +240,7 @@
     max-width: 220px;
     margin: 0;
     font-family: v.$sans;
-    font-size: 13px;
+    font-size: 14px;
     line-height: 1.5;
   }
 }

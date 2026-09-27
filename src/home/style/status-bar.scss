@@ -8,7 +8,7 @@
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
-  font-size: 9px;
+  font-size: 10px;
 }
 
 .save-state {
@@ -61,7 +61,7 @@
   }
 
   > span {
-    font-size: 8px;
+    font-size: 9px;
 
     @media (max-width: 640px) {
       display: none;

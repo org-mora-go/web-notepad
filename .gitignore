@@ -30,3 +30,6 @@ pnpm-debug.log*
 .vscode/
 .idea/
 *.swp
+
+#etc
+next-env.d.ts

@@ -19,13 +19,13 @@
   overflow: hidden;
   border-right: 1px solid #242422;
   color: #40403c;
-  font-size: 11px;
+  font-size: 12px;
   user-select: none;
 
   span {
-    min-height: 26.25px;
+    min-height: 29.75px;
     padding-right: 15px;
-    line-height: 26.25px;
+    line-height: 29.75px;
 
     @media (max-width: 640px) {
       padding-right: 8px;
@@ -43,7 +43,7 @@
   background: transparent;
   color: #deded8;
   caret-color: v.$signal;
-  font-size: 15px;
+  font-size: 17px;
   line-height: 1.75;
   tab-size: 2;
 
@@ -53,6 +53,6 @@
 
   @media (max-width: 640px) {
     padding: 25px 18px;
-    font-size: 14px;
+    font-size: 15px;
   }
 }
