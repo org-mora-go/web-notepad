@@ -3,11 +3,11 @@
 .note-editor {
   min-height: 0;
   display: grid;
-  grid-template-columns: 58px minmax(0, 1fr);
+  grid-template-columns: 39px minmax(0, 1fr);
   overflow: hidden;
 
   @media (max-width: 640px) {
-    grid-template-columns: 38px minmax(0, 1fr);
+    grid-template-columns: 25px minmax(0, 1fr);
   }
 
   .line-rail {
@@ -23,11 +23,11 @@
 
     span {
       min-height: 29.75px;
-      padding-right: 15px;
-      line-height: 29.75px;
+      padding-right: 10px;
+      line-height: 19.9px;
 
       @media (max-width: 640px) {
-        padding-right: 8px;
+        padding-right: 5px;
       }
     }
   }
