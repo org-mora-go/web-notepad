@@ -24,6 +24,7 @@ type Props = {
   dropZones: PaneDropZone[];
   widthRatio?: number;
   onResize?: (ratio: number) => void;
+  onActivate: () => void;
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onMove: (fromTabId: string, toTabId: string) => void;
@@ -45,6 +46,7 @@ export function NotePane({
   dropZones,
   widthRatio,
   onResize,
+  onActivate,
   onSelect,
   onClose,
   onMove,
@@ -89,7 +91,11 @@ export function NotePane({
         className="pane-slot"
         style={widthRatio ? { flex: `0 0 ${widthRatio * 100}%` } : undefined}
       >
-        <div className="note-pane">
+        <div
+          className="note-pane"
+          onFocusCapture={onActivate}
+          onPointerDownCapture={onActivate}
+        >
           <TabStrip
             tabs={tabs}
             activeTabId={activeTab.id}

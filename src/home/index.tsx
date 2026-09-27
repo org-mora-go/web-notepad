@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   useEditorFocus,
   useNotepadShortcuts,
@@ -24,6 +24,7 @@ export function Home() {
     activeTabId,
     rightTabIds,
     activeRightTabId,
+    activePane,
     splitRatio,
     unsavedSnapshots,
     addTab,
@@ -31,6 +32,7 @@ export function Home() {
     updateTab,
     moveTab,
     moveTabToPane,
+    setActivePane,
     setSplitRatio,
     toggleUrgent,
     closeTab,
@@ -50,6 +52,17 @@ export function Home() {
 
   useNotepadShortcuts({ editorRef, composingRef });
   useEditorFocus(editorRef, activeTabId, hydrated);
+  useEditorFocus(rightEditorRef, activeRightTabId ?? "", hydrated);
+
+  // Keep the caret in the pane that shortcuts just moved to.
+  useEffect(() => {
+    if (!hydrated) return;
+    const frame = window.requestAnimationFrame(() => {
+      const target = activePane === "right" ? rightEditorRef.current : editorRef.current;
+      target?.focus();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [activePane, hydrated]);
   const leftStrip = useTabStrip(leftTabs.length, activeTabId, hydrated);
   const rightStrip = useTabStrip(rightTabs.length, activeRightTabId ?? "", hydrated);
 
@@ -109,6 +122,7 @@ export function Home() {
             draggingTabId={draggingTabId}
             dropZones={leftDropZones}
             widthRatio={split ? splitRatio : undefined}
+            onActivate={() => setActivePane("left")}
             onSelect={selectTab}
             onClose={closeTab}
             onMove={moveTab}
@@ -129,6 +143,7 @@ export function Home() {
               draggingTabId={draggingTabId}
               dropZones={rightDropZones}
               onResize={setSplitRatio}
+              onActivate={() => setActivePane("right")}
               onSelect={selectTab}
               onClose={closeTab}
               onMove={moveTab}

@@ -25,6 +25,7 @@ type NotepadState = {
   activeTabId: string;
   rightTabIds: string[];
   activeRightTabId: string | null;
+  activePane: PaneId;
   splitRatio: number;
   nextTabNumber: number;
   nextUnsavedNumber: number;
@@ -34,6 +35,7 @@ type NotepadState = {
   updateTab: (tabId: string, content: string) => void;
   moveTab: (fromTabId: string, toTabId: string) => void;
   moveTabToPane: (tabId: string, pane: PaneId) => void;
+  setActivePane: (pane: PaneId) => void;
   setSplitRatio: (ratio: number) => void;
   toggleUrgent: (tabId: string) => void;
   closeTab: (tabId: string) => void;
@@ -95,6 +97,7 @@ export const useNotepadStore = create<NotepadState>()(
         activeTabId: "tab-1",
         rightTabIds: [],
         activeRightTabId: null,
+        activePane: "left",
         splitRatio: 0.5,
         nextTabNumber: 2,
         nextUnsavedNumber: 1,
@@ -109,14 +112,15 @@ export const useNotepadStore = create<NotepadState>()(
             rightTabIds: toRight ? [...state.rightTabIds, tab.id] : state.rightTabIds,
             activeRightTabId: toRight ? tab.id : state.activeRightTabId,
             activeTabId: toRight ? state.activeTabId : tab.id,
+            activePane: toRight ? "right" : "left",
             nextTabNumber: tabNumber + 1,
           });
         },
         selectTab: (tabId) =>
           set((state) =>
             state.rightTabIds.includes(tabId)
-              ? { activeRightTabId: tabId }
-              : { activeTabId: tabId },
+              ? { activeRightTabId: tabId, activePane: "right" }
+              : { activeTabId: tabId, activePane: "left" },
           ),
         updateTab: (tabId, content) =>
           set((state) => ({
@@ -157,6 +161,7 @@ export const useNotepadStore = create<NotepadState>()(
               return {
                 rightTabIds,
                 activeRightTabId: tabId,
+                activePane: "right",
                 activeTabId:
                   state.activeTabId === tabId
                     ? leftTabs[leftTabs.length - 1].id
@@ -169,6 +174,7 @@ export const useNotepadStore = create<NotepadState>()(
             return {
               rightTabIds,
               activeTabId: tabId,
+              activePane: "left",
               activeRightTabId:
                 rightTabIds.length === 0
                   ? null
@@ -177,8 +183,11 @@ export const useNotepadStore = create<NotepadState>()(
                     : state.activeRightTabId,
             };
           }),
-        setSplitRatio: (ratio) =>
-          set({
+        setActivePane: (pane) =>
+          set((state) => ({
+            activePane: pane === "right" && state.rightTabIds.length === 0 ? "left" : pane,
+          })),
+        setSplitRatio: (ratio) =>          set({
             splitRatio: Math.min(MAX_SPLIT_RATIO, Math.max(MIN_SPLIT_RATIO, ratio)),
           }),
         toggleUrgent: (tabId) =>
@@ -203,6 +212,7 @@ export const useNotepadStore = create<NotepadState>()(
               activeTabId: replacement.id,
               rightTabIds: [],
               activeRightTabId: null,
+              activePane: "left",
               nextTabNumber: 2,
             });
             return;
@@ -221,6 +231,7 @@ export const useNotepadStore = create<NotepadState>()(
             set({
               tabs: remainingTabs,
               rightTabIds,
+              activePane: rightTabIds.length === 0 ? "left" : "right",
               activeRightTabId:
                 rightTabIds.length === 0
                   ? null
@@ -237,6 +248,7 @@ export const useNotepadStore = create<NotepadState>()(
               tabs: remainingTabs,
               rightTabIds: [],
               activeRightTabId: null,
+              activePane: "left",
               activeTabId: currentState.activeRightTabId ?? remainingTabs[0].id,
             });
             return;
