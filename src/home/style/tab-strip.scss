@@ -23,8 +23,8 @@
   }
 
   .tab-item {
-    width: 190px;
-    min-width: 140px;
+    width: 247px;
+    min-width: 182px;
     display: flex;
     align-items: center;
     border-right: 1px solid v.$line;
@@ -56,7 +56,7 @@
     }
 
     @media (max-width: 640px) {
-      width: 155px;
+      width: 202px;
     }
   }
 

@@ -46,7 +46,13 @@ export function useTabStrip(tabCount: number, activeTabId: string, hydrated: boo
     };
   }, [tabListOpen]);
 
-  return { tabsScrollRef, tabListRef, tabsOverflowing, tabListOpen, setTabListOpen };
+  return {
+    tabsScrollRef,
+    tabListRef,
+    tabsOverflowing,
+    tabListOpen,
+    setTabListOpen,
+  };
 }
 
 export type TabStripState = ReturnType<typeof useTabStrip>;
