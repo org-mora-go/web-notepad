@@ -2,7 +2,7 @@
 
 import type { RefObject } from "react";
 import type { PaneDropZone } from "@/src/entity";
-import type { NoteTab } from "@/src/entity/store";
+import type { NoteTab } from "@/src/entity/notepad/store";
 import type { TabStripState } from "@/src/entity/hook";
 import { NoteEditor } from "@/src/feature";
 import { TabStrip } from "./component";

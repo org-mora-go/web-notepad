@@ -2,7 +2,7 @@
 
 import { useState, type RefObject } from "react";
 import { Plus } from "lucide-react";
-import type { NoteTab } from "@/src/entity/store";
+import type { NoteTab } from "@/src/entity/notepad/store";
 import { TabItem } from "./tab-item";
 import { TabContextMenu } from "./tab-context-menu";
 

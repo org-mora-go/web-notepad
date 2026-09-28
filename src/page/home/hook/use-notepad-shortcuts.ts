@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, type RefObject } from "react";
-import { useNotepadStore } from "@/src/entity/store";
+import { useNotepadStore } from "@/src/entity/notepad/store";
 
 type Options = {
   editorRef: RefObject<HTMLTextAreaElement | null>;

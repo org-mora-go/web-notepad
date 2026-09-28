@@ -1,7 +1,7 @@
 "use client";
 
 import type { RefObject } from "react";
-import type { NoteTab } from "@/src/entity/store";
+import type { NoteTab } from "@/src/entity/notepad/store";
 import { useNoteEditor } from "./hook";
 
 type Props = {

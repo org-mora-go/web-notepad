@@ -4,7 +4,7 @@ import type {
   KeyboardEvent,
   UIEvent,
 } from "react";
-import type { NoteTab } from "@/src/entity/store";
+import type { NoteTab } from "@/src/entity/notepad/store";
 import { handleEditorKeyDown, insertAtSelection } from "../util";
 
 type Options = {
