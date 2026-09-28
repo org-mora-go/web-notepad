@@ -1,4 +1,4 @@
-@use "../../../shared/style/variable" as v;
+@use "../../../entity/style/variable" as v;
 @use "../../../widget/note-pane/style/index";
 @use "./status-bar";
 @use "./bookmark-panel.scss";
@@ -38,28 +38,4 @@
     display: grid;
   }
 
-  .pane-divider {
-    position: relative;
-    z-index: 1;
-    width: 10px;
-    flex: 0 0 10px;
-    cursor: col-resize;
-    touch-action: none;
-
-    &::before {
-      position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 50%;
-      width: 5px;
-      background: v.$line;
-      content: "";
-      pointer-events: none;
-      transform: translateX(-50%);
-    }
-
-    &:hover::before {
-      background: v.$hover-line;
-    }
-  }
 }

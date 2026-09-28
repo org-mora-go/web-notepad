@@ -1,37 +1,7 @@
 "use client";
 
-import type { RefObject } from "react";
-import type { PaneDropZone } from "@/src/entity";
-import type { NoteTab } from "@/src/entity/notepad/store";
-import type { TabStripState } from "@/src/entity/hook";
-import { NoteEditor } from "@/src/feature";
-import { TabStrip } from "./component";
-import { usePaneDropArea, usePaneResize } from "./hook";
-
-type Props = {
-  tabs: NoteTab[];
-  activeTab: NoteTab;
-  tabStrip: TabStripState;
-  editorRef: RefObject<HTMLTextAreaElement | null>;
-  composingRef: RefObject<boolean>;
-  autoFocus?: boolean;
-  isFocused: boolean;
-  draggingTabId: string | null;
-  dropZones: PaneDropZone[];
-  widthRatio?: number;
-  onResize?: (ratio: number) => void;
-  onActivate: () => void;
-  onSelect: (tabId: string) => void;
-  onClose: (tabId: string) => void;
-  onMove: (fromTabId: string, toTabId: string) => void;
-  onAdopt: (tabId: string) => void;
-  onDragStateChange: (tabId: string | null) => void;
-  onToggleUrgent: (tabId: string) => void;
-  onTogglePin: (tabId: string) => void;
-  onToggleBookmark: (tabId: string) => void;
-  onAdd: () => void;
-  onChange: (content: string) => void;
-};
+import { NotePaneBody, PaneDivider, TabStrip } from "./component";
+import type { NotePaneProps } from "./type";
 
 export function NotePane({
   tabs,
@@ -56,30 +26,10 @@ export function NotePane({
   onToggleBookmark,
   onAdd,
   onChange,
-}: Props) {
-  const dragActive = draggingTabId !== null;
-  const adoptZone = dropZones.find((zone) => zone.key === "adopt");
-  const {
-    dropAreaHovered,
-    handleDragEnter,
-    handleDragLeave,
-    handleDragOver,
-    handleDrop,
-  } = usePaneDropArea(dragActive, () => adoptZone?.onDrop());
-  const handleDividerPointerDown = usePaneResize(onResize);
-
+}: NotePaneProps) {
   return (
     <>
-      {onResize && (
-        <div
-          className="pane-divider"
-          role="separator"
-          aria-orientation="vertical"
-          aria-label="영역 크기 조절"
-          onPointerDown={handleDividerPointerDown}
-        />
-      )}
-      
+      {onResize && <PaneDivider onResize={onResize} />}
       <div
         className="pane-slot"
         style={widthRatio ? { flex: `0 0 ${widthRatio * 100}%` } : undefined}
@@ -105,41 +55,16 @@ export function NotePane({
             onToggleBookmark={onToggleBookmark}
             onAdd={onAdd}
           />
-
-          <div
-            className="note-pane-body"
-            onDragEnter={handleDragEnter}
-            onDragLeave={handleDragLeave}
-            onDragOver={handleDragOver}
-            onDrop={handleDrop}
-          >
-            <NoteEditor
-              tab={activeTab}
-              lineCount={activeTab.content.split("\n").length}
-              editorRef={editorRef}
-              composingRef={composingRef}
-              autoFocus={autoFocus}
-              onChange={onChange}
-            />
-
-            {dragActive && dropAreaHovered &&
-              dropZones.map((zone) => (
-                <div
-                  key={zone.key}
-                  className={`note-pane-drop ${zone.half ? "is-half" : ""}`}
-                  onDragOver={(event) => {
-                    event.preventDefault();
-                  }}
-                  onDrop={(event) => {
-                    event.preventDefault();
-                    event.stopPropagation();
-                    zone.onDrop();
-                  }}
-                >
-                  <span>{zone.label}</span>
-                </div>
-              ))}
-          </div>
+          
+          <NotePaneBody
+            activeTab={activeTab}
+            editorRef={editorRef}
+            composingRef={composingRef}
+            autoFocus={autoFocus}
+            draggingTabId={draggingTabId}
+            dropZones={dropZones}
+            onChange={onChange}
+          />
         </div>
       </div>
     </>

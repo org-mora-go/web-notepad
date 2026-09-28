@@ -1,5 +1,6 @@
-@use "../../../shared/style/variable" as v;
 @use "./tab-strip.scss";
+@use "./note-pane-body.scss";
+@use "./pane-divider.scss";
 @use "../../../feature/note-editor/style/index";
 
 .note-pane {
@@ -8,34 +9,6 @@
   display: grid;
   grid-template-rows: 45px minmax(0, 1fr);
 
-  .note-pane-body {
-    position: relative;
-    min-height: 0;
-    display: grid;
-  }
-
-  .note-pane-drop {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    display: grid;
-    place-items: center;
-    border: 1px dashed v.$signal;
-    background: rgba(143, 227, 176, 0.08);
-
-    &.is-half {
-      left: 50%;
-    }
-
-    span {
-      padding: 6px 12px;
-      background: v.$raised;
-      color: v.$signal;
-      font-size: 11px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-  }
 }
 
 .note-pane.is-unfocused .tab-item.is-active.is-dirty {
