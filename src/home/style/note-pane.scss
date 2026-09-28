@@ -38,6 +38,10 @@
   }
 }
 
-.note-pane.is-unfocused .tab-item.is-active.is-dirty:not(.is-urgent) {
+.note-pane.is-unfocused .tab-item.is-active.is-dirty {
   box-shadow: inset 0 2px rgba(143, 227, 176, 0.58);
+}
+
+.note-pane.is-unfocused .tab-item.is-active.is-urgent {
+  box-shadow: inset 0 2px rgba(224, 90, 90, 0.58);
 }
