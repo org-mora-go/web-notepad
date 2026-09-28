@@ -7,8 +7,8 @@ import {
   type PointerEvent as ReactPointerEvent,
   type RefObject,
 } from "react";
-import type { TabStripState } from "@/src/home/hook";
-import type { NoteTab } from "@/src/home/store";
+import type { TabStripState } from "@/src/page/home/hook";
+import type { NoteTab } from "@/src/page/home/store";
 import { NoteEditor } from "./note-editor";
 import { TabStrip } from "./tab-strip";
 

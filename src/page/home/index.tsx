@@ -6,8 +6,8 @@ import {
   useNotepadShortcuts,
   useStoreHydrated,
   useTabStrip,
-} from "@/src/home/hook";
-import { useNotepadStore } from "@/src/home/store";
+} from "@/src/page/home/hook";
+import { useNotepadStore } from "@/src/page/home/store";
 import { HistoryPanel, NotePane, StatusBar, type PaneDropZone } from "./component";
 import "./style/index.scss";
 

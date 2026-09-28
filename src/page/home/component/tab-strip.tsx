@@ -2,7 +2,7 @@
 
 import { useState, type Dispatch, type RefObject, type SetStateAction } from "react";
 import { Menu, Plus, X } from "lucide-react";
-import type { NoteTab } from "@/src/home/store";
+import type { NoteTab } from "@/src/page/home/store";
 
 type Props = {
   tabs: NoteTab[];

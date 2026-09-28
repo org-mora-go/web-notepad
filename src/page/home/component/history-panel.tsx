@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { Clock3, RotateCcw, Trash2, X } from "lucide-react";
-import type { UnsavedSnapshot } from "@/src/home/store";
+import type { UnsavedSnapshot } from "@/src/page/home/store";
 
 const formatDate = (timestamp: number) =>
   new Intl.DateTimeFormat("ko-KR", {
