@@ -47,7 +47,12 @@
 }
 
 .note-pane.is-unfocused
-  .tab-item.is-active:not(.is-dirty):not(.is-urgent)
+  .tab-item.is-active:not(.is-dirty):not(.is-urgent) {
+  box-shadow: inset 0 2px rgba(184, 184, 176, 0.58);
+}
+
+.note-pane.is-unfocused
+  .tab-item.is-active
   .tab-title {
   color: rgba(222, 222, 216, 0.62);
 }
