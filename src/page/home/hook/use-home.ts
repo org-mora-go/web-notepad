@@ -2,13 +2,13 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { PaneDropZone } from "@/src/entity";
-import { useNotepadStore } from "@/src/page/home/store";
+import { useTabStrip } from "@/src/entity/hook";
+import { useNotepadStore } from "@/src/entity/store";
 import { useEditorFocus } from "./use-editor-focus";
 import { useNotepadShortcuts } from "./use-notepad-shortcuts";
 import { useStoreHydrated } from "./use-store-hydrated";
-import { useTabStrip } from "./use-tab-strip";
 
-export function useHomeWorkspace() {
+export function useHome() {
   const hydrated = useStoreHydrated();
   const [historyOpen, setHistoryOpen] = useState(false);
   const [draggingTabId, setDraggingTabId] = useState<string | null>(null);

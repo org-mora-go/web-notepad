@@ -1,7 +1,7 @@
 "use client";
 
-import { useHomeWorkspace } from "@/src/page/home/hook";
-import { HistoryPanel, StatusBar } from "./component";
+import { useHome } from "@/src/page/home/hook";
+import { HistoryPanel, Loading, StatusBar } from "./component";
 import { NotePane } from "@/src/widget";
 import "./style/index.scss";
 
@@ -19,14 +19,10 @@ export function Home() {
     restoreSnapshot,
     deleteSnapshot,
     clearHistory,
-  } = useHomeWorkspace();
+  } = useHome();
 
   if (!hydrated || !activeTab) {
-    return (
-      <main className="home is-loading">
-        <span className="loading-mark">NOTEPAD_</span>
-      </main>
-    );
+    return <Loading />;
   }
 
   return (

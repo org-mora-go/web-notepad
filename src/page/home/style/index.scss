@@ -2,6 +2,7 @@
 @use "../../../widget/note-pane/style/index";
 @use "./status-bar";
 @use "./history-panel";
+@use "./loading.scss";
 
 .home {
   min-height: 100vh;
@@ -11,16 +12,6 @@
     linear-gradient(rgba(255, 255, 255, 0.018) 1px, transparent 1px),
     linear-gradient(90deg, rgba(255, 255, 255, 0.018) 1px, transparent 1px);
   background-size: 28px 28px;
-
-  &.is-loading {
-    display: grid;
-    place-items: center;
-  }
-
-  .loading-mark {
-    color: v.$signal;
-    font-size: 14px;
-  }
 
   .workspace {
     width: 100%;

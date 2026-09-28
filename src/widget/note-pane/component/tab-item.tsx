@@ -1,5 +1,5 @@
 import { X } from "lucide-react";
-import type { NoteTab } from "@/src/page/home/store";
+import type { NoteTab } from "@/src/entity/store";
 
 type Props = {
   tab: NoteTab;

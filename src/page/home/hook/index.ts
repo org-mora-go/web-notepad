@@ -1,6 +1,4 @@
 export { useStoreHydrated } from "./use-store-hydrated";
 export { useNotepadShortcuts } from "./use-notepad-shortcuts";
 export { useEditorFocus } from "./use-editor-focus";
-export { useTabStrip } from "./use-tab-strip";
-export type { TabStripState } from "./use-tab-strip";
-export { useHomeWorkspace } from "./use-home-workspace";
+export { useHome } from "./use-home";
