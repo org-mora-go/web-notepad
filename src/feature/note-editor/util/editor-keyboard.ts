@@ -1,5 +1,5 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
-import { insertIndentedNewline, isImeComposing } from "./editor-content";
+import { insertAtSelection, isImeComposing } from "./editor-content";
 
 type MutableRef<T> = { current: T };
 
@@ -69,10 +69,11 @@ export function handleEditorKeyDown(
   if (event.key === "Enter" && !isImeComposing(event.nativeEvent, composingRef.current)) {
     event.preventDefault();
     const textarea = event.currentTarget;
-    const { content: nextContent, cursorPosition } = insertIndentedNewline(
+    const { content: nextContent, cursorPosition } = insertAtSelection(
       textarea.value,
       textarea.selectionStart,
       textarea.selectionEnd,
+      "\n",
     );
     commitContent(nextContent);
 
