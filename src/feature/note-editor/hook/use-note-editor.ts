@@ -32,7 +32,8 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   };
 
   const insertTab = (textarea: HTMLTextAreaElement) => {
-    const { content, selectionStart, selectionEnd } = textarea;
+    const content = textarea.value;
+    const { selectionStart, selectionEnd } = textarea;
     commitContent(content);
     const { content: nextContent, cursorPosition } = insertAtSelection(
       content,

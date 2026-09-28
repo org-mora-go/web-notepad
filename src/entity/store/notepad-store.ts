@@ -75,12 +75,13 @@ const sortPinnedFirst = (tabs: NoteTab[]) =>
     )
     .map(({ tab }) => tab);
 
-const getTitleFromContent = (content: string, fallback: string) => {
-  if (!content.trim()) {
+const getTitleFromContent = (content: unknown, fallback: string) => {
+  const text = typeof content === "string" ? content : "";
+  if (!text.trim()) {
     return "Untitled";
   }
 
-  const firstLine = content
+  const firstLine = text
     .split("\n")
     .map((line) => line.trim())
     .find(Boolean);
@@ -127,7 +128,7 @@ export const useNotepadStore = create<NotepadState>()(
                 ? {
                     ...tab,
                     title: getTitleFromContent(content, tab.title),
-                    content,
+                    content: typeof content === "string" ? content : "",
                     updatedAt: Date.now(),
                   }
                 : tab,
@@ -342,17 +343,36 @@ export const useNotepadStore = create<NotepadState>()(
         };
         delete persisted.unsavedSnapshots;
         delete persisted.nextUnsavedNumber;
-        const tabs = persisted.tabs ?? currentState.tabs;
+        const tabs = (persisted.tabs ?? currentState.tabs).map((tab) => ({
+          ...tab,
+          title: typeof tab.title === "string" ? tab.title : "Untitled",
+          content: typeof tab.content === "string" ? tab.content : "",
+          savedContent: typeof tab.savedContent === "string" ? tab.savedContent : "",
+          urgent: Boolean(tab.urgent),
+          pinned: Boolean(tab.pinned),
+          bookmarked: Boolean(tab.bookmarked),
+        }));
+        const bookmarks = Array.isArray(persisted.bookmarks)
+          ? persisted.bookmarks
+              .filter((bookmark) => bookmark && typeof bookmark.id === "string")
+              .map((bookmark) => ({
+                ...bookmark,
+                sourceTabId:
+                  typeof bookmark.sourceTabId === "string" ? bookmark.sourceTabId : "",
+                title: typeof bookmark.title === "string" ? bookmark.title : "Untitled",
+                content: typeof bookmark.content === "string" ? bookmark.content : "",
+                createdAt:
+                  typeof bookmark.createdAt === "number" && Number.isFinite(bookmark.createdAt)
+                    ? bookmark.createdAt
+                    : Date.now(),
+              }))
+          : currentState.bookmarks;
 
         return {
           ...currentState,
           ...persisted,
-          tabs: tabs.map((tab) => ({
-            ...tab,
-            pinned: Boolean(tab.pinned),
-            bookmarked: Boolean(tab.bookmarked),
-          })),
-          bookmarks: persisted.bookmarks ?? currentState.bookmarks,
+          tabs,
+          bookmarks,
         };
       },
     },
