@@ -2,8 +2,8 @@
 
 .tab-strip {
   .tab-item {
-    width: 247px;
-    min-width: 182px;
+    width: 296px;
+    min-width: 218px;
     display: flex;
     align-items: center;
     border-right: 1px solid v.$line;
@@ -28,14 +28,50 @@
       }
     }
 
+    &.is-pinned {
+      background: #18221b;
+      border-right-color: #35463a;
+
+      .tab-select {
+        color: #b9ddc5;
+      }
+
+      .tab-indicator.is-pin {
+        color: v.$signal;
+      }
+    }
+
+    &.is-pinned.is-active {
+      background: #1c2a20;
+      box-shadow: inset 0 2px v.$signal;
+    }
+
     &.is-urgent,
     &.is-urgent.is-active,
     &.is-urgent.is-active.is-dirty {
       box-shadow: inset 0 2px v.$urgent;
     }
 
+    &.is-pinned.is-urgent {
+      background: #261919;
+      border-right-color: #553638;
+
+      .tab-select {
+        color: #e2b9b9;
+      }
+
+      .tab-indicator.is-pin {
+        color: v.$urgent;
+      }
+    }
+
+    &.is-pinned.is-urgent.is-active {
+      background: #301d1e;
+      box-shadow: inset 0 2px v.$urgent;
+    }
+
     @media (max-width: 640px) {
-      width: 202px;
+      width: 242px;
     }
   }
 
@@ -51,6 +87,18 @@
     background: transparent;
     color: inherit;
     cursor: default;
+  }
+
+  .tab-pin-toggle {
+    display: grid;
+    width: 22px;
+    height: 30px;
+    flex: 0 0 auto;
+    place-items: center;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
   }
 
   .tab-item[draggable="true"] .tab-title {
