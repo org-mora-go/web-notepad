@@ -92,18 +92,43 @@ export function useNotepadShortcuts({ editorRef, composingRef }: Options) {
         !event.shiftKey &&
         (isArrowUp || isArrowDown)
       ) {
-        // Tab navigation spans both panes, ordered left pane first.
-        const orderedTabs =
-          rightTabIds.length === 0
-            ? tabs
-            : [...tabs.filter((tab) => !rightTabIds.includes(tab.id)), ...paneRightTabs];
-        const orderedIndex = orderedTabs.findIndex((tab) => tab.id === paneActiveId);
-
         event.preventDefault();
         const offset = isArrowUp ? -1 : 1;
-        const nextIndex = orderedIndex + offset;
-        if (orderedIndex < 0 || nextIndex < 0 || nextIndex >= orderedTabs.length) return;
-        state.selectTab(orderedTabs[nextIndex].id);
+
+        if (rightTabIds.length === 0) {
+          const currentIndex = tabs.findIndex((tab) => tab.id === paneActiveId);
+          const nextIndex = currentIndex + offset;
+          if (currentIndex < 0 || nextIndex < 0 || nextIndex >= tabs.length) return;
+          state.selectTab(tabs[nextIndex].id);
+          return;
+        }
+
+        const leftTabs = tabs.filter((tab) => !rightTabIds.includes(tab.id));
+        const rightTabs = paneRightTabs;
+        if (pane === "left") {
+          const currentIndex = leftTabs.findIndex((tab) => tab.id === paneActiveId);
+          if (currentIndex < 0) return;
+
+          if (isArrowUp && currentIndex > 0) {
+            state.selectTab(leftTabs[currentIndex - 1].id);
+          } else if (isArrowDown && currentIndex < leftTabs.length - 1) {
+            state.selectTab(leftTabs[currentIndex + 1].id);
+          } else if (isArrowDown && currentIndex === leftTabs.length - 1) {
+            state.selectTab(rightTabs[0].id);
+          }
+          return;
+        }
+
+        const currentIndex = rightTabs.findIndex((tab) => tab.id === paneActiveId);
+        if (currentIndex < 0) return;
+
+        if (isArrowUp && currentIndex > 0) {
+          state.selectTab(rightTabs[currentIndex - 1].id);
+        } else if (isArrowUp && currentIndex === 0) {
+          state.selectTab(leftTabs[leftTabs.length - 1].id);
+        } else if (isArrowDown && currentIndex < rightTabs.length - 1) {
+          state.selectTab(rightTabs[currentIndex + 1].id);
+        }
       }
     };
 
