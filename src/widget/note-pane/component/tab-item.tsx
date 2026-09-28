@@ -1,4 +1,4 @@
-import { X } from "lucide-react";
+import { Bookmark, Pin, X } from "lucide-react";
 import type { NoteTab } from "@/src/entity/store";
 
 type Props = {
@@ -10,6 +10,7 @@ type Props = {
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onToggleUrgent: (tabId: string) => void;
+  onContextMenu: (tabId: string, clientX: number, clientY: number) => void;
   onDragStateChange: (tabId: string | null) => void;
   onDropTargetChange: (tabId: string | null) => void;
   onDrop: (fromTabId: string, toTabId: string) => void;
@@ -25,6 +26,7 @@ export function TabItem({
   onSelect,
   onClose,
   onToggleUrgent,
+  onContextMenu,
   onDragStateChange,
   onDropTargetChange,
   onDrop,
@@ -38,8 +40,12 @@ export function TabItem({
         tab.urgent ? "is-urgent" : ""
       } ${draggingTabId === tab.id ? "is-dragging" : ""} ${
         dropTarget ? "is-drop-target" : ""
-      }`}
+      } ${tab.pinned ? "is-pinned" : ""} ${tab.bookmarked ? "is-bookmarked" : ""}`}
       draggable
+      onContextMenu={(event) => {
+        event.preventDefault();
+        onContextMenu(tab.id, event.clientX, event.clientY);
+      }}
       onDragStart={(event) => {
         event.dataTransfer.effectAllowed = "move";
         event.dataTransfer.setData("text/plain", tab.id);
@@ -79,17 +85,23 @@ export function TabItem({
         aria-selected={active}
         onClick={() => onSelect(tab.id)}
       >
+        {tab.pinned && <Pin className="tab-indicator is-pin" size={12} aria-hidden="true" />}
+        {tab.bookmarked && (
+          <Bookmark className="tab-indicator is-bookmark" size={12} aria-hidden="true" />
+        )}
         <span className="tab-title">{tab.title}</span>
       </button>
-      <button
-        className="tab-close"
-        type="button"
-        onClick={() => onClose(tab.id)}
-        aria-label={`${tab.title} 닫기`}
-        title="탭 닫기"
-      >
-        <X size={14} />
-      </button>
+      {!tab.pinned && (
+        <button
+          className="tab-close"
+          type="button"
+          onClick={() => onClose(tab.id)}
+          aria-label={`${tab.title} 닫기`}
+          title="탭 닫기"
+        >
+          <X size={14} />
+        </button>
+      )}
     </div>
   );
 }

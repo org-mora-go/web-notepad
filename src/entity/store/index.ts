@@ -1,2 +1,2 @@
 export { useNotepadStore } from "./notepad-store";
-export type { NoteTab, PaneId, UnsavedSnapshot } from "./notepad-store";
+export type { BookmarkEntry, NoteTab, PaneId } from "./notepad-store";

@@ -27,6 +27,8 @@ type Props = {
   onAdopt: (tabId: string) => void;
   onDragStateChange: (tabId: string | null) => void;
   onToggleUrgent: (tabId: string) => void;
+  onTogglePin: (tabId: string) => void;
+  onToggleBookmark: (tabId: string) => void;
   onAdd: () => void;
   onChange: (content: string) => void;
 };
@@ -50,6 +52,8 @@ export function NotePane({
   onAdopt,
   onDragStateChange,
   onToggleUrgent,
+  onTogglePin,
+  onToggleBookmark,
   onAdd,
   onChange,
 }: Props) {
@@ -97,6 +101,8 @@ export function NotePane({
             onAdopt={onAdopt}
             onDragStateChange={onDragStateChange}
             onToggleUrgent={onToggleUrgent}
+            onTogglePin={onTogglePin}
+            onToggleBookmark={onToggleBookmark}
             onAdd={onAdd}
           />
 

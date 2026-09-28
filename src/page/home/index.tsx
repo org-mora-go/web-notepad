@@ -1,24 +1,23 @@
 "use client";
 
 import { useHome } from "@/src/page/home/hook";
-import { HistoryPanel, Loading, StatusBar } from "./component";
+import { BookmarkPanel, Loading, StatusBar } from "./component";
 import { NotePane } from "@/src/widget";
 import "./style/index.scss";
 
 export function Home() {
   const {
     hydrated,
-    historyOpen,
-    setHistoryOpen,
+    bookmarksOpen,
+    setBookmarksOpen,
     activeTab,
     lineCount,
     split,
-    unsavedSnapshots,
+    bookmarks,
     leftPaneProps,
     rightPaneProps,
-    restoreSnapshot,
-    deleteSnapshot,
-    clearHistory,
+    openBookmark,
+    removeBookmark,
   } = useHome();
 
   if (!hydrated || !activeTab) {
@@ -36,18 +35,20 @@ export function Home() {
         <StatusBar
           charCount={activeTab.content.length}
           lineCount={lineCount}
-          historyOpen={historyOpen}
-          onToggleHistory={() => setHistoryOpen((open) => !open)}
+          bookmarksOpen={bookmarksOpen}
+          onToggleBookmarks={() => setBookmarksOpen((open) => !open)}
         />
       </section>
 
-      <HistoryPanel
-        snapshots={unsavedSnapshots}
-        open={historyOpen}
-        onClose={() => setHistoryOpen(false)}
-        onRestore={restoreSnapshot}
-        onDelete={deleteSnapshot}
-        onClear={clearHistory}
+      <BookmarkPanel
+        bookmarks={bookmarks}
+        open={bookmarksOpen}
+        onClose={() => setBookmarksOpen(false)}
+        onOpen={(bookmarkId) => {
+          openBookmark(bookmarkId);
+          setBookmarksOpen(false);
+        }}
+        onRemove={removeBookmark}
       />
     </main>
   );

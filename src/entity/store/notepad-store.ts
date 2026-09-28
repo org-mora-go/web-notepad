@@ -7,15 +7,17 @@ export type NoteTab = {
   content: string;
   savedContent: string;
   urgent: boolean;
+  pinned: boolean;
+  bookmarked: boolean;
   updatedAt: number;
 };
 
-export type UnsavedSnapshot = {
+export type BookmarkEntry = {
   id: string;
-  name: string;
+  sourceTabId: string;
+  title: string;
   content: string;
-  sourceTitle: string;
-  capturedAt: number;
+  createdAt: number;
 };
 
 export type PaneId = "left" | "right";
@@ -28,8 +30,7 @@ type NotepadState = {
   activePane: PaneId;
   splitRatio: number;
   nextTabNumber: number;
-  nextUnsavedNumber: number;
-  unsavedSnapshots: UnsavedSnapshot[];
+  bookmarks: BookmarkEntry[];
   addTab: (pane?: PaneId) => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
@@ -38,10 +39,11 @@ type NotepadState = {
   setActivePane: (pane: PaneId) => void;
   setSplitRatio: (ratio: number) => void;
   toggleUrgent: (tabId: string) => void;
+  togglePin: (tabId: string) => void;
+  toggleBookmark: (tabId: string) => void;
   closeTab: (tabId: string) => void;
-  restoreSnapshot: (snapshotId: string) => void;
-  deleteSnapshot: (snapshotId: string) => void;
-  clearHistory: () => void;
+  openBookmark: (bookmarkId: string) => void;
+  removeBookmark: (bookmarkId: string) => void;
 };
 
 export const MIN_SPLIT_RATIO = 0.2;
@@ -53,8 +55,25 @@ const createTab = (number: number): NoteTab => ({
   content: "",
   savedContent: "",
   urgent: false,
+  pinned: false,
+  bookmarked: false,
   updatedAt: 0,
 });
+
+const getNextTabNumber = (tabs: NoteTab[], nextTabNumber: number) => {
+  const usedIds = new Set(tabs.map((tab) => tab.id));
+  let number = Math.max(nextTabNumber, 2);
+  while (usedIds.has(`tab-${number}`)) number += 1;
+  return number;
+};
+
+const sortPinnedFirst = (tabs: NoteTab[]) =>
+  tabs
+    .map((tab, index) => ({ tab, index }))
+    .sort(
+      (a, b) => Number(Boolean(b.tab.pinned)) - Number(Boolean(a.tab.pinned)) || a.index - b.index,
+    )
+    .map(({ tab }) => tab);
 
 const getTitleFromContent = (content: string, fallback: string) => {
   if (!content.trim()) {
@@ -72,26 +91,6 @@ const getTitleFromContent = (content: string, fallback: string) => {
 export const useNotepadStore = create<NotepadState>()(
   persist(
     (set, get) => {
-      const addSnapshot = (tab: NoteTab) => {
-        const state = get();
-
-        if (!tab.content.trim()) return;
-
-        const number = state.nextUnsavedNumber;
-        const snapshot: UnsavedSnapshot = {
-          id: `unsaved-${number}`,
-          name: getTitleFromContent(tab.content, tab.title),
-          content: tab.content,
-          sourceTitle: tab.title,
-          capturedAt: Date.now(),
-        };
-
-        set({
-          unsavedSnapshots: [snapshot, ...state.unsavedSnapshots],
-          nextUnsavedNumber: number + 1,
-        });
-      };
-
       return {
         tabs: [createTab(1)],
         activeTabId: "tab-1",
@@ -100,11 +99,10 @@ export const useNotepadStore = create<NotepadState>()(
         activePane: "left",
         splitRatio: 0.5,
         nextTabNumber: 2,
-        nextUnsavedNumber: 1,
-        unsavedSnapshots: [],
+        bookmarks: [],
         addTab: (pane = "left") => {
           const state = get();
-          const tabNumber = Math.max(state.nextTabNumber, 2);
+          const tabNumber = getNextTabNumber(state.tabs, state.nextTabNumber);
           const tab = createTab(tabNumber);
           const toRight = pane === "right" && state.rightTabIds.length > 0;
           set({
@@ -144,7 +142,7 @@ export const useNotepadStore = create<NotepadState>()(
             const tabs = [...state.tabs];
             const [moved] = tabs.splice(from, 1);
             tabs.splice(to, 0, moved);
-            return { tabs };
+            return { tabs: sortPinnedFirst(tabs) };
           }),
         moveTabToPane: (tabId, pane) =>
           set((state) => {
@@ -196,12 +194,50 @@ export const useNotepadStore = create<NotepadState>()(
               tab.id === tabId ? { ...tab, urgent: !tab.urgent } : tab,
             ),
           })),
+        togglePin: (tabId) =>
+          set((state) => ({
+            tabs: sortPinnedFirst(
+              state.tabs.map((tab) =>
+                tab.id === tabId ? { ...tab, pinned: !tab.pinned } : tab,
+              ),
+            ),
+          })),
+        toggleBookmark: (tabId) =>
+          set((state) => {
+            const tab = state.tabs.find((item) => item.id === tabId);
+            if (!tab) return state;
+            const existing = state.bookmarks.find((item) => item.sourceTabId === tabId);
+            if (existing) {
+              return {
+                tabs: state.tabs.map((item) =>
+                  item.id === tabId ? { ...item, bookmarked: false } : item,
+                ),
+                bookmarks: state.bookmarks.filter((item) => item.id !== existing.id),
+              };
+            }
+
+            const now = Date.now();
+            return {
+              tabs: state.tabs.map((item) =>
+                item.id === tabId ? { ...item, bookmarked: true } : item,
+              ),
+              bookmarks: [
+                {
+                  id: `bookmark-${tabId}`,
+                  sourceTabId: tabId,
+                  title: getTitleFromContent(tab.content, tab.title),
+                  content: tab.content,
+                  createdAt: now,
+                },
+                ...state.bookmarks,
+              ],
+            };
+          }),
         closeTab: (tabId) => {
           const state = get();
           const tab = state.tabs.find((item) => item.id === tabId);
-          if (!tab) return;
+          if (!tab || tab.pinned) return;
 
-          addSnapshot(tab);
           const currentState = get();
           const remainingTabs = currentState.tabs.filter((item) => item.id !== tabId);
 
@@ -213,7 +249,6 @@ export const useNotepadStore = create<NotepadState>()(
               rightTabIds: [],
               activeRightTabId: null,
               activePane: "left",
-              nextTabNumber: 2,
             });
             return;
           }
@@ -261,37 +296,65 @@ export const useNotepadStore = create<NotepadState>()(
               currentState.activeTabId === tabId ? fallbackId : currentState.activeTabId,
           });
         },
-        restoreSnapshot: (snapshotId) => {
+        openBookmark: (bookmarkId) => {
           const state = get();
-          const snapshot = state.unsavedSnapshots.find((item) => item.id === snapshotId);
-          if (!snapshot) return;
+          const bookmark = state.bookmarks.find((item) => item.id === bookmarkId);
+          if (!bookmark) return;
 
-          const tab = createTab(state.nextTabNumber);
+          const tabNumber = getNextTabNumber(state.tabs, state.nextTabNumber);
+          const tab = createTab(tabNumber);
           const restoredTab = {
             ...tab,
-            title: snapshot.name,
-            content: snapshot.content,
-            savedContent: snapshot.content,
-            updatedAt: Date.now(),
+            title: bookmark.title,
+            content: bookmark.content,
+            savedContent: bookmark.content,
+            updatedAt: bookmark.createdAt,
           };
           set({
             tabs: [...state.tabs, restoredTab],
             activeTabId: restoredTab.id,
-            nextTabNumber: state.nextTabNumber + 1,
+            nextTabNumber: tabNumber + 1,
+            activePane: "left",
           });
         },
-        deleteSnapshot: (snapshotId) =>
+        removeBookmark: (bookmarkId) =>
           set((state) => ({
-            unsavedSnapshots: state.unsavedSnapshots.filter(
-              (snapshot) => snapshot.id !== snapshotId,
+            bookmarks: state.bookmarks.filter((bookmark) => bookmark.id !== bookmarkId),
+            tabs: state.tabs.map((tab) =>
+              state.bookmarks.some(
+                (bookmark) => bookmark.id === bookmarkId && bookmark.sourceTabId === tab.id,
+              )
+                ? { ...tab, bookmarked: false }
+                : tab,
             ),
           })),
-        clearHistory: () => set({ unsavedSnapshots: [] }),
       };
     },
     {
       name: "web-notepad-storage",
       skipHydration: true,
+      merge: (persistedState, currentState) => {
+        const persisted = {
+          ...(persistedState as Partial<NotepadState> & {
+            unsavedSnapshots?: unknown;
+            nextUnsavedNumber?: unknown;
+          }),
+        };
+        delete persisted.unsavedSnapshots;
+        delete persisted.nextUnsavedNumber;
+        const tabs = persisted.tabs ?? currentState.tabs;
+
+        return {
+          ...currentState,
+          ...persisted,
+          tabs: tabs.map((tab) => ({
+            ...tab,
+            pinned: Boolean(tab.pinned),
+            bookmarked: Boolean(tab.bookmarked),
+          })),
+          bookmarks: persisted.bookmarks ?? currentState.bookmarks,
+        };
+      },
     },
   ),
 );

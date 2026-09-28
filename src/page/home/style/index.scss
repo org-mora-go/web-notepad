@@ -1,7 +1,7 @@
 @use "../../../shared/style/variable" as v;
 @use "../../../widget/note-pane/style/index";
 @use "./status-bar";
-@use "./history-panel";
+@use "./bookmark-panel.scss";
 @use "./loading.scss";
 
 .home {

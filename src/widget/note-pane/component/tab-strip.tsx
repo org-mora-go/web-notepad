@@ -4,6 +4,7 @@ import { useState, type RefObject } from "react";
 import { Plus } from "lucide-react";
 import type { NoteTab } from "@/src/entity/store";
 import { TabItem } from "./tab-item";
+import { TabContextMenu } from "./tab-context-menu";
 
 type Props = {
   tabs: NoteTab[];
@@ -17,8 +18,12 @@ type Props = {
   onAdopt: (tabId: string) => void;
   onDragStateChange: (tabId: string | null) => void;
   onToggleUrgent: (tabId: string) => void;
+  onTogglePin: (tabId: string) => void;
+  onToggleBookmark: (tabId: string) => void;
   onAdd: () => void;
 };
+
+type ContextMenuState = { tabId: string; left: number; top: number };
 
 export function TabStrip({
   tabs,
@@ -32,10 +37,14 @@ export function TabStrip({
   onAdopt,
   onDragStateChange,
   onToggleUrgent,
+  onTogglePin,
+  onToggleBookmark,
   onAdd,
 }: Props) {
   const [dropTargetId, setDropTargetId] = useState<string | null>(null);
+  const [contextMenu, setContextMenu] = useState<ContextMenuState | null>(null);
   const dragActive = draggingTabId !== null;
+  const contextTab = tabs.find((tab) => tab.id === contextMenu?.tabId);
 
   const endDrag = () => {
     setDropTargetId(null);
@@ -84,6 +93,13 @@ export function TabStrip({
             onSelect={onSelect}
             onClose={onClose}
             onToggleUrgent={onToggleUrgent}
+            onContextMenu={(tabId, clientX, clientY) =>
+              setContextMenu({
+                tabId,
+                left: Math.max(8, Math.min(clientX, window.innerWidth - 196)),
+                top: Math.max(8, Math.min(clientY, window.innerHeight - 104)),
+              })
+            }
             onDragStateChange={onDragStateChange}
             onDropTargetChange={(tabId) =>
               setDropTargetId((current) =>
@@ -104,6 +120,23 @@ export function TabStrip({
       >
         <Plus size={18} />
       </button>
+      {contextMenu && contextTab && (
+        <TabContextMenu
+          left={contextMenu.left}
+          top={contextMenu.top}
+          pinned={contextTab.pinned}
+          bookmarked={contextTab.bookmarked}
+          onTogglePin={() => {
+            onTogglePin(contextTab.id);
+            setContextMenu(null);
+          }}
+          onToggleBookmark={() => {
+            onToggleBookmark(contextTab.id);
+            setContextMenu(null);
+          }}
+          onClose={() => setContextMenu(null)}
+        />
+      )}
     </div>
   );
 }

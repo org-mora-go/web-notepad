@@ -10,7 +10,7 @@ import { useStoreHydrated } from "./use-store-hydrated";
 
 export function useHome() {
   const hydrated = useStoreHydrated();
-  const [historyOpen, setHistoryOpen] = useState(false);
+  const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const [draggingTabId, setDraggingTabId] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
@@ -23,7 +23,7 @@ export function useHome() {
     activeRightTabId,
     activePane,
     splitRatio,
-    unsavedSnapshots,
+    bookmarks,
     selectTab,
     updateTab,
     moveTab,
@@ -31,10 +31,11 @@ export function useHome() {
     setActivePane,
     setSplitRatio,
     toggleUrgent,
+    togglePin,
+    toggleBookmark,
     closeTab,
-    restoreSnapshot,
-    deleteSnapshot,
-    clearHistory,
+    openBookmark,
+    removeBookmark,
   } = useNotepadStore();
 
   const rightIds = useMemo(() => new Set(rightTabIds), [rightTabIds]);
@@ -126,6 +127,8 @@ export function useHome() {
         onAdopt: adoptTo("left"),
         onDragStateChange: setDraggingTabId,
         onToggleUrgent: toggleUrgent,
+        onTogglePin: togglePin,
+        onToggleBookmark: toggleBookmark,
         onAdd: () => addTabToPane("left"),
         onChange: (content: string) => updateTab(activeTab.id, content),
       }
@@ -149,6 +152,8 @@ export function useHome() {
         onAdopt: adoptTo("right"),
         onDragStateChange: setDraggingTabId,
         onToggleUrgent: toggleUrgent,
+        onTogglePin: togglePin,
+        onToggleBookmark: toggleBookmark,
         onAdd: () => addTabToPane("right"),
         onChange: (content: string) => updateTab(activeRightTab.id, content),
       }
@@ -156,16 +161,15 @@ export function useHome() {
 
   return {
     hydrated,
-    historyOpen,
-    setHistoryOpen,
+    bookmarksOpen,
+    setBookmarksOpen,
     activeTab,
     lineCount,
     split,
-    unsavedSnapshots,
+    bookmarks,
     leftPaneProps,
     rightPaneProps,
-    restoreSnapshot,
-    deleteSnapshot,
-    clearHistory,
+    openBookmark,
+    removeBookmark,
   };
 }

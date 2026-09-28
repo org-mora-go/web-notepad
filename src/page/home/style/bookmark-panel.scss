@@ -1,7 +1,7 @@
 @use "../../../shared/style/variable" as v;
 
-.history-panel {
-  .history-backdrop {
+.bookmark-panel {
+  .bookmark-backdrop {
     position: fixed;
     inset: 0;
     z-index: 10;
@@ -16,7 +16,7 @@
     }
   }
 
-  .history-drawer {
+  .bookmark-drawer {
     position: fixed;
     top: 0;
     right: 0;
@@ -36,7 +36,7 @@
     }
   }
 
-  .history-header {
+  .bookmark-header {
     min-height: 105px;
     display: flex;
     align-items: center;
@@ -46,14 +46,14 @@
     border-bottom: 1px solid v.$line;
 
     h2 {
-      margin: 0;
+      margin: 6px 0 0;
       font-family: v.$sans;
       font-size: 24px;
       font-weight: 500;
     }
   }
 
-  .history-header-main {
+  .bookmark-header-main {
     min-width: 0;
     display: flex;
     flex-direction: column;
@@ -62,25 +62,6 @@
   .eyebrow {
     color: v.$signal;
     font-size: 10px;
-  }
-
-  .history-title-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-top: 6px;
-  }
-
-  .clear-history-button {
-    height: 30px;
-    padding: 0 10px;
-    border: 1px solid v.$line;
-    background: transparent;
-    color: v.$ink;
-    font-size: 11px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
   }
 
   .panel-close {
@@ -98,14 +79,14 @@
     }
   }
 
-  .clear-confirm-backdrop {
+  .bookmark-confirm-backdrop {
     position: fixed;
     inset: 0;
     z-index: 30;
     background: rgba(0, 0, 0, 0.7);
   }
 
-  .clear-confirm-modal {
+  .bookmark-confirm-modal {
     position: fixed;
     inset: 50% auto auto 50%;
     z-index: 31;
@@ -124,7 +105,7 @@
     }
   }
 
-  .clear-confirm-actions {
+  .bookmark-confirm-actions {
     display: flex;
     justify-content: flex-end;
     gap: 10px;
@@ -145,13 +126,13 @@
     }
   }
 
-  .history-list {
+  .bookmark-list {
     min-height: 0;
     padding: 14px;
     overflow-y: auto;
   }
 
-  .history-item {
+  .bookmark-item {
     margin-bottom: 10px;
     padding: 16px;
     border: 1px solid v.$line;
@@ -171,7 +152,7 @@
     }
   }
 
-  .history-item-heading {
+  .bookmark-item-heading {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -188,17 +169,7 @@
     }
   }
 
-  .history-source {
-    display: block;
-    margin-top: 6px;
-    overflow: hidden;
-    color: #6f6f69;
-    font-size: 10px;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-  }
-
-  .history-actions {
+  .bookmark-actions {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -221,14 +192,14 @@
       }
     }
 
-    .delete-history {
+    .remove-bookmark {
       width: 30px;
       padding: 0;
       justify-content: center;
     }
   }
 
-  .history-empty {
+  .bookmark-empty {
     min-height: 280px;
     display: grid;
     place-content: center;

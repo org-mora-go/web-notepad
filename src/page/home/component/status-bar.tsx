@@ -1,15 +1,15 @@
 "use client";
 
-import { FileClock } from "lucide-react";
+import { Bookmark } from "lucide-react";
 
 type Props = {
   charCount: number;
   lineCount: number;
-  historyOpen: boolean;
-  onToggleHistory: () => void;
+  bookmarksOpen: boolean;
+  onToggleBookmarks: () => void;
 };
 
-export function StatusBar({ charCount, lineCount, historyOpen, onToggleHistory }: Props) {
+export function StatusBar({ charCount, lineCount, bookmarksOpen, onToggleBookmarks }: Props) {
   return (
     <footer className="status-bar">
       <div className="save-state">
@@ -21,14 +21,14 @@ export function StatusBar({ charCount, lineCount, historyOpen, onToggleHistory }
         <span className="status-lines">{lineCount} LINES</span>
         <div className="status-actions">
           <button
-            className={`status-command ${historyOpen ? "is-active" : ""}`}
+            className={`status-command ${bookmarksOpen ? "is-active" : ""}`}
             type="button"
-            onClick={onToggleHistory}
-            aria-expanded={historyOpen}
-            aria-controls="unsaved-history"
+            onClick={onToggleBookmarks}
+            aria-expanded={bookmarksOpen}
+            aria-controls="bookmarks-panel"
           >
-            <FileClock size={13} strokeWidth={1.8} />
-            <span>HISTORY</span>
+            <Bookmark size={13} strokeWidth={1.8} />
+            <span>BOOKMARKS</span>
           </button>
         </div>
       </div>

@@ -97,6 +97,20 @@
     white-space: nowrap;
   }
 
+  .tab-indicator {
+    flex: 0 0 auto;
+    color: v.$muted;
+
+    &.is-pin {
+      color: v.$signal;
+      transform: rotate(35deg);
+    }
+
+    &.is-bookmark {
+      color: v.$saved;
+    }
+  }
+
   .tab-close {
     width: 34px;
     height: 44px;
