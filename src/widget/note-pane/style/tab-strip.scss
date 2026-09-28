@@ -1,6 +1,5 @@
 @use "../../../shared/style/variable" as v;
 @use "./tab-item";
-@use "./tab-list-menu";
 
 .tab-strip {
   position: relative;
@@ -25,9 +24,7 @@
   }
 
   .tab-close,
-  .add-tab,
-  .tab-list-toggle,
-  .tab-list-close {
+  .add-tab {
     display: grid;
     place-items: center;
     border: 0;

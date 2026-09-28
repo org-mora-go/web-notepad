@@ -1,19 +1,15 @@
 "use client";
 
-import { useState, type Dispatch, type RefObject, type SetStateAction } from "react";
+import { useState, type RefObject } from "react";
 import { Plus } from "lucide-react";
 import type { NoteTab } from "@/src/page/home/store";
 import { TabItem } from "./tab-item";
-import { TabListMenu } from "./tab-list-menu";
 
 type Props = {
   tabs: NoteTab[];
   activeTabId: string;
   tabsScrollRef: RefObject<HTMLDivElement | null>;
-  tabListRef: RefObject<HTMLDivElement | null>;
   tabsOverflowing: boolean;
-  tabListOpen: boolean;
-  setTabListOpen: Dispatch<SetStateAction<boolean>>;
   draggingTabId: string | null;
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
@@ -28,10 +24,7 @@ export function TabStrip({
   tabs,
   activeTabId,
   tabsScrollRef,
-  tabListRef,
   tabsOverflowing,
-  tabListOpen,
-  setTabListOpen,
   draggingTabId,
   onSelect,
   onClose,
@@ -111,16 +104,6 @@ export function TabStrip({
       >
         <Plus size={18} />
       </button>
-      <TabListMenu
-        tabs={tabs}
-        activeTabId={activeTabId}
-        tabListRef={tabListRef}
-        tabsOverflowing={tabsOverflowing}
-        tabListOpen={tabListOpen}
-        setTabListOpen={setTabListOpen}
-        onSelect={onSelect}
-        onClose={onClose}
-      />
     </div>
   );
 }

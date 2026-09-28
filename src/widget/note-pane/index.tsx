@@ -88,10 +88,7 @@ export function NotePane({
             tabs={tabs}
             activeTabId={activeTab.id}
             tabsScrollRef={tabStrip.tabsScrollRef}
-            tabListRef={tabStrip.tabListRef}
             tabsOverflowing={tabStrip.tabsOverflowing}
-            tabListOpen={tabStrip.tabListOpen}
-            setTabListOpen={tabStrip.setTabListOpen}
             draggingTabId={draggingTabId}
             onSelect={onSelect}
             onClose={onClose}
