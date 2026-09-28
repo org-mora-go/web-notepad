@@ -75,6 +75,7 @@ export function NotePane({
           onPointerDown={handleDividerPointerDown}
         />
       )}
+      
       <div
         className="pane-slot"
         style={widthRatio ? { flex: `0 0 ${widthRatio * 100}%` } : undefined}
