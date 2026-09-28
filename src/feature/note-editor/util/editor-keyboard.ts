@@ -82,7 +82,10 @@ export function handleEditorKeyDown(
     return;
   }
 
-  if (event.key !== "Tab") return;
+  // Option+Tab creates a note tab in the workspace shortcut handler.
+  // Do not queue the regular Tab insertion: its animation-frame callback can
+  // run after the active tab changes and read the new tab's textarea value.
+  if (event.key !== "Tab" || event.altKey) return;
 
   event.preventDefault();
   const textarea = event.currentTarget;

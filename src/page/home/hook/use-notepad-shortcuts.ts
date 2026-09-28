@@ -5,10 +5,11 @@ import { useNotepadStore } from "@/src/page/home/store";
 
 type Options = {
   editorRef: RefObject<HTMLTextAreaElement | null>;
+  rightEditorRef: RefObject<HTMLTextAreaElement | null>;
   composingRef: RefObject<boolean>;
 };
 
-export function useNotepadShortcuts({ editorRef, composingRef }: Options) {
+export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }: Options) {
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
       const state = useNotepadStore.getState();
@@ -56,6 +57,10 @@ export function useNotepadShortcuts({ editorRef, composingRef }: Options) {
 
       if (shouldAddTab) {
         event.preventDefault();
+        const activeEditor = pane === "right" ? rightEditorRef.current : editorRef.current;
+        if (activeEditor && paneActiveId) {
+          state.updateTab(paneActiveId, activeEditor.value);
+        }
         state.addTab(pane);
         return;
       }
@@ -76,6 +81,10 @@ export function useNotepadShortcuts({ editorRef, composingRef }: Options) {
 
       if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "Tab") {
         event.preventDefault();
+        const activeEditor = pane === "right" ? rightEditorRef.current : editorRef.current;
+        if (activeEditor && paneActiveId) {
+          state.updateTab(paneActiveId, activeEditor.value);
+        }
         state.addTab(pane);
         return;
       }

@@ -24,7 +24,6 @@ export function useHomeWorkspace() {
     activePane,
     splitRatio,
     unsavedSnapshots,
-    addTab,
     selectTab,
     updateTab,
     moveTab,
@@ -47,7 +46,7 @@ export function useHomeWorkspace() {
     rightTabs.find((tab) => tab.id === activeRightTabId) ?? rightTabs[0];
   const lineCount = activeTab?.content.split("\n").length ?? 1;
 
-  useNotepadShortcuts({ editorRef, composingRef });
+  useNotepadShortcuts({ editorRef, rightEditorRef, composingRef });
   useEditorFocus(editorRef, activeTabId, hydrated);
   useEditorFocus(rightEditorRef, activeRightTabId ?? "", hydrated);
 
@@ -63,6 +62,16 @@ export function useHomeWorkspace() {
 
   const leftStrip = useTabStrip(leftTabs.length, activeTabId, hydrated);
   const rightStrip = useTabStrip(rightTabs.length, activeRightTabId ?? "", hydrated);
+
+  const addTabToPane = (pane: "left" | "right") => {
+    const state = useNotepadStore.getState();
+    const tabId = pane === "right" ? state.activeRightTabId : state.activeTabId;
+    const editor = pane === "right" ? rightEditorRef.current : editorRef.current;
+
+    // Commit the textarea's latest value before changing the active tab.
+    if (tabId && editor) state.updateTab(tabId, editor.value);
+    state.addTab(pane);
+  };
 
   const draggingPane = draggingTabId
     ? rightIds.has(draggingTabId)
@@ -117,7 +126,7 @@ export function useHomeWorkspace() {
         onAdopt: adoptTo("left"),
         onDragStateChange: setDraggingTabId,
         onToggleUrgent: toggleUrgent,
-        onAdd: () => addTab(),
+        onAdd: () => addTabToPane("left"),
         onChange: (content: string) => updateTab(activeTab.id, content),
       }
     : null;
@@ -140,7 +149,7 @@ export function useHomeWorkspace() {
         onAdopt: adoptTo("right"),
         onDragStateChange: setDraggingTabId,
         onToggleUrgent: toggleUrgent,
-        onAdd: () => addTab("right"),
+        onAdd: () => addTabToPane("right"),
         onChange: (content: string) => updateTab(activeRightTab.id, content),
       }
     : null;
