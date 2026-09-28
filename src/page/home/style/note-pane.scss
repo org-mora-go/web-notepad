@@ -1,6 +1,6 @@
 @use "../../../shared/style/variable" as v;
 @use "./tab-strip";
-@use "./note-editor";
+@use "../../../feature/note-editor/style/index";
 
 .note-pane {
   min-width: 0;
