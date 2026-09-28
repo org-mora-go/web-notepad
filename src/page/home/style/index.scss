@@ -1,5 +1,5 @@
 @use "../../../shared/style/variable" as v;
-@use "./note-pane";
+@use "../../../widget/note-pane/style/index";
 @use "./status-bar";
 @use "./history-panel";
 

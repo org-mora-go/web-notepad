@@ -1,23 +1,12 @@
 "use client";
 
-import {
-  useEffect,
-  useState,
-  type DragEvent as ReactDragEvent,
-  type PointerEvent as ReactPointerEvent,
-  type RefObject,
-} from "react";
+import type { RefObject } from "react";
+import type { PaneDropZone } from "@/src/entity";
 import type { TabStripState } from "@/src/page/home/hook";
 import type { NoteTab } from "@/src/page/home/store";
 import { NoteEditor } from "@/src/feature";
-import { TabStrip } from "./tab-strip";
-
-export type PaneDropZone = {
-  key: string;
-  label: string;
-  half?: boolean;
-  onDrop: () => void;
-};
+import { TabStrip } from "./component/tab-strip";
+import { usePaneDropArea, usePaneResize } from "./hook";
 
 type Props = {
   tabs: NoteTab[];
@@ -65,35 +54,15 @@ export function NotePane({
   onChange,
 }: Props) {
   const dragActive = draggingTabId !== null;
-  const [dropAreaHovered, setDropAreaHovered] = useState(false);
-
-  useEffect(() => {
-    if (!dragActive) setDropAreaHovered(false);
-  }, [dragActive]);
-
-  const handleDropAreaLeave = (event: ReactDragEvent<HTMLDivElement>) => {
-    const nextTarget = event.relatedTarget;
-    if (nextTarget instanceof Node && event.currentTarget.contains(nextTarget)) return;
-    setDropAreaHovered(false);
-  };
-
-  const handleDividerPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!onResize) return;
-    event.preventDefault();
-    const group = event.currentTarget.parentElement;
-    if (!group) return;
-
-    const handleMove = (moveEvent: PointerEvent) => {
-      const rect = group.getBoundingClientRect();
-      onResize((moveEvent.clientX - rect.left) / rect.width);
-    };
-    const handleUp = () => {
-      window.removeEventListener("pointermove", handleMove);
-      window.removeEventListener("pointerup", handleUp);
-    };
-    window.addEventListener("pointermove", handleMove);
-    window.addEventListener("pointerup", handleUp);
-  };
+  const adoptZone = dropZones.find((zone) => zone.key === "adopt");
+  const {
+    dropAreaHovered,
+    handleDragEnter,
+    handleDragLeave,
+    handleDragOver,
+    handleDrop,
+  } = usePaneDropArea(dragActive, () => adoptZone?.onDrop());
+  const handleDividerPointerDown = usePaneResize(onResize);
 
   return (
     <>
@@ -135,23 +104,10 @@ export function NotePane({
 
           <div
             className="note-pane-body"
-            onDragEnter={(event) => {
-              if (!dragActive) return;
-              event.preventDefault();
-              setDropAreaHovered(true);
-            }}
-            onDragLeave={handleDropAreaLeave}
-            onDragOver={(event) => {
-              if (!dragActive) return;
-              event.preventDefault();
-            }}
-            onDrop={(event) => {
-              if (!dragActive) return;
-              event.preventDefault();
-              setDropAreaHovered(false);
-              const zone = dropZones.find((item) => item.key === "adopt");
-              zone?.onDrop();
-            }}
+            onDragEnter={handleDragEnter}
+            onDragLeave={handleDragLeave}
+            onDragOver={handleDragOver}
+            onDrop={handleDrop}
           >
             <NoteEditor
               tab={activeTab}
@@ -173,7 +129,6 @@ export function NotePane({
                   onDrop={(event) => {
                     event.preventDefault();
                     event.stopPropagation();
-                    setDropAreaHovered(false);
                     zone.onDrop();
                   }}
                 >

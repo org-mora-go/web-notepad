@@ -8,7 +8,9 @@ import {
   useTabStrip,
 } from "@/src/page/home/hook";
 import { useNotepadStore } from "@/src/page/home/store";
-import { HistoryPanel, NotePane, StatusBar, type PaneDropZone } from "./component";
+import type { PaneDropZone } from "@/src/entity";
+import { HistoryPanel, StatusBar } from "./component";
+import { NotePane } from "@/src/widget";
 import "./style/index.scss";
 
 export function Home() {
