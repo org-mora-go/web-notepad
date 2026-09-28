@@ -61,8 +61,14 @@ export function TabStrip({
       className="tab-strip"
       role="tablist"
       aria-label="메모 탭"
+      onDragEnter={(event) => {
+        if (!dragActive) return;
+        event.preventDefault();
+      }}
       onDragOver={(event) => {
-        if (dragActive) event.preventDefault();
+        if (dragActive) {
+          event.preventDefault();
+        }
       }}
       onDrop={(event) => {
         event.preventDefault();
@@ -94,7 +100,11 @@ export function TabStrip({
               onDragOver={(event) => {
                 if (!dragActive || draggingTabId === tab.id) return;
                 event.preventDefault();
-                event.dataTransfer.dropEffect = "move";
+                setDropTargetId(tab.id);
+              }}
+              onDragEnter={(event) => {
+                if (!dragActive || draggingTabId === tab.id) return;
+                event.preventDefault();
                 setDropTargetId(tab.id);
               }}
               onDragLeave={() => {

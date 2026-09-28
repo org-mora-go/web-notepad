@@ -1,6 +1,12 @@
 "use client";
 
-import type { PointerEvent as ReactPointerEvent, RefObject } from "react";
+import {
+  useEffect,
+  useState,
+  type DragEvent as ReactDragEvent,
+  type PointerEvent as ReactPointerEvent,
+  type RefObject,
+} from "react";
 import type { TabStripState } from "@/src/home/hook";
 import type { NoteTab } from "@/src/home/store";
 import { NoteEditor } from "./note-editor";
@@ -57,6 +63,17 @@ export function NotePane({
   onChange,
 }: Props) {
   const dragActive = draggingTabId !== null;
+  const [dropAreaHovered, setDropAreaHovered] = useState(false);
+
+  useEffect(() => {
+    if (!dragActive) setDropAreaHovered(false);
+  }, [dragActive]);
+
+  const handleDropAreaLeave = (event: ReactDragEvent<HTMLDivElement>) => {
+    const nextTarget = event.relatedTarget;
+    if (nextTarget instanceof Node && event.currentTarget.contains(nextTarget)) return;
+    setDropAreaHovered(false);
+  };
 
   const handleDividerPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
     if (!onResize) return;
@@ -114,7 +131,26 @@ export function NotePane({
             onAdd={onAdd}
           />
 
-          <div className="note-pane-body">
+          <div
+            className="note-pane-body"
+            onDragEnter={(event) => {
+              if (!dragActive) return;
+              event.preventDefault();
+              setDropAreaHovered(true);
+            }}
+            onDragLeave={handleDropAreaLeave}
+            onDragOver={(event) => {
+              if (!dragActive) return;
+              event.preventDefault();
+            }}
+            onDrop={(event) => {
+              if (!dragActive) return;
+              event.preventDefault();
+              setDropAreaHovered(false);
+              const zone = dropZones.find((item) => item.key === "adopt");
+              zone?.onDrop();
+            }}
+          >
             <NoteEditor
               tab={activeTab}
               lineCount={activeTab.content.split("\n").length}
@@ -124,17 +160,18 @@ export function NotePane({
               onChange={onChange}
             />
 
-            {dragActive &&
+            {dragActive && dropAreaHovered &&
               dropZones.map((zone) => (
                 <div
                   key={zone.key}
                   className={`note-pane-drop ${zone.half ? "is-half" : ""}`}
                   onDragOver={(event) => {
                     event.preventDefault();
-                    event.dataTransfer.dropEffect = "move";
                   }}
                   onDrop={(event) => {
                     event.preventDefault();
+                    event.stopPropagation();
+                    setDropAreaHovered(false);
                     zone.onDrop();
                   }}
                 >
