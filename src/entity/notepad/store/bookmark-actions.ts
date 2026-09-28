@@ -45,7 +45,7 @@ export const createBookmarkActions: StateCreator<NotepadState, [], [], BookmarkA
     const bookmark = state.bookmarks.find((item) => item.id === bookmarkId);
     if (!bookmark) return;
 
-    const number = getNextTabNumber(state.tabs, state.nextTabNumber);
+    const number = getNextTabNumber(state.tabs);
     const tab = {
       ...createNoteTab(number),
       title: bookmark.title,

@@ -11,9 +11,9 @@ export const createNoteTab = (number: number): NoteTab => ({
   updatedAt: 0,
 });
 
-export const getNextTabNumber = (tabs: NoteTab[], nextTabNumber: number) => {
+export const getNextTabNumber = (tabs: NoteTab[]) => {
   const usedIds = new Set(tabs.map((tab) => tab.id));
-  let number = Math.max(nextTabNumber, 2);
+  let number = 2;
   while (usedIds.has(`tab-${number}`)) number += 1;
   return number;
 };

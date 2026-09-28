@@ -10,7 +10,7 @@ type TabActions = Pick<
 export const createTabActions: StateCreator<NotepadState, [], [], TabActions> = (set, get) => ({
   addTab: (pane = "left") => {
     const state = get();
-    const number = getNextTabNumber(state.tabs, state.nextTabNumber);
+    const number = getNextTabNumber(state.tabs);
     const tab = createNoteTab(number);
     const toRight = pane === "right" && state.rightTabIds.length > 0;
 
