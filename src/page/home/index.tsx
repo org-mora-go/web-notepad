@@ -102,14 +102,14 @@ export function Home() {
 
   if (!hydrated || !activeTab) {
     return (
-      <main className="index is-loading">
+      <main className="home is-loading">
         <span className="loading-mark">NOTEPAD_</span>
       </main>
     );
   }
 
   return (
-    <main className="index">
+    <main className="home">
       <section className="workspace">
         <div className={`pane-group ${split ? "is-split" : ""}`}>
           <NotePane
