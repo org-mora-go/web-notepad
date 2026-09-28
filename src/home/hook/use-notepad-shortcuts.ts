@@ -99,14 +99,10 @@ export function useNotepadShortcuts({ editorRef, composingRef }: Options) {
             : [...tabs.filter((tab) => !rightTabIds.includes(tab.id)), ...paneRightTabs];
         const orderedIndex = orderedTabs.findIndex((tab) => tab.id === paneActiveId);
 
-        if (orderedTabs.length <= 1 || orderedIndex < 0) {
-          return;
-        }
-
         event.preventDefault();
         const offset = isArrowUp ? -1 : 1;
-        const nextIndex =
-          (orderedIndex + offset + orderedTabs.length) % orderedTabs.length;
+        const nextIndex = orderedIndex + offset;
+        if (orderedIndex < 0 || nextIndex < 0 || nextIndex >= orderedTabs.length) return;
         state.selectTab(orderedTabs[nextIndex].id);
       }
     };

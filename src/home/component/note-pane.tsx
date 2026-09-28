@@ -26,6 +26,7 @@ type Props = {
   editorRef: RefObject<HTMLTextAreaElement | null>;
   composingRef: RefObject<boolean>;
   autoFocus?: boolean;
+  isFocused: boolean;
   draggingTabId: string | null;
   dropZones: PaneDropZone[];
   widthRatio?: number;
@@ -48,6 +49,7 @@ export function NotePane({
   editorRef,
   composingRef,
   autoFocus,
+  isFocused,
   draggingTabId,
   dropZones,
   widthRatio,
@@ -109,7 +111,7 @@ export function NotePane({
         style={widthRatio ? { flex: `0 0 ${widthRatio * 100}%` } : undefined}
       >
         <div
-          className="note-pane"
+          className={`note-pane ${isFocused ? "" : "is-unfocused"}`}
           onFocusCapture={onActivate}
           onPointerDownCapture={onActivate}
         >

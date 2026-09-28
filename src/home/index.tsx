@@ -119,6 +119,7 @@ export function Home() {
             editorRef={editorRef}
             composingRef={composingRef}
             autoFocus
+            isFocused={!split || activePane === "left"}
             draggingTabId={draggingTabId}
             dropZones={leftDropZones}
             widthRatio={split ? splitRatio : undefined}
@@ -140,6 +141,7 @@ export function Home() {
               tabStrip={rightStrip}
               editorRef={rightEditorRef}
               composingRef={rightComposingRef}
+              isFocused={activePane === "right"}
               draggingTabId={draggingTabId}
               dropZones={rightDropZones}
               onResize={setSplitRatio}
