@@ -30,18 +30,25 @@ export const createTabActions: StateCreator<NotepadState, [], [], TabActions> = 
         : { activeTabId: tabId, activePane: "left" },
     ),
   updateTab: (tabId, content) =>
-    set((state) => ({
-      tabs: state.tabs.map((tab) =>
-        tab.id === tabId
-          ? {
-              ...tab,
-              title: getTitleFromContent(content, tab.title),
-              content: typeof content === "string" ? content : "",
-              updatedAt: Date.now(),
-            }
-          : tab,
-      ),
-    })),
+    set((state) => {
+      const tab = state.tabs.find((item) => item.id === tabId);
+      if (!tab) return state;
+
+      const nextContent = typeof content === "string" ? content : "";
+      const nextTitle = getTitleFromContent(nextContent, tab.title);
+      return {
+        tabs: state.tabs.map((item) =>
+          item.id === tabId
+            ? { ...item, title: nextTitle, content: nextContent, updatedAt: Date.now() }
+            : item,
+        ),
+        bookmarks: state.bookmarks.map((bookmark) =>
+          bookmark.sourceTabId === tabId
+            ? { ...bookmark, title: nextTitle, content: nextContent }
+            : bookmark,
+        ),
+      };
+    }),
   moveTab: (fromTabId, toTabId) =>
     set((state) => {
       const from = state.tabs.findIndex((tab) => tab.id === fromTabId);
