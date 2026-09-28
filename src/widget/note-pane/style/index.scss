@@ -1,5 +1,5 @@
 @use "../../../shared/style/variable" as v;
-@use "./tab-strip";
+@use "./tab-strip.scss";
 @use "../../../feature/note-editor/style/index";
 
 .note-pane {

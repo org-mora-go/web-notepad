@@ -5,7 +5,7 @@ import type { PaneDropZone } from "@/src/entity";
 import type { TabStripState } from "@/src/page/home/hook";
 import type { NoteTab } from "@/src/page/home/store";
 import { NoteEditor } from "@/src/feature";
-import { TabStrip } from "./component/tab-strip";
+import { TabStrip } from "./component";
 import { usePaneDropArea, usePaneResize } from "./hook";
 
 type Props = {

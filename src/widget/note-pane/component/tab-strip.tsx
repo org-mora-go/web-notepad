@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, type Dispatch, type RefObject, type SetStateAction } from "react";
-import { Menu, Plus, X } from "lucide-react";
+import { Plus } from "lucide-react";
 import type { NoteTab } from "@/src/page/home/store";
+import { TabItem } from "./tab-item";
+import { TabListMenu } from "./tab-list-menu";
 
 type Props = {
   tabs: NoteTab[];
@@ -66,9 +68,7 @@ export function TabStrip({
         event.preventDefault();
       }}
       onDragOver={(event) => {
-        if (dragActive) {
-          event.preventDefault();
-        }
+        if (dragActive) event.preventDefault();
       }}
       onDrop={(event) => {
         event.preventDefault();
@@ -80,75 +80,27 @@ export function TabStrip({
         className={`tabs-scroll ${tabsOverflowing ? "is-overflowing" : ""}`}
         ref={tabsScrollRef}
       >
-        {tabs.map((tab) => {
-          const active = tab.id === activeTabId;
-          const dirty = tab.content.trim() !== "" && tab.content !== tab.savedContent;
-          return (
-            <div
-              className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""} ${
-                tab.urgent ? "is-urgent" : ""
-              } ${draggingTabId === tab.id ? "is-dragging" : ""} ${
-                dropTargetId === tab.id ? "is-drop-target" : ""
-              }`}
-              key={tab.id}
-              draggable
-              onDragStart={(event) => {
-                event.dataTransfer.effectAllowed = "move";
-                event.dataTransfer.setData("text/plain", tab.id);
-                onDragStateChange(tab.id);
-              }}
-              onDragOver={(event) => {
-                if (!dragActive || draggingTabId === tab.id) return;
-                event.preventDefault();
-                setDropTargetId(tab.id);
-              }}
-              onDragEnter={(event) => {
-                if (!dragActive || draggingTabId === tab.id) return;
-                event.preventDefault();
-                setDropTargetId(tab.id);
-              }}
-              onDragLeave={() => {
-                setDropTargetId((current) => (current === tab.id ? null : current));
-              }}
-              onDrop={(event) => {
-                event.preventDefault();
-                event.stopPropagation();
-                applyDrop(event.dataTransfer.getData("text/plain"), tab.id);
-                endDrag();
-              }}
-              onDragEnd={endDrag}
-            >
-              <button
-                className={`dirty-dot ${dirty ? "is-dirty" : ""} ${
-                  tab.urgent ? "is-urgent" : ""
-                }`}
-                type="button"
-                onClick={() => onToggleUrgent(tab.id)}
-                aria-pressed={tab.urgent}
-                aria-label={`${tab.title} 긴급 표시`}
-                title="긴급 표시"
-              />
-              <button
-                className="tab-select"
-                type="button"
-                role="tab"
-                aria-selected={active}
-                onClick={() => onSelect(tab.id)}
-              >
-                <span className="tab-title">{tab.title}</span>
-              </button>
-              <button
-                className="tab-close"
-                type="button"
-                onClick={() => onClose(tab.id)}
-                aria-label={`${tab.title} 닫기`}
-                title="탭 닫기"
-              >
-                <X size={14} />
-              </button>
-            </div>
-          );
-        })}
+        {tabs.map((tab) => (
+          <TabItem
+            key={tab.id}
+            tab={tab}
+            active={tab.id === activeTabId}
+            draggingTabId={draggingTabId}
+            dragActive={dragActive}
+            dropTarget={dropTargetId === tab.id}
+            onSelect={onSelect}
+            onClose={onClose}
+            onToggleUrgent={onToggleUrgent}
+            onDragStateChange={onDragStateChange}
+            onDropTargetChange={(tabId) =>
+              setDropTargetId((current) =>
+                tabId === null && current !== tab.id ? current : tabId,
+              )
+            }
+            onDrop={applyDrop}
+            onDragEnd={endDrag}
+          />
+        ))}
       </div>
       <button
         className="add-tab"
@@ -159,53 +111,16 @@ export function TabStrip({
       >
         <Plus size={18} />
       </button>
-      {tabsOverflowing && (
-        <div className="tab-list-wrap" ref={tabListRef}>
-          <button
-            className={`tab-list-toggle ${tabListOpen ? "is-active" : ""}`}
-            type="button"
-            onClick={() => setTabListOpen((open) => !open)}
-            aria-label="탭 목록"
-            aria-expanded={tabListOpen}
-            aria-controls="tab-list-menu"
-            title="탭 목록"
-          >
-            <Menu size={16} />
-          </button>
-          {tabListOpen && (
-            <ul id="tab-list-menu" className="tab-list-menu" role="menu">
-              {tabs.map((tab) => (
-                <li
-                  key={tab.id}
-                  role="none"
-                  className={tab.id === activeTabId ? "is-active" : ""}
-                >
-                  <button
-                    type="button"
-                    role="menuitem"
-                    className="tab-list-select"
-                    onClick={() => {
-                      onSelect(tab.id);
-                      setTabListOpen(false);
-                    }}
-                  >
-                    {tab.title}
-                  </button>
-                  <button
-                    type="button"
-                    className="tab-list-close"
-                    onClick={() => onClose(tab.id)}
-                    aria-label={`${tab.title} 닫기`}
-                    title="탭 닫기"
-                  >
-                    <X size={13} />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          )}
-        </div>
-      )}
+      <TabListMenu
+        tabs={tabs}
+        activeTabId={activeTabId}
+        tabListRef={tabListRef}
+        tabsOverflowing={tabsOverflowing}
+        tabListOpen={tabListOpen}
+        setTabListOpen={setTabListOpen}
+        onSelect={onSelect}
+        onClose={onClose}
+      />
     </div>
   );
 }
