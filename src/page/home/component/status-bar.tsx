@@ -13,7 +13,7 @@ export function StatusBar({ lineCount, bookmarksOpen, onToggleBookmarks }: Props
     <footer className="status-bar">
       <div className="save-state">
         <span className="status-light" />
-        DEVELOPED BY HYUN-WOO YOO
+        <span className="creator-credit">DEVELOPED BY HYUN-WOO YOO</span>
       </div>
       <div className="status-meta">
         <span className="status-lines">{lineCount} LINES</span>
