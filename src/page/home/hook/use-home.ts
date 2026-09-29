@@ -42,9 +42,13 @@ export function useHome() {
   const leftTabs = tabs.filter((tab) => !rightIds.has(tab.id));
   const rightTabs = tabs.filter((tab) => rightIds.has(tab.id));
   const split = rightTabs.length > 0;
-  const activeTab = leftTabs.find((tab) => tab.id === activeTabId) ?? leftTabs[0];
+  const leftActiveTab = leftTabs.find((tab) => tab.id === activeTabId) ?? leftTabs[0];
   const activeRightTab =
     rightTabs.find((tab) => tab.id === activeRightTabId) ?? rightTabs[0];
+  const activeTab =
+    (activePane === "right"
+      ? activeRightTab ?? leftActiveTab
+      : leftActiveTab ?? activeRightTab) ?? rightTabs[0];
   const lineCount = activeTab?.content.split("\n").length ?? 1;
 
   useNotepadShortcuts({ editorRef, rightEditorRef, composingRef });
@@ -108,10 +112,10 @@ export function useHome() {
       ? [{ key: "adopt", label: "Move here", onDrop: dropTo("right") }]
       : [];
 
-  const leftPaneProps = activeTab
+  const leftPaneProps = leftActiveTab
     ? {
         tabs: leftTabs,
-        activeTab,
+        activeTab: leftActiveTab,
         tabStrip: leftStrip,
         editorRef,
         composingRef,
@@ -130,7 +134,7 @@ export function useHome() {
         onTogglePin: togglePin,
         onToggleBookmark: toggleBookmark,
         onAdd: () => addTabToPane("left"),
-        onChange: (content: string) => updateTab(activeTab.id, content),
+        onChange: (content: string) => updateTab(leftActiveTab.id, content),
       }
     : null;
 

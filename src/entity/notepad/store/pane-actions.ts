@@ -11,16 +11,27 @@ export const createPaneActions: StateCreator<NotepadState, [], [], PaneActions> 
       const inRight = state.rightTabIds.includes(tabId);
 
       if (pane === "right") {
-        if (inRight || state.tabs.length - state.rightTabIds.length <= 1) return state;
+        if (inRight) return state;
 
         const rightTabIds = [...state.rightTabIds, tabId];
         const leftTabs = state.tabs.filter((tab) => !rightTabIds.includes(tab.id));
+        if (leftTabs.length === 0) {
+          return {
+            rightTabIds: [],
+            activeRightTabId: null,
+            activeTabId: tabId,
+            activePane: "left" as const,
+          };
+        }
+
         return {
           rightTabIds,
           activeRightTabId: tabId,
           activePane: "right",
           activeTabId:
-            state.activeTabId === tabId ? leftTabs[leftTabs.length - 1].id : state.activeTabId,
+            state.activeTabId === tabId
+              ? leftTabs[leftTabs.length - 1]?.id ?? ""
+              : state.activeTabId,
         };
       }
 
