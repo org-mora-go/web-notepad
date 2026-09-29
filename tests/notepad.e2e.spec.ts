@@ -34,3 +34,35 @@ test('notepad supports add, history, clear history, and tab close flows', async 
   const tabsAfterAltW = await tabTitles();
   expect(tabsAfterAltW.length).toBe(tabsAfterMetaN.length - 1);
 });
+
+test('a new tab does not overwrite a bookmark when a tab number is reused', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  const bookmarkedTab = page.locator('.tab-item').nth(1);
+  await bookmarkedTab.locator('[role="tab"]').click();
+  await page.locator('textarea').fill('bookmarked original');
+  await bookmarkedTab.locator('[role="tab"]').click({ button: 'right' });
+  await page.getByRole('menuitem', { name: 'Bookmark' }).click();
+  await bookmarkedTab.locator('.tab-close').click();
+
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await page.locator('textarea').fill('new tab content');
+  await page.getByRole('button', { name: 'BOOKMARKS' }).click();
+
+  await expect(page.locator('.bookmark-item p')).toHaveText('bookmarked original');
+});
+
+test('closing the last tab does not reuse a bookmarked tab ID', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+
+  const bookmarkedTab = page.locator('.tab-item').first();
+  await page.locator('textarea').fill('bookmarked original');
+  await bookmarkedTab.locator('[role="tab"]').click({ button: 'right' });
+  await page.getByRole('menuitem', { name: 'Bookmark' }).click();
+  await bookmarkedTab.locator('.tab-close').click();
+  await page.locator('textarea').fill('replacement tab content');
+  await page.getByRole('button', { name: 'BOOKMARKS' }).click();
+
+  await expect(page.locator('.bookmark-item p')).toHaveText('bookmarked original');
+});

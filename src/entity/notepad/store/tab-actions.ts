@@ -11,7 +11,8 @@ type TabActions = Pick<
 export const createTabActions: StateCreator<NotepadState, [], [], TabActions> = (set, get) => ({
   addTab: (pane = "left") => {
     const state = get();
-    const number = getNextTabNumber(state.tabs);
+    const reservedIds = state.bookmarks.map((bookmark) => bookmark.sourceTabId);
+    const number = getNextTabNumber(state.tabs, reservedIds);
     const tab = createNoteTab(number);
     const toRight = pane === "right" && state.rightTabIds.length > 0;
 
@@ -80,7 +81,8 @@ export const createTabActions: StateCreator<NotepadState, [], [], TabActions> = 
 
     const remainingTabs = state.tabs.filter((item) => item.id !== tabId);
     if (remainingTabs.length === 0) {
-      const replacement = createNoteTab(1);
+      const reservedIds = state.bookmarks.map((bookmark) => bookmark.sourceTabId);
+      const replacement = createNoteTab(getNextTabNumber([], reservedIds, 1));
       set({
         tabs: [replacement],
         activeTabId: replacement.id,

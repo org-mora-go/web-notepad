@@ -11,9 +11,9 @@ export const createNoteTab = (number: number): NoteTab => ({
   updatedAt: 0,
 });
 
-export const getNextTabNumber = (tabs: NoteTab[]) => {
-  const usedIds = new Set(tabs.map((tab) => tab.id));
-  let number = 2;
+export const getNextTabNumber = (tabs: NoteTab[], reservedIds: string[] = [], startAt = 2) => {
+  const usedIds = new Set([...tabs.map((tab) => tab.id), ...reservedIds]);
+  let number = startAt;
   while (usedIds.has(`tab-${number}`)) number += 1;
   return number;
 };
