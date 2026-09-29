@@ -6,7 +6,7 @@ import { createBookmarkActions } from "./bookmark-actions";
 import { createPaneActions } from "./pane-actions";
 import { createTabActions } from "./tab-actions";
 
-export { MAX_SPLIT_RATIO, MIN_SPLIT_RATIO } from "./store-constants";
+export { MAX_SPLIT_RATIO, MIN_SPLIT_RATIO } from "../constant";
 
 export const useNotepadStore = create<NotepadState>()(
   persist(
