@@ -94,7 +94,6 @@ export function TabStrip({
             onClose={onClose}
             onToggleUrgent={onToggleUrgent}
             onTogglePin={onTogglePin}
-            onToggleBookmark={onToggleBookmark}
             onContextMenu={(tabId, clientX, clientY) =>
               setContextMenu({
                 tabId,
