@@ -48,8 +48,7 @@ export function TabItem({
         event.preventDefault();
         onContextMenu(tab.id, event.clientX, event.clientY);
       }}
-      onDragStart={(event) => {
-        event.dataTransfer.effectAllowed = "move";
+      onDragStart={(event) => {        
         event.dataTransfer.setData("text/plain", tab.id);
         onDragStateChange(tab.id);
       }}
