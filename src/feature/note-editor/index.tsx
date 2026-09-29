@@ -80,7 +80,7 @@ export function NoteEditor({
         style={
           {
             backgroundImage: selectedLineRanges
-              .map(() => "linear-gradient(rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.07))")
+              .map(() => "linear-gradient(rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.09))")
               .join(", "),
             backgroundSize: selectedLineRanges
               .map(
