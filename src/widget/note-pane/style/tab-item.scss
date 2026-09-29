@@ -2,10 +2,10 @@
 
 .tab-strip {
   .tab-item {
-    width: 222px;
-    min-width: 222px;
-    max-width: 222px;
-    height: 42px;
+    width: 187px;
+    min-width: 187px;
+    max-width: 187px;
+    height: 37px;
     flex: 0 0 auto;
     display: flex;
     align-items: center;
@@ -74,20 +74,20 @@
     }
 
     @media (max-width: 640px) {
-      width: 184px;
-      min-width: 184px;
-      max-width: 184px;
+      width: 154px;
+      min-width: 154px;
+      max-width: 154px;
     }
   }
 
   .tab-select {
     min-width: 0;
     flex: 1;
-    height: 42px;
+    height: 37px;
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 0 5px 0 8px;
+    gap: 6px;
+    padding: 0 4px 0 6px;
     border: 0;
     background: transparent;
     color: inherit;
@@ -96,9 +96,10 @@
 
   .tab-pin-toggle {
     display: grid;
-    width: 20px;
-    height: 29px;
+    width: 16px;
+    height: 23px;
     flex: 0 0 auto;
+    margin-right: 4px;
     place-items: center;
     padding: 0;
     border: 0;
@@ -108,9 +109,10 @@
 
   .tab-bookmark-toggle {
     display: grid;
-    width: 20px;
-    height: 24px;
+    width: 16px;
+    height: 19px;
     flex: 0 0 auto;
+    margin-right: 4px;
     place-items: center;
     padding: 0;
     border: 0;
@@ -128,11 +130,12 @@
   }
 
   .dirty-dot {
-    width: 11px;
-    height: 11px;
+    width: 13px;
+    height: 13px;
     flex: 0 0 auto;
     position: relative;
-    margin-left: 12px;
+    margin-left: 11px;
+    margin-right: 4px;
     padding: 0;
     border: 0;
     background: transparent;
@@ -142,8 +145,8 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 8px;
-      height: 8px;
+      width: 9px;
+      height: 9px;
       background: v.$saved;
       content: "";
       transform: translate(-50%, -50%);
@@ -163,7 +166,7 @@
   .tab-title {
     flex: 0 1 auto;
     overflow: hidden;
-    font-size: 13.2px;
+    font-size: 12.9px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
@@ -184,6 +187,6 @@
 
   .tab-close {
     width: 34px;
-    height: 42px;
+    height: 37px;
   }
 }

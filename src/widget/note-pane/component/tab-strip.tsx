@@ -120,7 +120,7 @@ export function TabStrip({
         aria-label="새 탭 추가"
         title="새 탭"
       >
-        <Plus size={18} />
+        <Plus size={14} />
       </button>
       {contextMenu && contextTab && (
         <TabContextMenu

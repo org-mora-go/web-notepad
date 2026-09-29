@@ -3,8 +3,8 @@
 
 .tab-strip {
   position: relative;
-  height: 42px;
-  min-height: 42px;
+  height: 37px;
+  min-height: 37px;
   min-width: 0;
   display: flex;
   border-bottom: 1px solid v.$line;
@@ -41,9 +41,9 @@
   }
 
   .add-tab {
-    width: 41px;
-    min-width: 41px;
-    height: 42px;
+    width: 33px;
+    min-width: 33px;
+    height: 37px;
     border-right: 1px solid v.$line;
   }
 }

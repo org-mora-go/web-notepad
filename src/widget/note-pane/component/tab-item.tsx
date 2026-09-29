@@ -89,7 +89,7 @@ export function TabItem({
           aria-label={`${tab.title} 고정 해제`}
           title="고정 해제"
         >
-          <Pin className="tab-indicator is-pin" size={12} aria-hidden="true" />
+          <Pin className="tab-indicator is-pin" size={13} aria-hidden="true" />
         </button>
       )}
       {tab.bookmarked && (
@@ -100,7 +100,7 @@ export function TabItem({
           aria-label={`${tab.title} 북마크 제거`}
           title="북마크 제거"
         >
-          <Bookmark className="tab-indicator is-bookmark" size={12} aria-hidden="true" />
+          <Bookmark className="tab-indicator is-bookmark" size={13} aria-hidden="true" />
         </button>
       )}
       <button
@@ -120,7 +120,7 @@ export function TabItem({
           aria-label={`${tab.title} 닫기`}
           title="탭 닫기"
         >
-          <X size={14} />
+          <X size={11} />
         </button>
       )}
     </div>
