@@ -45,18 +45,35 @@ export const createBookmarkActions: StateCreator<NotepadState, [], [], BookmarkA
     const bookmark = state.bookmarks.find((item) => item.id === bookmarkId);
     if (!bookmark) return;
 
+    const sourceTab = state.tabs.find((tab) => tab.id === bookmark.sourceTabId);
+    if (sourceTab) {
+      const inRightPane = state.rightTabIds.includes(sourceTab.id);
+      set(
+        inRightPane
+          ? { activeRightTabId: sourceTab.id, activePane: "right" }
+          : { activeTabId: sourceTab.id, activePane: "left" },
+      );
+      return;
+    }
+
     const number = getNextTabNumber(state.tabs);
+    const sourceTabId = bookmark.sourceTabId || `tab-${number}`;
     const tab = {
       ...createNoteTab(number),
+      id: sourceTabId,
       title: bookmark.title,
       content: bookmark.content,
       savedContent: bookmark.content,
+      bookmarked: true,
       updatedAt: bookmark.createdAt,
     };
     set({
       tabs: [...state.tabs, tab],
+      bookmarks: state.bookmarks.map((item) =>
+        item.id === bookmarkId ? { ...item, sourceTabId } : item,
+      ),
       activeTabId: tab.id,
-      nextTabNumber: number + 1,
+      nextTabNumber: Math.max(state.nextTabNumber, number + 1),
       activePane: "left",
     });
   },
