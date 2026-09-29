@@ -33,7 +33,6 @@ export function Home() {
         </div>
 
         <StatusBar
-          charCount={activeTab.content.length}
           lineCount={lineCount}
           bookmarksOpen={bookmarksOpen}
           onToggleBookmarks={() => setBookmarksOpen((open) => !open)}

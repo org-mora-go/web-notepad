@@ -3,13 +3,12 @@
 import { Bookmark } from "lucide-react";
 
 type Props = {
-  charCount: number;
   lineCount: number;
   bookmarksOpen: boolean;
   onToggleBookmarks: () => void;
 };
 
-export function StatusBar({ charCount, lineCount, bookmarksOpen, onToggleBookmarks }: Props) {
+export function StatusBar({ lineCount, bookmarksOpen, onToggleBookmarks }: Props) {
   return (
     <footer className="status-bar">
       <div className="save-state">
@@ -17,7 +16,6 @@ export function StatusBar({ charCount, lineCount, bookmarksOpen, onToggleBookmar
         SAVED LOCALLY
       </div>
       <div className="status-meta">
-        <span>{charCount} CHARS</span>
         <span className="status-lines">{lineCount} LINES</span>
         <div className="status-actions">
           <button
