@@ -1,10 +1,12 @@
 "use client";
 
-import { useState, type RefObject } from "react";
 import { Plus } from "lucide-react";
-import type { NoteTab } from "@/src/entity/notepad/store";
-import { TabItem } from "./tab-item";
+import { type RefObject,useState } from "react";
+
+import type { NoteTab } from "@/src/entity/notepad";
+
 import { TabContextMenu } from "./tab-context-menu";
+import { TabItem } from "./tab-item";
 
 type Props = {
   tabs: NoteTab[];

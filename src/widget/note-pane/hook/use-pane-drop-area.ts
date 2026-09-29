@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, type DragEvent as ReactDragEvent } from "react";
+import { type DragEvent as ReactDragEvent,useEffect, useState } from "react";
 
 export function usePaneDropArea(dragActive: boolean, onDrop: () => void) {
   const [dropAreaHovered, setDropAreaHovered] = useState(false);

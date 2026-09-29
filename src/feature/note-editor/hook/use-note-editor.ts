@@ -1,10 +1,12 @@
-import { useEffect, useRef, useState, type RefObject } from "react";
 import type {
   ChangeEvent,
   KeyboardEvent,
   UIEvent,
 } from "react";
-import type { NoteTab } from "@/src/entity/notepad/store";
+import { type RefObject,useEffect, useRef, useState } from "react";
+
+import type { NoteTab } from "@/src/entity/notepad";
+
 import { handleEditorKeyDown, insertAtSelection } from "../util";
 
 type Options = {

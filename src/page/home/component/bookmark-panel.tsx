@@ -1,6 +1,7 @@
 "use client";
 
 import { Bookmark, Trash2, X } from "lucide-react";
+
 import type { BookmarkEntry } from "@/src/entity/notepad/store";
 
 const formatDate = (timestamp: number) =>

@@ -1,4 +1,5 @@
 import type { StateCreator } from "zustand";
+
 import type { NotepadState } from "../type";
 import { createNoteTab, getNextTabNumber, getTitleFromContent } from "../util";
 

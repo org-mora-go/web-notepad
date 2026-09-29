@@ -1,1 +1,1 @@
-export type { BookmarkEntry, NoteTab, NotepadState, PaneId } from "./notepad";
+export type { BookmarkEntry, NotepadState, NoteTab, PaneId } from "./notepad";

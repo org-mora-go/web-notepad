@@ -1,5 +1,6 @@
 import { Bookmark, Pin, X } from "lucide-react";
-import type { NoteTab } from "@/src/entity/notepad/store";
+
+import type { NoteTab } from "@/src/entity/notepad";
 
 type Props = {
   tab: NoteTab;

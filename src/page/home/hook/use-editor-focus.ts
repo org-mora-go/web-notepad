@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, type RefObject } from "react";
+import { type RefObject,useEffect } from "react";
+
 import { useNotepadStore } from "@/src/entity/notepad/store";
 
 export function useEditorFocus(

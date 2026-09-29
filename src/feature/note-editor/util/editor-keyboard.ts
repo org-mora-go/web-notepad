@@ -1,4 +1,5 @@
 import type { KeyboardEvent as ReactKeyboardEvent } from "react";
+
 import { insertAtSelection, isImeComposing } from "./editor-content";
 
 type MutableRef<T> = { current: T };

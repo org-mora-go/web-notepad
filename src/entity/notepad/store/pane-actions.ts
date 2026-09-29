@@ -1,6 +1,7 @@
 import type { StateCreator } from "zustand";
-import type { NotepadState, PaneId } from "../type";
+
 import { MAX_SPLIT_RATIO, MIN_SPLIT_RATIO } from "../constant";
+import type { NotepadState, PaneId } from "../type";
 
 type PaneActions = Pick<NotepadState, "moveTabToPane" | "setActivePane" | "setSplitRatio">;
 

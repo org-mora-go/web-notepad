@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, type PointerEvent as ReactPointerEvent } from "react";
+import { type PointerEvent as ReactPointerEvent,useCallback } from "react";
 
 export function usePaneResize(onResize?: (ratio: number) => void) {
   return useCallback(

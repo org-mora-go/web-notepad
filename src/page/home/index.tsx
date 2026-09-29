@@ -1,9 +1,11 @@
 "use client";
 
-import { useHome } from "@/src/page/home/hook";
-import { BookmarkPanel, Loading, StatusBar } from "./component";
-import { NotePane } from "@/src/widget";
 import "./style/index.scss";
+
+import { useHome } from "@/src/page/home/hook";
+import { NotePane } from "@/src/widget";
+
+import { BookmarkPanel, Loading, StatusBar } from "./component";
 
 export function Home() {
   const {

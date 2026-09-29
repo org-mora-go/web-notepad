@@ -1,5 +1,6 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import type { NotepadState } from "../type";
 import { createNoteTab, normalizePersistedState } from "../util";
 import { createBookmarkActions } from "./bookmark-actions";

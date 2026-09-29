@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
 import { Bookmark, Pin } from "lucide-react";
+import { useEffect, useRef } from "react";
 
 type Props = {
   left: number;
