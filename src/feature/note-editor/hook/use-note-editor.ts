@@ -1,4 +1,4 @@
-import { useRef, type RefObject } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import type {
   ChangeEvent,
   KeyboardEvent,
@@ -18,7 +18,49 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const undoHistoryRef = useRef(new Map<string, string[]>());
   const redoHistoryRef = useRef(new Map<string, string[]>());
   const contentRef = useRef(tab.content);
+  const [selectedLines, setSelectedLines] = useState<number[]>([]);
+  const previousTabIdRef = useRef(tab.id);
+  const previousContentRef = useRef(tab.content);
   contentRef.current = tab.content;
+
+  useEffect(() => {
+    if (previousTabIdRef.current !== tab.id) {
+      setSelectedLines([]);
+    } else {
+      const previousLines = previousContentRef.current.split("\n");
+      const nextLines = tab.content.split("\n");
+      if (nextLines.length < previousLines.length) {
+        let commonPrefix = 0;
+        while (
+          commonPrefix < nextLines.length &&
+          previousLines[commonPrefix] === nextLines[commonPrefix]
+        ) {
+          commonPrefix += 1;
+        }
+
+        let commonSuffix = 0;
+        while (
+          commonSuffix < nextLines.length - commonPrefix &&
+          previousLines[previousLines.length - 1 - commonSuffix] ===
+            nextLines[nextLines.length - 1 - commonSuffix]
+        ) {
+          commonSuffix += 1;
+        }
+
+        const removedLines = previousLines.length - nextLines.length;
+        const unchangedSuffixStart = previousLines.length - commonSuffix;
+        setSelectedLines((selected) =>
+          selected.flatMap((lineIndex) => {
+            if (lineIndex < commonPrefix) return [lineIndex];
+            if (lineIndex >= unchangedSuffixStart) return [lineIndex - removedLines];
+            return [];
+          }),
+        );
+      }
+    }
+    previousTabIdRef.current = tab.id;
+    previousContentRef.current = tab.content;
+  }, [tab.content, tab.id]);
 
   const commitContent = (content: string) => {
     const previousContent = contentRef.current;
@@ -79,8 +121,18 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
     }
   };
 
+  const toggleLineSelection = (lineIndex: number) => {
+    setSelectedLines((current) =>
+      current.includes(lineIndex)
+        ? current.filter((selectedIndex) => selectedIndex !== lineIndex)
+        : [...current, lineIndex],
+    );
+  };
+
   return {
     lineRailRef,
+    selectedLines,
+    toggleLineSelection,
     handleChange,
     handleKeyDown,
     handleCompositionStart,
