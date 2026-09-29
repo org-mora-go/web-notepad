@@ -18,15 +18,14 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const undoHistoryRef = useRef(new Map<string, string[]>());
   const redoHistoryRef = useRef(new Map<string, string[]>());
   const contentRef = useRef(tab.content);
-  const [selectedLines, setSelectedLines] = useState<number[]>([]);
+  const [selectedLinesByTab, setSelectedLinesByTab] = useState<Record<string, number[]>>({});
+  const selectedLines = selectedLinesByTab[tab.id] ?? [];
   const previousTabIdRef = useRef(tab.id);
   const previousContentRef = useRef(tab.content);
   contentRef.current = tab.content;
 
   useEffect(() => {
-    if (previousTabIdRef.current !== tab.id) {
-      setSelectedLines([]);
-    } else {
+    if (previousTabIdRef.current === tab.id) {
       const previousLines = previousContentRef.current.split("\n");
       const nextLines = tab.content.split("\n");
       if (nextLines.length < previousLines.length) {
@@ -49,13 +48,15 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
 
         const removedLines = previousLines.length - nextLines.length;
         const unchangedSuffixStart = previousLines.length - commonSuffix;
-        setSelectedLines((selected) =>
-          selected.flatMap((lineIndex) => {
+        setSelectedLinesByTab((current) => {
+          const selected = current[tab.id] ?? [];
+          const remapped = selected.flatMap((lineIndex) => {
             if (lineIndex < commonPrefix) return [lineIndex];
             if (lineIndex >= unchangedSuffixStart) return [lineIndex - removedLines];
             return [];
-          }),
-        );
+          });
+          return { ...current, [tab.id]: remapped };
+        });
       }
     }
     previousTabIdRef.current = tab.id;
@@ -122,11 +123,13 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   };
 
   const toggleLineSelection = (lineIndex: number) => {
-    setSelectedLines((current) =>
-      current.includes(lineIndex)
-        ? current.filter((selectedIndex) => selectedIndex !== lineIndex)
-        : [...current, lineIndex],
-    );
+    setSelectedLinesByTab((current) => {
+      const selected = current[tab.id] ?? [];
+      const next = selected.includes(lineIndex)
+        ? selected.filter((selectedIndex) => selectedIndex !== lineIndex)
+        : [...selected, lineIndex];
+      return { ...current, [tab.id]: next };
+    });
   };
 
   return {
