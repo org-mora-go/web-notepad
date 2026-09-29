@@ -30,10 +30,11 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
     if (previousTabIdRef.current === tab.id) {
       const previousLines = previousContentRef.current.split("\n");
       const nextLines = tab.content.split("\n");
-      if (nextLines.length < previousLines.length) {
+      if (nextLines.length !== previousLines.length) {
+        const shorterLength = Math.min(previousLines.length, nextLines.length);
         let commonPrefix = 0;
         while (
-          commonPrefix < nextLines.length &&
+          commonPrefix < shorterLength &&
           previousLines[commonPrefix] === nextLines[commonPrefix]
         ) {
           commonPrefix += 1;
@@ -41,20 +42,21 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
 
         let commonSuffix = 0;
         while (
-          commonSuffix < nextLines.length - commonPrefix &&
+          commonSuffix < shorterLength - commonPrefix &&
           previousLines[previousLines.length - 1 - commonSuffix] ===
             nextLines[nextLines.length - 1 - commonSuffix]
         ) {
           commonSuffix += 1;
         }
 
-        const removedLines = previousLines.length - nextLines.length;
+        // Positive when lines were inserted (e.g. Enter), negative when removed.
+        const lineCountDelta = nextLines.length - previousLines.length;
         const unchangedSuffixStart = previousLines.length - commonSuffix;
         setSelectedLinesByTab((current) => {
           const selected = current[tab.id] ?? [];
           const remapped = selected.flatMap((lineIndex) => {
             if (lineIndex < commonPrefix) return [lineIndex];
-            if (lineIndex >= unchangedSuffixStart) return [lineIndex - removedLines];
+            if (lineIndex >= unchangedSuffixStart) return [lineIndex + lineCountDelta];
             return [];
           });
           return { ...current, [tab.id]: remapped };
