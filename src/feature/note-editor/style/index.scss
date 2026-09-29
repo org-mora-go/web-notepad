@@ -1,6 +1,8 @@
 @use "../../../entity/style/variable" as v;
 
 .note-editor {
+  --editor-line-height: 29.75px;
+
   min-height: 0;
   display: grid;
   grid-template-columns: 39px minmax(0, 1fr);
@@ -11,7 +13,7 @@
   }
 
   .line-rail {
-    padding-top: 27px;
+    padding-top: 14px;
     display: flex;
     flex-direction: column;
     align-items: flex-end;
@@ -22,9 +24,11 @@
     user-select: none;
 
     span {
-      min-height: 29.75px;
+      display: block;
+      height: var(--editor-line-height);
+      flex: 0 0 var(--editor-line-height);
       padding-right: 10px;
-      line-height: 19.9px;
+      line-height: var(--editor-line-height);
 
       @media (max-width: 640px) {
         padding-right: 5px;
@@ -38,14 +42,14 @@
     transform: scaleX(0.95);
     transform-origin: top left;
     resize: none;
-    padding: 27px 34px;
+    padding: 14px 22px;
     border: 0;
     outline: none;
     background: transparent;
     color: #ffffff;
     caret-color: v.$signal;
     font-size: 17px;
-    line-height: 1.75;
+    line-height: var(--editor-line-height);
     tab-size: 2;
 
     &::placeholder {
@@ -53,8 +57,12 @@
     }
 
     @media (max-width: 640px) {
-      padding: 25px 18px;
+      padding: 12px 14px;
       font-size: 15px;
     }
+  }
+
+  @media (max-width: 640px) {
+    --editor-line-height: 26.25px;
   }
 }
