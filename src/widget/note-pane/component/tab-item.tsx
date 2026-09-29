@@ -11,6 +11,7 @@ type Props = {
   onClose: (tabId: string) => void;
   onToggleUrgent: (tabId: string) => void;
   onTogglePin: (tabId: string) => void;
+  onToggleBookmark: (tabId: string) => void;
   onContextMenu: (tabId: string, clientX: number, clientY: number) => void;
   onDragStateChange: (tabId: string | null) => void;
   onDropTargetChange: (tabId: string | null) => void;
@@ -28,6 +29,7 @@ export function TabItem({
   onClose,
   onToggleUrgent,
   onTogglePin,
+  onToggleBookmark,
   onContextMenu,
   onDragStateChange,
   onDropTargetChange,
@@ -90,6 +92,17 @@ export function TabItem({
           <Pin className="tab-indicator is-pin" size={12} aria-hidden="true" />
         </button>
       )}
+      {tab.bookmarked && (
+        <button
+          className="tab-bookmark-toggle"
+          type="button"
+          onClick={() => onToggleBookmark(tab.id)}
+          aria-label={`${tab.title} 북마크 제거`}
+          title="북마크 제거"
+        >
+          <Bookmark className="tab-indicator is-bookmark" size={12} aria-hidden="true" />
+        </button>
+      )}
       <button
         className="tab-select"
         type="button"
@@ -97,9 +110,6 @@ export function TabItem({
         aria-selected={active}
         onClick={() => onSelect(tab.id)}
       >
-        {tab.bookmarked && (
-          <Bookmark className="tab-indicator is-bookmark" size={12} aria-hidden="true" />
-        )}
         <span className="tab-title">{tab.title}</span>
       </button>
       {!tab.pinned && (

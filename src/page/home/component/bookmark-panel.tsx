@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import { Bookmark, Trash2, X } from "lucide-react";
 import type { BookmarkEntry } from "@/src/entity/notepad/store";
 
@@ -21,8 +20,6 @@ type Props = {
 };
 
 export function BookmarkPanel({ bookmarks, open, onClose, onOpen, onRemove }: Props) {
-  const [pendingRemoval, setPendingRemoval] = useState<string | null>(null);
-
   return (
     <div className="bookmark-panel">
       <div
@@ -30,33 +27,6 @@ export function BookmarkPanel({ bookmarks, open, onClose, onOpen, onRemove }: Pr
         onClick={onClose}
         aria-hidden="true"
       />
-      {pendingRemoval && (
-        <>
-          <div
-            className="bookmark-confirm-backdrop"
-            onClick={() => setPendingRemoval(null)}
-            aria-hidden="true"
-          />
-          <div className="bookmark-confirm-modal" role="dialog" aria-modal="true">
-            <p>Remove this bookmark?</p>
-            <div className="bookmark-confirm-actions">
-              <button type="button" onClick={() => setPendingRemoval(null)}>
-                Cancel
-              </button>
-              <button
-                type="button"
-                className="confirm-delete"
-                onClick={() => {
-                  onRemove(pendingRemoval);
-                  setPendingRemoval(null);
-                }}
-              >
-                Remove
-              </button>
-            </div>
-          </div>
-        </>
-      )}
       <aside
         id="bookmarks-panel"
         className={`bookmark-drawer ${open ? "is-open" : ""}`}
@@ -95,7 +65,7 @@ export function BookmarkPanel({ bookmarks, open, onClose, onOpen, onRemove }: Pr
                   <button
                     className="remove-bookmark"
                     type="button"
-                    onClick={() => setPendingRemoval(bookmark.id)}
+                    onClick={() => onRemove(bookmark.id)}
                     aria-label={`${bookmark.title} 북마크 제거`}
                     title="북마크 제거"
                   >
