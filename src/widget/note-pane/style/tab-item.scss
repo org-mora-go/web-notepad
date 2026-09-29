@@ -2,10 +2,10 @@
 
 .tab-strip {
   .tab-item {
-    width: 185px;
-    min-width: 185px;
-    max-width: 185px;
-    height: 35px;
+    width: 222px;
+    min-width: 222px;
+    max-width: 222px;
+    height: 42px;
     flex: 0 0 auto;
     display: flex;
     align-items: center;
@@ -74,16 +74,16 @@
     }
 
     @media (max-width: 640px) {
-      width: 153px;
-      min-width: 153px;
-      max-width: 153px;
+      width: 184px;
+      min-width: 184px;
+      max-width: 184px;
     }
   }
 
   .tab-select {
     min-width: 0;
     flex: 1;
-    height: 35px;
+    height: 42px;
     display: flex;
     align-items: center;
     gap: 8px;
@@ -97,7 +97,7 @@
   .tab-pin-toggle {
     display: grid;
     width: 20px;
-    height: 24px;
+    height: 29px;
     flex: 0 0 auto;
     place-items: center;
     padding: 0;
@@ -167,6 +167,6 @@
 
   .tab-close {
     width: 34px;
-    height: 35px;
+    height: 42px;
   }
 }
