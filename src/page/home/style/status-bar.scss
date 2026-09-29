@@ -8,7 +8,7 @@
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
-  font-size: 10px;
+  font-size: 12px;
 
   .save-state {
     display: flex;
@@ -60,7 +60,7 @@
     }
 
     > span {
-      font-size: 9px;
+      font-size: 10.8px;
 
       @media (max-width: 640px) {
         display: none;
