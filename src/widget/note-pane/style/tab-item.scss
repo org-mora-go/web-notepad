@@ -2,9 +2,10 @@
 
 .tab-strip {
   .tab-item {
-    width: 213px;
-    min-width: 213px;
-    max-width: 213px;
+    width: 185px;
+    min-width: 185px;
+    max-width: 185px;
+    height: 35px;
     flex: 0 0 auto;
     display: flex;
     align-items: center;
@@ -73,9 +74,9 @@
     }
 
     @media (max-width: 640px) {
-      width: 175px;
-      min-width: 175px;
-      max-width: 175px;
+      width: 153px;
+      min-width: 153px;
+      max-width: 153px;
     }
   }
 
@@ -145,7 +146,7 @@
   .tab-title {
     flex: 0 1 auto;
     overflow: hidden;
-    font-size: 12px;
+    font-size: 13.2px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

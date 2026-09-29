@@ -3,6 +3,8 @@
 
 .tab-strip {
   position: relative;
+  height: 35px;
+  min-height: 35px;
   min-width: 0;
   display: flex;
   border-bottom: 1px solid v.$line;
@@ -12,6 +14,7 @@
     min-width: 0;
     display: flex;
     overflow-x: auto;
+    overflow-y: hidden;
     scrollbar-width: thin;
 
     &.is-overflowing {
