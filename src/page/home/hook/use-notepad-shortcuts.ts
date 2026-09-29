@@ -2,7 +2,7 @@
 
 import { type RefObject,useEffect } from "react";
 
-import { useNotepadStore } from "@/src/entity/notepad/store";
+import { useNotepadStore } from "@/src/entity/notepad";
 
 type Options = {
   editorRef: RefObject<HTMLTextAreaElement | null>;

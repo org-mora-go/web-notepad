@@ -4,7 +4,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import type { PaneDropZone } from "@/src/entity";
 import { useTabStrip } from "@/src/entity/hook";
-import { useNotepadStore } from "@/src/entity/notepad/store";
+import { useNotepadStore } from "@/src/entity/notepad";
 
 import { useEditorFocus } from "./use-editor-focus";
 import { useNotepadShortcuts } from "./use-notepad-shortcuts";

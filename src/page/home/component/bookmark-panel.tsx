@@ -2,7 +2,7 @@
 
 import { Bookmark, Trash2, X } from "lucide-react";
 
-import type { BookmarkEntry } from "@/src/entity/notepad/store";
+import type { BookmarkEntry } from "@/src/entity/notepad";
 
 const formatDate = (timestamp: number) =>
   new Intl.DateTimeFormat("ko-KR", {

@@ -2,7 +2,7 @@
 
 import { useEffect, useSyncExternalStore } from "react";
 
-import { useNotepadStore } from "@/src/entity/notepad/store";
+import { useNotepadStore } from "@/src/entity/notepad";
 
 const subscribeToHydration = (onStoreChange: () => void) =>
   useNotepadStore.persist?.onFinishHydration(onStoreChange) ?? (() => undefined);

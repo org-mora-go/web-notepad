@@ -2,7 +2,7 @@
 
 import { type RefObject,useEffect } from "react";
 
-import { useNotepadStore } from "@/src/entity/notepad/store";
+import { useNotepadStore } from "@/src/entity/notepad";
 
 export function useEditorFocus(
   editorRef: RefObject<HTMLTextAreaElement | null>,
