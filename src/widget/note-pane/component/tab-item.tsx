@@ -49,6 +49,11 @@ export function TabItem({
         event.preventDefault();
         onContextMenu(tab.id, event.clientX, event.clientY);
       }}
+      onAuxClick={(event) => {
+        if (event.button !== 1) return;
+        event.preventDefault();
+        onClose(tab.id);
+      }}
       onDragStart={(event) => {        
         event.dataTransfer.setData("text/plain", tab.id);
         onDragStateChange(tab.id);

@@ -67,6 +67,16 @@ test('closing the last tab does not reuse a bookmarked tab ID', async ({ page })
   await expect(page.locator('.bookmark-item p')).toHaveText('bookmarked original');
 });
 
+test('middle-clicking a tab closes it', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  const tabs = page.locator('[role="tab"]');
+  await expect(tabs).toHaveCount(2);
+  await tabs.nth(1).click({ button: 'middle' });
+  await expect(tabs).toHaveCount(1);
+});
+
 test('Tab inserts once at the caret and waits for Korean composition to finish', async ({ page }) => {
   await page.goto('http://localhost:3000');
 
