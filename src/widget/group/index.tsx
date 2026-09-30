@@ -5,8 +5,7 @@ import { type FormEvent, useState } from "react";
 
 import type { GroupEntry } from "@/src/entity/notepad";
 import { UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
-
-import { SearchField } from "../search-field";
+import { matchesSearchQuery, SearchField } from "@/src/feature";
 
 type Props = {
   groups: GroupEntry[];
@@ -29,12 +28,9 @@ export function GroupPanel({
 }: Props) {
   const [groupName, setGroupName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  const filteredGroups = normalizedQuery
-    ? groups.filter((group) =>
-        group.name.toLowerCase().includes(normalizedQuery),
-      )
-    : groups;
+  const filteredGroups = groups.filter((group) =>
+    matchesSearchQuery(searchQuery, group.name),
+  );
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -97,7 +93,7 @@ export function GroupPanel({
               <p>아직 그룹이 없습니다</p>
             </div>
           ) : filteredGroups.length === 0 ? (
-            <div className="widget-search-empty">
+            <div className="search-empty-state">
               <p>검색 결과가 없습니다</p>
             </div>
           ) : (

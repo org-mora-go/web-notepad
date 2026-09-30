@@ -51,6 +51,7 @@ export function normalizePersistedState(
   };
   delete persisted.unsavedSnapshots;
   delete persisted.nextUnsavedNumber;
+  const hasLegacyTabs = Array.isArray(persisted.tabs);
   const legacyTabs = normalizeTabs(persisted.tabs, currentState.groups[0].tabs);
   const legacyBookmarks = normalizeBookmarks(
     persisted.bookmarks,
@@ -163,7 +164,10 @@ export function normalizePersistedState(
   if (!ungrouped) {
     groups.unshift({
       ...currentState.groups[0],
-      tabs: legacyTabs,
+      tabs:
+        hasLegacyTabs && legacyTabs.length > 0
+          ? legacyTabs
+          : [createLegacyGroupTab()],
       bookmarks: legacyBookmarks,
     });
   }

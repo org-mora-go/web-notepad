@@ -1,6 +1,6 @@
 @use "../../../entity/style/variable" as v;
 
-.widget-search-field {
+.search-field {
   height: 36px;
   display: flex;
   align-items: center;
@@ -37,7 +37,7 @@
   }
 }
 
-.widget-search-empty {
+.search-empty-state {
   min-height: 220px;
   display: grid;
   place-content: center;

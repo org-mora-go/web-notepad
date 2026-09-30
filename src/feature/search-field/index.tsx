@@ -16,7 +16,7 @@ export function SearchField({
   onChange,
 }: Props) {
   return (
-    <label className="widget-search-field">
+    <label className="search-field">
       <Search size={15} aria-hidden="true" />
       <input
         type="search"

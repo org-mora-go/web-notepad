@@ -3,5 +3,4 @@ export {
   createNoteTab,
   getNextTabNumber,
   getTitleFromContent,
-  sortPinnedFirst,
 } from "./note-tab";

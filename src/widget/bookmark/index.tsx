@@ -4,8 +4,7 @@ import { Bookmark, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type { BookmarkEntry } from "@/src/entity/notepad";
-
-import { SearchField } from "../search-field";
+import { matchesSearchQuery, SearchField } from "@/src/feature";
 
 const formatDate = (timestamp: number) =>
   new Intl.DateTimeFormat("ko-KR", {
@@ -99,14 +98,9 @@ export function BookmarkPanel({
   onRemove,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
-  const normalizedQuery = searchQuery.trim().toLowerCase();
-  const filteredBookmarks = normalizedQuery
-    ? bookmarks.filter((bookmark) =>
-        `${bookmark.title}\n${bookmark.content}`
-          .toLowerCase()
-          .includes(normalizedQuery),
-      )
-    : bookmarks;
+  const filteredBookmarks = bookmarks.filter((bookmark) =>
+    matchesSearchQuery(searchQuery, bookmark.title, bookmark.content),
+  );
 
   return (
     <div className="bookmark-panel">
@@ -146,7 +140,7 @@ export function BookmarkPanel({
               <p>Empty Bookmarks</p>
             </div>
           ) : filteredBookmarks.length === 0 ? (
-            <div className="widget-search-empty">
+            <div className="search-empty-state">
               <p>검색 결과가 없습니다</p>
             </div>
           ) : (

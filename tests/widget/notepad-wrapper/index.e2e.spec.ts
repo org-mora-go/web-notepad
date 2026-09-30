@@ -73,6 +73,20 @@ test("탭은 짧은 제목에 맞춰지고 제목 길이에 따라 제한 너비
   expect(expandedWidth).toBeLessThanOrEqual(301);
 });
 
+test("탭을 고정해도 기존 탭 순서를 유지한다", async ({ page }) => {
+  await page.goto("http://localhost:3000");
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+
+  const tabs = page.locator('[role="tab"]');
+  const tabTitlesBeforePin = await tabs.allTextContents();
+  const secondTab = page.locator(".tab-item").nth(1);
+  await secondTab.locator('[role="tab"]').click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Pin" }).click();
+
+  await expect(secondTab).toHaveClass(/is-pinned/);
+  await expect.poll(() => tabs.allTextContents()).toEqual(tabTitlesBeforePin);
+});
+
 test("컨텍스트 메뉴에서 탭을 고정하면 닫기 버튼이 숨겨지고 가운데 클릭으로 닫히지 않는다", async ({
   page,
 }) => {

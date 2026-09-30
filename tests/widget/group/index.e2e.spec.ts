@@ -120,27 +120,96 @@ test("공백 이름으로는 그룹을 생성하지 않고 유효한 이름으�
   await expect(page.locator("textarea")).toHaveValue("");
 });
 
-test("그룹 검색은 대소문자를 구분하지 않고 검색 결과가 없음을 표시한다", async ({
+test("Ungrouped 복원 시 다른 그룹과 탭 ID가 충돌하지 않는다", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    localStorage.setItem(
+      "web-notepad-storage",
+      JSON.stringify({
+        state: {
+          nextTabNumber: 2,
+          activeGroupId: "group-work",
+          groups: [
+            {
+              id: "group-work",
+              name: "Work",
+              createdAt: 1,
+              tabs: [
+                {
+                  id: "tab-1",
+                  title: "Existing work",
+                  content: "existing content",
+                  savedContent: "existing content",
+                  urgent: false,
+                  pinned: false,
+                  bookmarked: false,
+                  updatedAt: 1,
+                },
+              ],
+              bookmarks: [],
+              activeTabId: "tab-1",
+              rightTabIds: [],
+              activeRightTabId: null,
+              activePane: "left",
+              splitRatio: 0.5,
+            },
+          ],
+        },
+        version: 0,
+      }),
+    );
+  });
+  await page.goto("http://localhost:3000");
+  await expect(page.locator("textarea")).toHaveValue("existing content");
+
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  const tabIds = await page.evaluate(() => {
+    const storage = localStorage.getItem("web-notepad-storage");
+    if (!storage) return [];
+    const state = JSON.parse(storage).state;
+    return state.groups.flatMap((group: { tabs: { id: string }[] }) =>
+      group.tabs.map((tab) => tab.id),
+    );
+  });
+
+  expect(new Set(tabIds).size).toBe(tabIds.length);
+});
+
+test("그룹 삭제 시 모든 노트와 북마크를 Ungrouped로 보존한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");
   await page.getByRole("button", { name: "Ungrouped (1)" }).click();
-  await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Work");
+  await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Archive");
   await page.getByRole("button", { name: "그룹 생성" }).click();
 
-  await page.getByRole("button", { name: "Work (2)" }).click();
-  await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Personal");
-  await page.getByRole("button", { name: "그룹 생성" }).click();
+  await page.locator("textarea").fill("First archived note");
+  await page
+    .locator('.tab-item.is-active [role="tab"]')
+    .click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Bookmark" }).click();
 
-  await page.getByRole("button", { name: "Personal (3)" }).click();
-  const search = page.getByRole("searchbox", { name: "그룹 검색" });
-  await search.fill("WORK");
-  await expect(page.locator(".group-item")).toHaveCount(1);
-  await expect(page.locator(".group-item")).toContainText("Work");
+  await page.keyboard.press("Meta+n");
+  await page.locator("textarea").fill("Second archived note");
+  await page
+    .locator('.tab-item.is-active [role="tab"]')
+    .click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Bookmark" }).click();
 
-  await search.fill("missing");
-  await expect(page.locator(".group-item")).toHaveCount(0);
-  await expect(page.locator(".widget-search-empty")).toContainText(
-    "검색 결과가 없습니다",
+  await page.getByRole("button", { name: "Archive (2)" }).click();
+  await page.getByRole("button", { name: "Archive 그룹 삭제" }).click();
+  await expect(page.getByRole("button", { name: "Ungrouped (1)" })).toBeVisible();
+  await expect(page.locator('[role="tab"]')).toHaveCount(3);
+  await expect(page.locator("textarea")).toHaveValue("Second archived note");
+  await page.getByRole("button", { name: "그룹 닫기" }).click();
+  await page.getByRole("button", { name: "BOOKMARK" }).click();
+
+  await expect(page.locator(".bookmark-item")).toHaveCount(2);
+  await expect(page.locator(".bookmark-item").nth(0)).toContainText(
+    "Second archived note",
+  );
+  await expect(page.locator(".bookmark-item").nth(1)).toContainText(
+    "First archived note",
   );
 });

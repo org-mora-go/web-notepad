@@ -11,20 +11,16 @@ export const createNoteTab = (number: number): NoteTab => ({
   updatedAt: 0,
 });
 
-export const getNextTabNumber = (tabs: NoteTab[], reservedIds: string[] = [], startAt = 2) => {
+export const getNextTabNumber = (
+  tabs: NoteTab[],
+  reservedIds: string[] = [],
+  startAt = 2,
+) => {
   const usedIds = new Set([...tabs.map((tab) => tab.id), ...reservedIds]);
   let number = startAt;
   while (usedIds.has(`tab-${number}`)) number += 1;
   return number;
 };
-
-export const sortPinnedFirst = (tabs: NoteTab[]) =>
-  tabs
-    .map((tab, index) => ({ tab, index }))
-    .sort(
-      (a, b) => Number(Boolean(b.tab.pinned)) - Number(Boolean(a.tab.pinned)) || a.index - b.index,
-    )
-    .map(({ tab }) => tab);
 
 export const getTitleFromContent = (content: unknown, fallback: string) => {
   const text = typeof content === "string" ? content : "";

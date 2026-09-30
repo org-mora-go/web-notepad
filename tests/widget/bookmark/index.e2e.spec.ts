@@ -110,33 +110,23 @@ test("긴 북마크 본문은 더보기와 간소화로 전체 표시를 전환�
     .toBe(true);
 });
 
-test("북마크 검색은 제목과 본문에서 일치 항목을 찾는다", async ({ page }) => {
+test("북마크 제거 시 탭 표시를 해제하고 메모는 유지한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
 
-  await page
-    .locator("textarea")
-    .fill("Sprint planning\nInclude pineapple inventory in the notes");
-  await page
-    .locator('.tab-item.is-active [role="tab"]')
-    .click({ button: "right" });
+  const editor = page.locator("textarea").first();
+  await editor.fill("Keep this note");
+  const tab = page.locator(".tab-item.is-active");
+  await tab.locator('[role="tab"]').click({ button: "right" });
   await page.getByRole("menuitem", { name: "Bookmark" }).click();
+  await expect(tab).toHaveClass(/is-bookmarked/);
+
   await page.getByRole("button", { name: "BOOKMARK" }).click();
-
-  const search = page.getByRole("searchbox", { name: "북마크 검색" });
-  await search.fill("sprint");
-  await expect(page.locator(".bookmark-item")).toHaveCount(1);
-  await expect(page.locator(".bookmark-item-heading")).toContainText(
-    "Sprint planning",
+  await page.getByRole("button", { name: "Keep this note 북마크 제거" }).click();
+  await expect(page.locator(".bookmark-empty")).toContainText(
+    "Empty Bookmarks",
   );
+  await page.getByRole("button", { name: "북마크 닫기" }).click();
 
-  await search.fill("PINEAPPLE");
-  await expect(page.locator(".bookmark-item")).toHaveCount(1);
-
-  await search.fill("not present");
-  await expect(page.locator(".widget-search-empty")).toContainText(
-    "검색 결과가 없습니다",
-  );
-
-  await search.fill("");
-  await expect(page.locator(".bookmark-item")).toHaveCount(1);
+  await expect(editor).toHaveValue("Keep this note");
+  await expect(tab).not.toHaveClass(/is-bookmarked/);
 });

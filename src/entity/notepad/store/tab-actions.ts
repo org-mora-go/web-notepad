@@ -1,12 +1,7 @@
 import type { StateCreator } from "zustand";
 
 import type { NotepadState } from "../type";
-import {
-  createNoteTab,
-  getNextTabNumber,
-  getTitleFromContent,
-  sortPinnedFirst,
-} from "../util";
+import { createNoteTab, getNextTabNumber, getTitleFromContent } from "../util";
 import {
   getActiveGroup,
   getAllTabs,
@@ -107,7 +102,7 @@ export const createTabActions: StateCreator<
       tabs.splice(to, 0, moved);
       return updateGroup(state, group.id, (current) => ({
         ...current,
-        tabs: sortPinnedFirst(tabs),
+        tabs,
       }));
     }),
   toggleUrgent: (tabId) =>
@@ -127,10 +122,8 @@ export const createTabActions: StateCreator<
       if (!group) return state;
       return updateGroup(state, group.id, (current) => ({
         ...current,
-        tabs: sortPinnedFirst(
-          current.tabs.map((tab) =>
-            tab.id === tabId ? { ...tab, pinned: !tab.pinned } : tab,
-          ),
+        tabs: current.tabs.map((tab) =>
+          tab.id === tabId ? { ...tab, pinned: !tab.pinned } : tab,
         ),
       }));
     }),
