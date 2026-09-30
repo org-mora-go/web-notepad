@@ -36,6 +36,8 @@
       border-right-color: #35463a;
 
       .tab-select {
+        // No close button renders on pinned tabs, so add back the trailing space it would occupy.
+        padding-right: 14px;
         color: #b9ddc5;
       }
 
