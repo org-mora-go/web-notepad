@@ -1,0 +1,52 @@
+@use "../../../entity/style/variable" as v;
+
+.widget-search-field {
+  height: 36px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0 14px 12px;
+  padding: 0 10px;
+  border: 1px solid v.$line;
+  background: #151514;
+  color: v.$dim;
+
+  &:focus-within {
+    border-color: v.$hover-line;
+  }
+
+  svg {
+    flex: 0 0 auto;
+  }
+
+  input {
+    width: 100%;
+    min-width: 0;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: v.$ink;
+    font: inherit;
+    font-size: 12px;
+
+    &::placeholder {
+      color: v.$dim;
+    }
+  }
+}
+
+.widget-search-empty {
+  min-height: 220px;
+  display: grid;
+  place-content: center;
+  color: v.$dim;
+  text-align: center;
+
+  p {
+    margin: 0;
+    font-family: v.$sans;
+    font-size: 13px;
+  }
+}

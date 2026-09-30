@@ -5,6 +5,8 @@ import { useEffect, useRef, useState } from "react";
 
 import type { BookmarkEntry } from "@/src/entity/notepad";
 
+import { SearchField } from "../search-field";
+
 const formatDate = (timestamp: number) =>
   new Intl.DateTimeFormat("ko-KR", {
     month: "2-digit",
@@ -96,6 +98,16 @@ export function BookmarkPanel({
   onOpen,
   onRemove,
 }: Props) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredBookmarks = normalizedQuery
+    ? bookmarks.filter((bookmark) =>
+        `${bookmark.title}\n${bookmark.content}`
+          .toLowerCase()
+          .includes(normalizedQuery),
+      )
+    : bookmarks;
+
   return (
     <div className="bookmark-panel">
       <div
@@ -121,14 +133,24 @@ export function BookmarkPanel({
             <X size={12} />
           </button>
         </div>
+        <SearchField
+          value={searchQuery}
+          ariaLabel="북마크 검색"
+          placeholder="북마크 검색"
+          onChange={setSearchQuery}
+        />
         <div className="bookmark-list">
           {bookmarks.length === 0 ? (
             <div className="bookmark-empty">
               <Bookmark size={26} strokeWidth={1.4} />
               <p>Empty Bookmarks</p>
             </div>
+          ) : filteredBookmarks.length === 0 ? (
+            <div className="widget-search-empty">
+              <p>검색 결과가 없습니다</p>
+            </div>
           ) : (
-            bookmarks.map((bookmark) => (
+            filteredBookmarks.map((bookmark) => (
               <BookmarkItem
                 key={bookmark.id}
                 bookmark={bookmark}

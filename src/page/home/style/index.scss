@@ -1,8 +1,9 @@
 @use "../../../entity/style/variable" as v;
-@use "../../../widget/note-pane/style/index";
+@use "../../../widget/notepad-wrapper/style/index" as notepad;
+@use "../../../widget/bookmark/style/index" as bookmark;
+@use "../../../widget/group/style/index" as group;
+@use "../../../widget/search-field/style/index" as search-field;
 @use "./status-bar";
-@use "./bookmark-panel.scss";
-@use "./group-panel.scss";
 @use "./loading.scss";
 
 .home {

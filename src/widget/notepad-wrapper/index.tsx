@@ -1,9 +1,9 @@
 "use client";
 
 import { NotePaneBody, PaneDivider, TabStrip } from "./component";
-import type { NotePaneProps } from "./type";
+import type { NotepadPaneProps } from "./type";
 
-export function NotePane({
+export function NotepadPane({
   tabs,
   activeTab,
   tabStrip,
@@ -26,7 +26,7 @@ export function NotePane({
   onToggleBookmark,
   onAdd,
   onChange,
-}: NotePaneProps) {
+}: NotepadPaneProps) {
   return (
     <>
       {onResize && <PaneDivider onResize={onResize} />}
@@ -70,3 +70,5 @@ export function NotePane({
     </>
   );
 }
+
+export { NotepadPane as NotePane };

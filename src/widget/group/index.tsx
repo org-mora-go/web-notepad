@@ -6,6 +6,8 @@ import { type FormEvent, useState } from "react";
 import type { GroupEntry } from "@/src/entity/notepad";
 import { UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
 
+import { SearchField } from "../search-field";
+
 type Props = {
   groups: GroupEntry[];
   activeGroupId: string;
@@ -26,6 +28,13 @@ export function GroupPanel({
   onRemove,
 }: Props) {
   const [groupName, setGroupName] = useState("");
+  const [searchQuery, setSearchQuery] = useState("");
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+  const filteredGroups = normalizedQuery
+    ? groups.filter((group) =>
+        group.name.toLowerCase().includes(normalizedQuery),
+      )
+    : groups;
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -75,14 +84,24 @@ export function GroupPanel({
             <Plus size={16} />
           </button>
         </form>
+        <SearchField
+          value={searchQuery}
+          ariaLabel="그룹 검색"
+          placeholder="그룹 검색"
+          onChange={setSearchQuery}
+        />
         <div className="group-list">
           {groups.length === 0 ? (
             <div className="group-empty">
               <Layers size={24} strokeWidth={1.5} />
               <p>아직 그룹이 없습니다</p>
             </div>
+          ) : filteredGroups.length === 0 ? (
+            <div className="widget-search-empty">
+              <p>검색 결과가 없습니다</p>
+            </div>
           ) : (
-            groups.map((group) => (
+            filteredGroups.map((group) => (
               <article
                 className={`group-item ${group.id === activeGroupId ? "is-active" : ""}`}
                 key={group.id}

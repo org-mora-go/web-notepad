@@ -4,7 +4,7 @@ import type { PaneDropZone } from "@/src/entity";
 import type { TabStripState } from "@/src/entity/hook";
 import type { NoteTab } from "@/src/entity/notepad";
 
-export type NotePaneProps = {
+export type NotepadPaneProps = {
   tabs: NoteTab[];
   activeTab: NoteTab;
   tabStrip: TabStripState;
@@ -28,3 +28,5 @@ export type NotePaneProps = {
   onAdd: () => void;
   onChange: (content: string) => void;
 };
+
+export type NotePaneProps = NotepadPaneProps;

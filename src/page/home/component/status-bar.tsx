@@ -39,9 +39,9 @@ export function StatusBar({
             aria-expanded={bookmarksOpen}
             aria-controls="bookmarks-panel"
           >
-            <Bookmark size={13} strokeWidth={1.8} />
+            <Bookmark size={16} strokeWidth={1.8} />
             <span>
-              BOOKMARKS{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}
+              BOOKMARK{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}
             </span>
           </button>
           <button
@@ -51,7 +51,7 @@ export function StatusBar({
             aria-expanded={groupsOpen}
             aria-controls="groups-panel"
           >
-            <Layers size={13} strokeWidth={1.8} />
+            <Layers size={16} strokeWidth={1.8} />
             <span>
               {activeGroupName} ({groupCount})
             </span>

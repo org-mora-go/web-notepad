@@ -3,9 +3,9 @@
 import "./style/index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { NotePane } from "@/src/widget";
+import { BookmarkPanel, GroupPanel, NotepadPane } from "@/src/widget";
 
-import { BookmarkPanel, GroupPanel, Loading, StatusBar } from "./component";
+import { Loading, StatusBar } from "./component";
 
 export function Home() {
   const {
@@ -39,8 +39,8 @@ export function Home() {
     <main className="home">
       <section className="workspace">
         <div className={`pane-group ${split ? "is-split" : ""}`}>
-          {leftPaneProps && <NotePane {...leftPaneProps} />}
-          {rightPaneProps && <NotePane {...rightPaneProps} />}
+          {leftPaneProps && <NotepadPane {...leftPaneProps} />}
+          {rightPaneProps && <NotepadPane {...rightPaneProps} />}
         </div>
 
         <StatusBar
