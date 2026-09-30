@@ -20,7 +20,13 @@ type Props = {
   onRemove: (bookmarkId: string) => void;
 };
 
-export function BookmarkPanel({ bookmarks, open, onClose, onOpen, onRemove }: Props) {
+export function BookmarkPanel({
+  bookmarks,
+  open,
+  onClose,
+  onOpen,
+  onRemove,
+}: Props) {
   return (
     <div className="bookmark-panel">
       <div
@@ -35,10 +41,14 @@ export function BookmarkPanel({ bookmarks, open, onClose, onOpen, onRemove }: Pr
       >
         <div className="bookmark-header">
           <div className="bookmark-header-main">
-            <span className="eyebrow">SAVED NOTES</span>
             <h2>Bookmarks</h2>
           </div>
-          <button className="panel-close" type="button" onClick={onClose} aria-label="북마크 닫기">
+          <button
+            className="panel-close"
+            type="button"
+            onClick={onClose}
+            aria-label="북마크 닫기"
+          >
             <X size={19} />
           </button>
         </div>

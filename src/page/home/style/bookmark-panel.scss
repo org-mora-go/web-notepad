@@ -37,16 +37,16 @@
   }
 
   .bookmark-header {
-    min-height: 105px;
+    min-height: 78px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 24px 22px;
+    padding: 16px 22px;
     border-bottom: 1px solid v.$line;
 
     h2 {
-      margin: 6px 0 0;
+      margin: 0;
       font-family: v.$sans;
       font-size: 24px;
       font-weight: 500;

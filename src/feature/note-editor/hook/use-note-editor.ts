@@ -1,9 +1,5 @@
-import type {
-  ChangeEvent,
-  KeyboardEvent,
-  UIEvent,
-} from "react";
-import { type RefObject,useEffect, useRef, useState } from "react";
+import type { ChangeEvent, KeyboardEvent, UIEvent } from "react";
+import { type RefObject, useEffect, useRef, useState } from "react";
 
 import type { NoteTab } from "@/src/entity/notepad";
 
@@ -19,9 +15,10 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const lineRailRef = useRef<HTMLDivElement>(null);
   const undoHistoryRef = useRef(new Map<string, string[]>());
   const redoHistoryRef = useRef(new Map<string, string[]>());
-  const pendingTabInsertionRef = useRef<HTMLTextAreaElement | null>(null);
   const contentRef = useRef(tab.content);
-  const [selectedLinesByTab, setSelectedLinesByTab] = useState<Record<string, number[]>>({});
+  const [selectedLinesByTab, setSelectedLinesByTab] = useState<
+    Record<string, number[]>
+  >({});
   const selectedLines = selectedLinesByTab[tab.id] ?? [];
   const previousTabIdRef = useRef(tab.id);
   const previousContentRef = useRef(tab.content);
@@ -57,7 +54,8 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
           const selected = current[tab.id] ?? [];
           const remapped = selected.flatMap((lineIndex) => {
             if (lineIndex < commonPrefix) return [lineIndex];
-            if (lineIndex >= unchangedSuffixStart) return [lineIndex + lineCountDelta];
+            if (lineIndex >= unchangedSuffixStart)
+              return [lineIndex + lineCountDelta];
             return [];
           });
           return { ...current, [tab.id]: remapped };
@@ -73,7 +71,10 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
     if (content === previousContent) return;
 
     const history = undoHistoryRef.current.get(tab.id) ?? [];
-    undoHistoryRef.current.set(tab.id, [...history.slice(-99), previousContent]);
+    undoHistoryRef.current.set(tab.id, [
+      ...history.slice(-99),
+      previousContent,
+    ]);
     redoHistoryRef.current.delete(tab.id);
     contentRef.current = content;
     onChange(content);
@@ -110,10 +111,6 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
       onChange,
       commitContent,
       insertTab,
-      hasPendingTabInsertion: () => pendingTabInsertionRef.current !== null,
-      queueTabInsertion: (textarea) => {
-        pendingTabInsertionRef.current = textarea;
-      },
     });
   };
 
@@ -123,14 +120,6 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
 
   const handleCompositionEnd = () => {
     composingRef.current = false;
-    const pendingTextarea = pendingTabInsertionRef.current;
-    if (pendingTextarea) {
-      window.requestAnimationFrame(() => {
-        if (pendingTabInsertionRef.current !== pendingTextarea) return;
-        pendingTabInsertionRef.current = null;
-        insertTab(pendingTextarea);
-      });
-    }
   };
 
   const handleScroll = (event: UIEvent<HTMLTextAreaElement>) => {
