@@ -79,3 +79,20 @@ test('북마크 패널이 열린 상태에서 배경을 누르면 패널이 다�
 	await expect(bookmarksButton).toHaveAttribute('aria-expanded', 'false');
 	await expect(page.locator('#bookmarks-panel')).toHaveAttribute('aria-hidden', 'true');
 });
+
+test('Cmd+A를 누르면 포커스된 에디터의 전체 텍스트가 선택된다', async ({ page }) => {
+	await page.goto('http://localhost:3000');
+
+	const editor = page.locator('textarea').first();
+	await editor.fill('select all test');
+	await page.keyboard.press('Meta+a');
+
+	await expect
+		.poll(() =>
+			editor.evaluate((element) => {
+				const textarea = element as HTMLTextAreaElement;
+				return [textarea.selectionStart, textarea.selectionEnd];
+			}),
+		)
+		.toEqual([0, 'select all test'.length]);
+});

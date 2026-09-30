@@ -101,3 +101,16 @@ test('컨텍스트 메뉴에서 Escape를 누르면 아무 변경 없이 메뉴�
 	await expect(tab).not.toHaveClass(/is-pinned/);
 	await expect(tab).not.toHaveClass(/is-bookmarked/);
 });
+
+test('28자를 넘는 제목은 정확히 28자까지만 탭 이름으로 쓰인다', async ({ page }) => {
+	await page.goto('http://localhost:3000');
+
+	const editor = page.locator('textarea').first();
+	await editor.fill('A'.repeat(40));
+
+	const activeTab = page.locator('.tab-item.is-active');
+	await expect(activeTab.locator('.tab-title')).toHaveText('A'.repeat(28));
+
+	const tabWidth = await activeTab.evaluate((element) => element.getBoundingClientRect().width);
+	expect(tabWidth).toBeLessThanOrEqual(301);
+});

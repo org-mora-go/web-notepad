@@ -126,3 +126,32 @@ test('다시 실행 기록이 없을 때 Redo를 눌러도 내용이 바뀌지 �
 	await page.keyboard.press('Meta+Shift+z');
 	await expect(editor).toHaveValue('untouched by redo');
 });
+
+test('실행 취소 후 새로운 내용을 입력하면 다시 실행 기록이 사라진다', async ({ page }) => {
+	await page.goto('http://localhost:3000');
+
+	const editor = page.locator('textarea').first();
+	await editor.fill('first');
+	await editor.fill('first second');
+
+	await page.keyboard.press('Meta+z');
+	await expect(editor).toHaveValue('first');
+
+	await editor.fill('first third');
+	await page.keyboard.press('Meta+Shift+z');
+	await expect(editor).toHaveValue('first third');
+});
+
+test('Tab 키는 선택된 영역을 지우고 탭 문자로 치환한다', async ({ page }) => {
+	await page.goto('http://localhost:3000');
+
+	const editor = page.locator('textarea').first();
+	await editor.fill('hello world');
+	await editor.evaluate((element) => (element as HTMLTextAreaElement).setSelectionRange(0, 5));
+
+	await page.keyboard.press('Tab');
+	await expect(editor).toHaveValue('\t world');
+	await expect
+		.poll(() => editor.evaluate((element) => (element as HTMLTextAreaElement).selectionStart))
+		.toBe(1);
+});
