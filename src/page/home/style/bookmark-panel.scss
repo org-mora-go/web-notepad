@@ -37,18 +37,18 @@
   }
 
   .bookmark-header {
-    min-height: 78px;
+    min-height: 45px;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    padding: 16px 22px;
+    padding: 4px 22px;
     border-bottom: 1px solid v.$line;
 
     h2 {
       margin: 0;
       font-family: v.$sans;
-      font-size: 24px;
+      font-size: 20px;
       font-weight: 500;
     }
   }
@@ -65,14 +65,19 @@
   }
 
   .panel-close {
-    width: 36px;
-    height: 36px;
+    width: 28px;
+    height: 28px;
     display: grid;
     place-items: center;
     border: 1px solid v.$line;
     background: transparent;
     color: v.$dim;
     cursor: pointer;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
 
     &:hover {
       color: v.$ink;
@@ -91,17 +96,34 @@
     border: 1px solid v.$line;
     background: #151514;
 
-    p {
+    .bookmark-content {
       margin: 18px 0;
-      display: -webkit-box;
+      max-height: 126px;
       overflow: hidden;
       color: v.$saved;
       font-family: v.$sans;
       font-size: 14px;
       line-height: 1.5;
       white-space: pre-wrap;
-      -webkit-box-orient: vertical;
-      -webkit-line-clamp: 3;
+      overflow-wrap: anywhere;
+    }
+
+    .bookmark-content.is-expanded {
+      max-height: none;
+    }
+
+    .bookmark-content-toggle {
+      margin: -10px 0 14px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: v.$dim;
+      font-size: 11px;
+      cursor: pointer;
+
+      &:hover {
+        color: v.$ink;
+      }
     }
   }
 
