@@ -19,6 +19,7 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const lineRailRef = useRef<HTMLDivElement>(null);
   const undoHistoryRef = useRef(new Map<string, string[]>());
   const redoHistoryRef = useRef(new Map<string, string[]>());
+  const pendingTabInsertionRef = useRef<HTMLTextAreaElement | null>(null);
   const contentRef = useRef(tab.content);
   const [selectedLinesByTab, setSelectedLinesByTab] = useState<Record<string, number[]>>({});
   const selectedLines = selectedLinesByTab[tab.id] ?? [];
@@ -109,6 +110,10 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
       onChange,
       commitContent,
       insertTab,
+      hasPendingTabInsertion: () => pendingTabInsertionRef.current !== null,
+      queueTabInsertion: (textarea) => {
+        pendingTabInsertionRef.current = textarea;
+      },
     });
   };
 
@@ -118,6 +123,14 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
 
   const handleCompositionEnd = () => {
     composingRef.current = false;
+    const pendingTextarea = pendingTabInsertionRef.current;
+    if (pendingTextarea) {
+      window.requestAnimationFrame(() => {
+        if (pendingTabInsertionRef.current !== pendingTextarea) return;
+        pendingTabInsertionRef.current = null;
+        insertTab(pendingTextarea);
+      });
+    }
   };
 
   const handleScroll = (event: UIEvent<HTMLTextAreaElement>) => {

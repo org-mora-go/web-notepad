@@ -66,3 +66,66 @@ test('closing the last tab does not reuse a bookmarked tab ID', async ({ page })
 
   await expect(page.locator('.bookmark-item p')).toHaveText('bookmarked original');
 });
+
+test('Tab inserts once at the caret and waits for Korean composition to finish', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+
+  const editor = page.locator('textarea').first();
+  await editor.fill('left right');
+  await editor.evaluate((element) => (element as HTMLTextAreaElement).setSelectionRange(4, 4));
+  await page.keyboard.press('Tab');
+  await expect(editor).toHaveValue('left\t right');
+  await expect
+    .poll(() => editor.evaluate((element) => (element as HTMLTextAreaElement).selectionStart))
+    .toBe(5);
+
+  await editor.fill('더ㅑㄹ');
+  await editor.evaluate((element) => (element as HTMLTextAreaElement).setSelectionRange(1, 1));
+  await editor.evaluate((element) =>
+    element.dispatchEvent(new CompositionEvent('compositionstart', { bubbles: true })),
+  );
+  await page.keyboard.press('Tab');
+  await expect(editor).toHaveValue('더ㅑㄹ');
+
+  await editor.evaluate((element) => {
+    const textarea = element as HTMLTextAreaElement;
+    type TestWindow = Window & {
+      __tabTestQueuedFrames?: FrameRequestCallback[];
+      __tabTestOriginalRequestAnimationFrame?: typeof window.requestAnimationFrame;
+    };
+    const testWindow = window as TestWindow;
+    testWindow.__tabTestQueuedFrames = [];
+    testWindow.__tabTestOriginalRequestAnimationFrame = window.requestAnimationFrame;
+    window.requestAnimationFrame = (callback) => {
+      testWindow.__tabTestQueuedFrames?.push(callback);
+      return testWindow.__tabTestQueuedFrames?.length ?? 0;
+    };
+    textarea.dispatchEvent(new CompositionEvent('compositionend', { bubbles: true }));
+    const setValue = Object.getOwnPropertyDescriptor(HTMLTextAreaElement.prototype, 'value')?.set;
+    setValue?.call(textarea, '더한글ㅑㄹ');
+    textarea.setSelectionRange(3, 3);
+    textarea.dispatchEvent(new Event('input', { bubbles: true }));
+  });
+
+  await page.keyboard.press('Tab');
+  await expect(editor).toHaveValue('더한글ㅑㄹ');
+  await editor.evaluate(() => {
+    type TestWindow = Window & {
+      __tabTestQueuedFrames?: FrameRequestCallback[];
+      __tabTestOriginalRequestAnimationFrame?: typeof window.requestAnimationFrame;
+    };
+    const testWindow = window as TestWindow;
+    const queuedFrames = testWindow.__tabTestQueuedFrames ?? [];
+    const originalRequestAnimationFrame = testWindow.__tabTestOriginalRequestAnimationFrame;
+    if (originalRequestAnimationFrame) {
+      window.requestAnimationFrame = originalRequestAnimationFrame;
+    }
+    delete testWindow.__tabTestQueuedFrames;
+    delete testWindow.__tabTestOriginalRequestAnimationFrame;
+    for (const callback of queuedFrames) callback(performance.now());
+  });
+  await expect(editor).toHaveValue('더한글\tㅑㄹ');
+  await expect
+    .poll(() => editor.evaluate((element) => (element as HTMLTextAreaElement).selectionStart))
+    .toBe(4);
+});

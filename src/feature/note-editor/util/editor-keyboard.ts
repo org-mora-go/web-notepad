@@ -13,6 +13,8 @@ type Options = {
   onChange: (content: string) => void;
   commitContent: (content: string) => void;
   insertTab: (textarea: HTMLTextAreaElement) => void;
+  hasPendingTabInsertion: () => boolean;
+  queueTabInsertion: (textarea: HTMLTextAreaElement) => void;
 };
 
 export function handleEditorKeyDown(
@@ -26,6 +28,8 @@ export function handleEditorKeyDown(
     onChange,
     commitContent,
     insertTab,
+    hasPendingTabInsertion,
+    queueTabInsertion,
   }: Options,
 ) {
   const isUndo =
@@ -91,5 +95,10 @@ export function handleEditorKeyDown(
 
   event.preventDefault();
   const textarea = event.currentTarget;
-  window.requestAnimationFrame(() => insertTab(textarea));
+  if (hasPendingTabInsertion()) return;
+  if (isImeComposing(event.nativeEvent, composingRef.current)) {
+    queueTabInsertion(textarea);
+    return;
+  }
+  insertTab(textarea);
 }
