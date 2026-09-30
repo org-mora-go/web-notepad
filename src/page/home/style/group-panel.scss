@@ -1,0 +1,186 @@
+@use "../../../entity/style/variable" as v;
+
+.group-panel {
+  .group-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.58);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+
+    &.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .group-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 20;
+    width: min(462px, 100vw);
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto auto minmax(0, 1fr);
+    border-left: 1px solid #3a3a35;
+    background: #10100f;
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+    transform: translateX(102%);
+    transition: transform 220ms ease;
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
+  .group-header {
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 22px;
+    border-bottom: 1px solid v.$line;
+
+    h2 {
+      margin: 0;
+      font-family: v.$sans;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+
+  .group-close,
+  .group-create-form button,
+  .group-item > button:not(.group-select) {
+    display: grid;
+    place-items: center;
+    border: 1px solid v.$line;
+    background: transparent;
+    color: v.$dim;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: v.$hover-line;
+      color: v.$ink;
+    }
+  }
+
+  .group-close {
+    width: 28px;
+    height: 28px;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+  }
+
+  .group-create-form {
+    display: flex;
+    gap: 8px;
+    padding: 14px;
+    border-bottom: 1px solid v.$line;
+
+    input {
+      min-width: 0;
+      height: 36px;
+      flex: 1;
+      padding: 0 10px;
+      border: 1px solid v.$line;
+      outline: none;
+      background: #151514;
+      color: v.$ink;
+      font: inherit;
+      font-size: 12px;
+
+      &:focus {
+        border-color: v.$hover-line;
+      }
+
+      &::placeholder {
+        color: v.$dim;
+      }
+    }
+
+    button {
+      width: 36px;
+      height: 36px;
+
+      &:disabled {
+        opacity: 0.45;
+        cursor: default;
+      }
+    }
+  }
+
+  .group-list {
+    min-height: 0;
+    padding: 14px;
+    overflow-y: auto;
+  }
+
+  .group-item {
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 8px;
+    padding: 8px 12px;
+    border: 1px solid v.$line;
+    background: #151514;
+
+    &.is-active {
+      border-color: v.$hover-line;
+      background: v.$raised;
+    }
+
+    .group-select {
+      min-width: 0;
+      flex: 1;
+      display: flex;
+      align-items: center;
+      padding: 4px 0;
+      border: 0;
+      background: transparent;
+      text-align: left;
+      cursor: pointer;
+
+      &:hover strong {
+        color: v.$ink;
+      }
+    }
+
+    strong {
+      min-width: 0;
+      overflow-wrap: anywhere;
+      color: v.$signal;
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    button {
+      width: 30px;
+      height: 30px;
+      flex: 0 0 auto;
+    }
+  }
+
+  .group-empty {
+    min-height: 220px;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 12px;
+    color: v.$dim;
+
+    p {
+      margin: 0;
+      font-family: v.$sans;
+      font-size: 13px;
+    }
+  }
+}

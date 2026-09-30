@@ -5,21 +5,30 @@ import "./style/index.scss";
 import { useHome } from "@/src/page/home/hook";
 import { NotePane } from "@/src/widget";
 
-import { BookmarkPanel, Loading, StatusBar } from "./component";
+import { BookmarkPanel, GroupPanel, Loading, StatusBar } from "./component";
 
 export function Home() {
   const {
     hydrated,
     bookmarksOpen,
     setBookmarksOpen,
+    groupsOpen,
+    setGroupsOpen,
+    activeGroupId,
+    selectGroup,
     activeTab,
     lineCount,
     split,
     bookmarks,
+    groups,
+    groupCount,
+    activeGroupName,
     leftPaneProps,
     rightPaneProps,
     openBookmark,
     removeBookmark,
+    createGroup,
+    removeGroup,
   } = useHome();
 
   if (!hydrated || !activeTab) {
@@ -38,7 +47,17 @@ export function Home() {
           lineCount={lineCount}
           bookmarkCount={bookmarks.length}
           bookmarksOpen={bookmarksOpen}
-          onToggleBookmarks={() => setBookmarksOpen((open) => !open)}
+          groupCount={groupCount}
+          activeGroupName={activeGroupName}
+          groupsOpen={groupsOpen}
+          onToggleBookmarks={() => {
+            setBookmarksOpen((open) => !open);
+            setGroupsOpen(false);
+          }}
+          onToggleGroups={() => {
+            setGroupsOpen((open) => !open);
+            setBookmarksOpen(false);
+          }}
         />
       </section>
 
@@ -51,6 +70,21 @@ export function Home() {
           setBookmarksOpen(false);
         }}
         onRemove={removeBookmark}
+      />
+      <GroupPanel
+        groups={groups}
+        activeGroupId={activeGroupId}
+        open={groupsOpen}
+        onClose={() => setGroupsOpen(false)}
+        onCreate={(name) => {
+          createGroup(name);
+          setGroupsOpen(false);
+        }}
+        onSelect={(groupId) => {
+          selectGroup(groupId);
+          setGroupsOpen(false);
+        }}
+        onRemove={removeGroup}
       />
     </main>
   );

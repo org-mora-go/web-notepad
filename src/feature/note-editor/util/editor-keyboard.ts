@@ -13,8 +13,8 @@ type Options = {
   onChange: (content: string) => void;
   commitContent: (content: string) => void;
   insertTab: (textarea: HTMLTextAreaElement) => void;
-  hasPendingTabInsertion: () => boolean;
-  queueTabInsertion: (textarea: HTMLTextAreaElement) => void;
+  hasPendingTabInsertion?: () => boolean;
+  queueTabInsertion?: (textarea: HTMLTextAreaElement) => void;
 };
 
 export function handleEditorKeyDown(
@@ -71,7 +71,10 @@ export function handleEditorKeyDown(
     return;
   }
 
-  if (event.key === "Enter" && !isImeComposing(event.nativeEvent, composingRef.current)) {
+  if (
+    event.key === "Enter" &&
+    !isImeComposing(event.nativeEvent, composingRef.current)
+  ) {
     event.preventDefault();
     const textarea = event.currentTarget;
     const { content: nextContent, cursorPosition } = insertAtSelection(
@@ -95,9 +98,13 @@ export function handleEditorKeyDown(
 
   event.preventDefault();
   const textarea = event.currentTarget;
-  if (hasPendingTabInsertion()) return;
+  if (hasPendingTabInsertion?.()) return;
   if (isImeComposing(event.nativeEvent, composingRef.current)) {
-    queueTabInsertion(textarea);
+    if (queueTabInsertion) {
+      queueTabInsertion(textarea);
+    } else {
+      insertTab(textarea);
+    }
     return;
   }
   insertTab(textarea);

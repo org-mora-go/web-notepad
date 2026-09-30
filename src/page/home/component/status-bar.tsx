@@ -1,15 +1,28 @@
 "use client";
 
-import { Bookmark } from "lucide-react";
+import { Bookmark, Layers } from "lucide-react";
 
 type Props = {
   lineCount: number;
   bookmarkCount: number;
   bookmarksOpen: boolean;
+  groupCount: number;
+  activeGroupName: string;
+  groupsOpen: boolean;
   onToggleBookmarks: () => void;
+  onToggleGroups: () => void;
 };
 
-export function StatusBar({ lineCount, bookmarkCount, bookmarksOpen, onToggleBookmarks }: Props) {
+export function StatusBar({
+  lineCount,
+  bookmarkCount,
+  bookmarksOpen,
+  groupCount,
+  activeGroupName,
+  groupsOpen,
+  onToggleBookmarks,
+  onToggleGroups,
+}: Props) {
   return (
     <footer className="status-bar">
       <div className="save-state">
@@ -27,7 +40,21 @@ export function StatusBar({ lineCount, bookmarkCount, bookmarksOpen, onToggleBoo
             aria-controls="bookmarks-panel"
           >
             <Bookmark size={13} strokeWidth={1.8} />
-            <span>BOOKMARKS{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}</span>
+            <span>
+              BOOKMARKS{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}
+            </span>
+          </button>
+          <button
+            className={`status-command group-status-command ${groupsOpen ? "is-active" : ""}`}
+            type="button"
+            onClick={onToggleGroups}
+            aria-expanded={groupsOpen}
+            aria-controls="groups-panel"
+          >
+            <Layers size={13} strokeWidth={1.8} />
+            <span>
+              {activeGroupName} ({groupCount})
+            </span>
           </button>
         </div>
       </div>

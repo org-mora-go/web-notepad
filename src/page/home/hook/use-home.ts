@@ -13,19 +13,16 @@ import { useStoreHydrated } from "./use-store-hydrated";
 export function useHome() {
   const hydrated = useStoreHydrated();
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
+  const [groupsOpen, setGroupsOpen] = useState(false);
   const [draggingTabId, setDraggingTabId] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
   const composingRef = useRef(false);
   const rightComposingRef = useRef(false);
   const {
-    tabs,
-    activeTabId,
-    rightTabIds,
-    activeRightTabId,
-    activePane,
-    splitRatio,
-    bookmarks,
+    groups,
+    activeGroupId,
+    selectGroup,
     selectTab,
     updateTab,
     moveTab,
@@ -38,42 +35,72 @@ export function useHome() {
     closeTab,
     openBookmark,
     removeBookmark,
+    createGroup,
+    removeGroup,
   } = useNotepadStore();
 
-  const rightIds = useMemo(() => new Set(rightTabIds), [rightTabIds]);
+  const activeGroup =
+    groups.find((group) => group.id === activeGroupId) ?? groups[0];
+  const tabs = activeGroup?.tabs ?? [];
+  const activeTabId = activeGroup?.activeTabId ?? "";
+  const activeRightTabId = activeGroup?.activeRightTabId ?? null;
+  const activePane = activeGroup?.activePane ?? "left";
+  const splitRatio = activeGroup?.splitRatio ?? 0.5;
+  const bookmarks = activeGroup?.bookmarks ?? [];
+  const groupCount = groups.length;
+  const activeGroupName = activeGroup?.name ?? "Ungrouped";
+
+  const rightIds = useMemo(
+    () => new Set(activeGroup?.rightTabIds ?? []),
+    [activeGroup?.rightTabIds],
+  );
   const leftTabs = tabs.filter((tab) => !rightIds.has(tab.id));
   const rightTabs = tabs.filter((tab) => rightIds.has(tab.id));
   const split = rightTabs.length > 0;
-  const leftActiveTab = leftTabs.find((tab) => tab.id === activeTabId) ?? leftTabs[0];
+  const leftActiveTab =
+    leftTabs.find((tab) => tab.id === activeTabId) ?? leftTabs[0];
   const activeRightTab =
     rightTabs.find((tab) => tab.id === activeRightTabId) ?? rightTabs[0];
   const activeTab =
     (activePane === "right"
-      ? activeRightTab ?? leftActiveTab
-      : leftActiveTab ?? activeRightTab) ?? rightTabs[0];
+      ? (activeRightTab ?? leftActiveTab)
+      : (leftActiveTab ?? activeRightTab)) ?? rightTabs[0];
   const lineCount = activeTab?.content.split("\n").length ?? 1;
 
   useNotepadShortcuts({ editorRef, rightEditorRef, composingRef });
-  useEditorFocus(editorRef, activeTabId, hydrated);
-  useEditorFocus(rightEditorRef, activeRightTabId ?? "", hydrated);
+  useEditorFocus(editorRef, activeGroupId, activeTabId, hydrated);
+  useEditorFocus(
+    rightEditorRef,
+    activeGroupId,
+    activeRightTabId ?? "",
+    hydrated,
+  );
 
   // Keep the caret in the pane that shortcuts just moved to.
   useEffect(() => {
     if (!hydrated) return;
     const frame = window.requestAnimationFrame(() => {
-      const target = activePane === "right" ? rightEditorRef.current : editorRef.current;
+      const target =
+        activePane === "right" ? rightEditorRef.current : editorRef.current;
       target?.focus();
     });
     return () => window.cancelAnimationFrame(frame);
   }, [activePane, hydrated]);
 
   const leftStrip = useTabStrip(leftTabs.length, activeTabId, hydrated);
-  const rightStrip = useTabStrip(rightTabs.length, activeRightTabId ?? "", hydrated);
+  const rightStrip = useTabStrip(
+    rightTabs.length,
+    activeRightTabId ?? "",
+    hydrated,
+  );
 
   const addTabToPane = (pane: "left" | "right") => {
     const state = useNotepadStore.getState();
-    const tabId = pane === "right" ? state.activeRightTabId : state.activeTabId;
-    const editor = pane === "right" ? rightEditorRef.current : editorRef.current;
+    const group = state.groups.find((item) => item.id === state.activeGroupId);
+    if (!group) return;
+    const tabId = pane === "right" ? group.activeRightTabId : group.activeTabId;
+    const editor =
+      pane === "right" ? rightEditorRef.current : editorRef.current;
 
     // Commit the textarea's latest value before changing the active tab.
     if (tabId && editor) state.updateTab(tabId, editor.value);
@@ -99,7 +126,11 @@ export function useHome() {
 
   const leftDropZones: PaneDropZone[] = [];
   if (draggingPane === "right") {
-    leftDropZones.push({ key: "adopt", label: "Move here", onDrop: dropTo("left") });
+    leftDropZones.push({
+      key: "adopt",
+      label: "Move here",
+      onDrop: dropTo("left"),
+    });
   } else if (draggingPane === "left" && !split && leftTabs.length > 1) {
     leftDropZones.push({
       key: "split",
@@ -140,42 +171,52 @@ export function useHome() {
       }
     : null;
 
-  const rightPaneProps = split && activeRightTab
-    ? {
-        tabs: rightTabs,
-        activeTab: activeRightTab,
-        tabStrip: rightStrip,
-        editorRef: rightEditorRef,
-        composingRef: rightComposingRef,
-        isFocused: activePane === "right",
-        draggingTabId,
-        dropZones: rightDropZones,
-        onResize: setSplitRatio,
-        onActivate: () => setActivePane("right"),
-        onSelect: selectTab,
-        onClose: closeTab,
-        onMove: moveTab,
-        onAdopt: adoptTo("right"),
-        onDragStateChange: setDraggingTabId,
-        onToggleUrgent: toggleUrgent,
-        onTogglePin: togglePin,
-        onToggleBookmark: toggleBookmark,
-        onAdd: () => addTabToPane("right"),
-        onChange: (content: string) => updateTab(activeRightTab.id, content),
-      }
-    : null;
+  const rightPaneProps =
+    split && activeRightTab
+      ? {
+          tabs: rightTabs,
+          activeTab: activeRightTab,
+          tabStrip: rightStrip,
+          editorRef: rightEditorRef,
+          composingRef: rightComposingRef,
+          isFocused: activePane === "right",
+          draggingTabId,
+          dropZones: rightDropZones,
+          onResize: setSplitRatio,
+          onActivate: () => setActivePane("right"),
+          onSelect: selectTab,
+          onClose: closeTab,
+          onMove: moveTab,
+          onAdopt: adoptTo("right"),
+          onDragStateChange: setDraggingTabId,
+          onToggleUrgent: toggleUrgent,
+          onTogglePin: togglePin,
+          onToggleBookmark: toggleBookmark,
+          onAdd: () => addTabToPane("right"),
+          onChange: (content: string) => updateTab(activeRightTab.id, content),
+        }
+      : null;
 
   return {
     hydrated,
     bookmarksOpen,
     setBookmarksOpen,
+    groupsOpen,
+    setGroupsOpen,
+    activeGroupId,
+    selectGroup,
     activeTab,
     lineCount,
     split,
     bookmarks,
+    groups,
+    groupCount,
+    activeGroupName,
     leftPaneProps,
     rightPaneProps,
     openBookmark,
     removeBookmark,
+    createGroup,
+    removeGroup,
   };
 }

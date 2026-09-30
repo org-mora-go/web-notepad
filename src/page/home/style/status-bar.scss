@@ -71,4 +71,17 @@
       }
     }
   }
+
+  .group-status-command > span {
+    display: block;
+    max-width: 180px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    @media (max-width: 640px) {
+      display: block;
+      max-width: min(26vw, 86px);
+    }
+  }
 }

@@ -22,9 +22,10 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const selectedLines = selectedLinesByTab[tab.id] ?? [];
   const previousTabIdRef = useRef(tab.id);
   const previousContentRef = useRef(tab.content);
-  contentRef.current = tab.content;
+  const pendingTabInsertionRef = useRef<HTMLTextAreaElement | null>(null);
 
   useEffect(() => {
+    contentRef.current = tab.content;
     if (previousTabIdRef.current === tab.id) {
       const previousLines = previousContentRef.current.split("\n");
       const nextLines = tab.content.split("\n");
@@ -111,6 +112,10 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
       onChange,
       commitContent,
       insertTab,
+      hasPendingTabInsertion: () => pendingTabInsertionRef.current !== null,
+      queueTabInsertion: (textarea) => {
+        pendingTabInsertionRef.current = textarea;
+      },
     });
   };
 
@@ -120,6 +125,14 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
 
   const handleCompositionEnd = () => {
     composingRef.current = false;
+    const pendingTextarea = pendingTabInsertionRef.current;
+    if (!pendingTextarea) return;
+
+    window.requestAnimationFrame(() => {
+      if (pendingTabInsertionRef.current !== pendingTextarea) return;
+      pendingTabInsertionRef.current = null;
+      insertTab(pendingTextarea);
+    });
   };
 
   const handleScroll = (event: UIEvent<HTMLTextAreaElement>) => {

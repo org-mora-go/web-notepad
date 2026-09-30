@@ -17,17 +17,25 @@ export type BookmarkEntry = {
   createdAt: number;
 };
 
-export type PaneId = "left" | "right";
-
-export type NotepadState = {
+export type GroupEntry = {
+  id: string;
+  name: string;
+  createdAt: number;
   tabs: NoteTab[];
+  bookmarks: BookmarkEntry[];
   activeTabId: string;
   rightTabIds: string[];
   activeRightTabId: string | null;
   activePane: PaneId;
   splitRatio: number;
+};
+
+export type PaneId = "left" | "right";
+
+export type NotepadState = {
   nextTabNumber: number;
-  bookmarks: BookmarkEntry[];
+  groups: GroupEntry[];
+  activeGroupId: string;
   addTab: (pane?: PaneId) => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
@@ -41,4 +49,7 @@ export type NotepadState = {
   closeTab: (tabId: string) => void;
   openBookmark: (bookmarkId: string) => void;
   removeBookmark: (bookmarkId: string) => void;
+  createGroup: (name: string) => void;
+  removeGroup: (groupId: string) => void;
+  selectGroup: (groupId: string) => void;
 };

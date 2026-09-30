@@ -1,6 +1,6 @@
 "use client";
 
-import { type RefObject,useEffect } from "react";
+import { type RefObject, useEffect } from "react";
 
 import { useNotepadStore } from "@/src/entity/notepad";
 
@@ -10,15 +10,25 @@ type Options = {
   composingRef: RefObject<boolean>;
 };
 
-export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }: Options) {
+export function useNotepadShortcuts({
+  editorRef,
+  rightEditorRef,
+  composingRef,
+}: Options) {
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
       const state = useNotepadStore.getState();
-      const { tabs, rightTabIds } = state;
-      const pane = rightTabIds.length === 0 ? "left" : state.activePane;
+      const activeGroup = state.groups.find(
+        (group) => group.id === state.activeGroupId,
+      );
+      if (!activeGroup) return;
+      const { tabs, rightTabIds } = activeGroup;
+      const pane = rightTabIds.length === 0 ? "left" : activeGroup.activePane;
       const paneRightTabs = tabs.filter((tab) => rightTabIds.includes(tab.id));
       const paneActiveId =
-        pane === "right" ? (state.activeRightTabId ?? "") : state.activeTabId;
+        pane === "right"
+          ? (activeGroup.activeRightTabId ?? "")
+          : activeGroup.activeTabId;
       const editor = editorRef.current;
 
       // The Korean IME swallows the first shortcut key while composing, so commit as soon as a modifier is held.
@@ -53,12 +63,19 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
       }
 
       const shouldAddTab =
-        (event.metaKey && !event.ctrlKey && !event.altKey && event.key.toLowerCase() === "n") ||
-        (event.altKey && !event.ctrlKey && !event.metaKey && event.key.toLowerCase() === "n");
+        (event.metaKey &&
+          !event.ctrlKey &&
+          !event.altKey &&
+          event.key.toLowerCase() === "n") ||
+        (event.altKey &&
+          !event.ctrlKey &&
+          !event.metaKey &&
+          event.key.toLowerCase() === "n");
 
       if (shouldAddTab) {
         event.preventDefault();
-        const activeEditor = pane === "right" ? rightEditorRef.current : editorRef.current;
+        const activeEditor =
+          pane === "right" ? rightEditorRef.current : editorRef.current;
         if (activeEditor && paneActiveId) {
           state.updateTab(paneActiveId, activeEditor.value);
         }
@@ -80,9 +97,15 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
         return;
       }
 
-      if (event.altKey && !event.ctrlKey && !event.metaKey && event.key === "Tab") {
+      if (
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        event.key === "Tab"
+      ) {
         event.preventDefault();
-        const activeEditor = pane === "right" ? rightEditorRef.current : editorRef.current;
+        const activeEditor =
+          pane === "right" ? rightEditorRef.current : editorRef.current;
         if (activeEditor && paneActiveId) {
           state.updateTab(paneActiveId, activeEditor.value);
         }
@@ -91,9 +114,13 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
       }
 
       const isArrowUp =
-        event.key === "ArrowUp" || event.key === "Up" || event.code === "ArrowUp";
+        event.key === "ArrowUp" ||
+        event.key === "Up" ||
+        event.code === "ArrowUp";
       const isArrowDown =
-        event.key === "ArrowDown" || event.key === "Down" || event.code === "ArrowDown";
+        event.key === "ArrowDown" ||
+        event.key === "Down" ||
+        event.code === "ArrowDown";
 
       if (
         event.altKey &&
@@ -108,7 +135,8 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
         if (rightTabIds.length === 0) {
           const currentIndex = tabs.findIndex((tab) => tab.id === paneActiveId);
           const nextIndex = currentIndex + offset;
-          if (currentIndex < 0 || nextIndex < 0 || nextIndex >= tabs.length) return;
+          if (currentIndex < 0 || nextIndex < 0 || nextIndex >= tabs.length)
+            return;
           state.selectTab(tabs[nextIndex].id);
           return;
         }
@@ -116,7 +144,9 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
         const leftTabs = tabs.filter((tab) => !rightTabIds.includes(tab.id));
         const rightTabs = paneRightTabs;
         if (pane === "left") {
-          const currentIndex = leftTabs.findIndex((tab) => tab.id === paneActiveId);
+          const currentIndex = leftTabs.findIndex(
+            (tab) => tab.id === paneActiveId,
+          );
           if (currentIndex < 0) return;
 
           if (isArrowUp && currentIndex > 0) {
@@ -129,7 +159,9 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
           return;
         }
 
-        const currentIndex = rightTabs.findIndex((tab) => tab.id === paneActiveId);
+        const currentIndex = rightTabs.findIndex(
+          (tab) => tab.id === paneActiveId,
+        );
         if (currentIndex < 0) return;
 
         if (isArrowUp && currentIndex > 0) {
@@ -144,5 +176,5 @@ export function useNotepadShortcuts({ editorRef, rightEditorRef, composingRef }:
 
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [composingRef, editorRef]);
+  }, [composingRef, editorRef, rightEditorRef]);
 }

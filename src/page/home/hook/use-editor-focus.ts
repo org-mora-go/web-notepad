@@ -1,11 +1,12 @@
 "use client";
 
-import { type RefObject,useEffect } from "react";
+import { type RefObject, useEffect } from "react";
 
 import { useNotepadStore } from "@/src/entity/notepad";
 
 export function useEditorFocus(
   editorRef: RefObject<HTMLTextAreaElement | null>,
+  activeGroupId: string,
   activeTabId: string,
   hydrated: boolean,
 ) {
@@ -15,14 +16,18 @@ export function useEditorFocus(
     const frame = window.requestAnimationFrame(() => {
       const currentTab = useNotepadStore
         .getState()
-        .tabs.find((tab) => tab.id === activeTabId);
+        .groups.find((group) => group.id === activeGroupId)
+        ?.tabs.find((tab) => tab.id === activeTabId);
       const editor = editorRef.current;
       if (!currentTab || !editor) return;
 
       editor.focus();
-      editor.setSelectionRange(currentTab.content.length, currentTab.content.length);
+      editor.setSelectionRange(
+        currentTab.content.length,
+        currentTab.content.length,
+      );
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [activeTabId, editorRef, hydrated]);
+  }, [activeGroupId, activeTabId, editorRef, hydrated]);
 }
