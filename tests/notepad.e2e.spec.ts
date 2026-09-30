@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test';
 
-test('notepad supports add, history, clear history, and tab close flows', async ({ page }) => {
+test('notepad supports add, bookmark, remove bookmark, and tab close flows', async ({ page }) => {
   await page.goto('http://localhost:3000');
 
   const tabTitles = () => page.locator('[role="tab"]').allTextContents();
@@ -15,16 +15,15 @@ test('notepad supports add, history, clear history, and tab close flows', async 
   expect(tabsAfterAddButton.length).toBe(initialTabs.length + 1);
 
   await page.locator('textarea').fill('hello world');
+  await page.locator('.tab-item.is-active [role="tab"]').click({ button: 'right' });
+  await page.getByRole('menuitem', { name: 'Bookmark', exact: true }).click();
   await page.keyboard.press('Alt+w');
 
-  await page.locator('button[aria-controls="unsaved-history"]').click();
-  await expect(page.locator('.history-item').first()).toContainText('hello world');
-  await page.locator('button:has-text("Clear")').click();
-  await expect(page.locator('.clear-confirm-modal p')).toContainText('Everything will be deleted.');
-  await page.locator('.confirm-delete').click();
-  await expect(page.locator('.history-empty p')).toContainText('Empty History');
-  await expect(page.locator('button:has-text("Clear")')).toHaveCount(0);
-  await page.locator('.panel-close').click();
+  await page.getByRole('button', { name: 'BOOKMARKS' }).click();
+  await expect(page.locator('.bookmark-item').first()).toContainText('hello world');
+  await page.locator('.remove-bookmark').first().click();
+  await expect(page.locator('.bookmark-empty')).toContainText('Empty Bookmarks');
+  await page.getByRole('button', { name: '북마크 닫기' }).click();
 
   await page.keyboard.press('Meta+n');
   const tabsAfterMetaN = await tabTitles();
@@ -90,6 +89,35 @@ test('tabs fit short titles and grow within the title-based width limit', async 
   const expandedWidth = await activeTab.evaluate((element) => element.getBoundingClientRect().width);
   expect(expandedWidth).toBeGreaterThan(shortWidth);
   expect(expandedWidth).toBeLessThanOrEqual(301);
+});
+
+test('line numbers stay aligned with the editor at the end of a long note', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+
+  const editor = page.locator('textarea').first();
+  await editor.fill(Array.from({ length: 120 }, (_, index) => `line ${index + 1}`).join('\n'));
+  await editor.evaluate((element) => {
+    element.scrollTop = element.scrollHeight;
+    element.dispatchEvent(new Event('scroll', { bubbles: true }));
+  });
+
+  await expect.poll(async () => {
+    return page.locator('.note-editor').evaluate((element) => {
+      const editor = element.querySelector('textarea');
+      const lineRail = element.querySelector<HTMLElement>('.line-rail');
+      if (!editor || !lineRail) return null;
+
+      return {
+        scrollOffsetDifference: editor.scrollTop - lineRail.scrollTop,
+        maxScrollDifference:
+          editor.scrollHeight - editor.clientHeight -
+          (lineRail.scrollHeight - lineRail.clientHeight),
+      };
+    });
+  }).toEqual({
+    scrollOffsetDifference: 0,
+    maxScrollDifference: 0,
+  });
 });
 
 test('Tab inserts once at the caret and waits for Korean composition to finish', async ({ page }) => {
