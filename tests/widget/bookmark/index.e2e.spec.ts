@@ -121,7 +121,9 @@ test("북마크 제거 시 탭 표시를 해제하고 메모는 유지한다", a
   await expect(tab).toHaveClass(/is-bookmarked/);
 
   await page.getByRole("button", { name: "BOOKMARK" }).click();
-  await page.getByRole("button", { name: "Keep this note 북마크 제거" }).click();
+  await page
+    .getByRole("button", { name: "Keep this note 북마크 제거" })
+    .click();
   await expect(page.locator(".bookmark-empty")).toContainText(
     "Empty Bookmarks",
   );

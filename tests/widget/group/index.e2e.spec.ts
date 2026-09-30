@@ -199,7 +199,9 @@ test("그룹 삭제 시 모든 노트와 북마크를 Ungrouped로 보존한다"
 
   await page.getByRole("button", { name: "Archive (2)" }).click();
   await page.getByRole("button", { name: "Archive 그룹 삭제" }).click();
-  await expect(page.getByRole("button", { name: "Ungrouped (1)" })).toBeVisible();
+  await expect(
+    page.getByRole("button", { name: "Ungrouped (1)" }),
+  ).toBeVisible();
   await expect(page.locator('[role="tab"]')).toHaveCount(3);
   await expect(page.locator("textarea")).toHaveValue("Second archived note");
   await page.getByRole("button", { name: "그룹 닫기" }).click();

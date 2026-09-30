@@ -60,3 +60,43 @@ test("Cmd+A를 누르면 포커스된 에디터의 전체 텍스트가 선택된
     )
     .toEqual([0, "select all test".length]);
 });
+
+test("탭 번호가 재사용되어도 새 탭이 기존 북마크를 덮어쓰지 않는다", async ({
+  page,
+}) => {
+  await page.goto("http://localhost:3000");
+
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  const bookmarkedTab = page.locator(".tab-item").nth(1);
+  await bookmarkedTab.locator('[role="tab"]').click();
+  await page.locator("textarea").fill("bookmarked original");
+  await bookmarkedTab.locator('[role="tab"]').click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Bookmark" }).click();
+  await bookmarkedTab.locator(".tab-close").click();
+
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await page.locator("textarea").fill("new tab content");
+  await page.getByRole("button", { name: "BOOKMARK" }).click();
+
+  await expect(page.locator(".bookmark-item p")).toHaveText(
+    "bookmarked original",
+  );
+});
+
+test("마지막 탭을 닫아도 북마크된 탭 ID는 재사용되지 않는다", async ({
+  page,
+}) => {
+  await page.goto("http://localhost:3000");
+
+  const bookmarkedTab = page.locator(".tab-item").first();
+  await page.locator("textarea").fill("bookmarked original");
+  await bookmarkedTab.locator('[role="tab"]').click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Bookmark" }).click();
+  await bookmarkedTab.locator(".tab-close").click();
+  await page.locator("textarea").fill("replacement tab content");
+  await page.getByRole("button", { name: "BOOKMARK" }).click();
+
+  await expect(page.locator(".bookmark-item p")).toHaveText(
+    "bookmarked original",
+  );
+});

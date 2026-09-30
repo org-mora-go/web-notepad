@@ -17,7 +17,7 @@ type Props = {
   onRemove: (groupId: string) => void;
 };
 
-export function GroupPanel({
+export function Group({
   groups,
   activeGroupId,
   open,

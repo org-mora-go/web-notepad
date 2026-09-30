@@ -1,0 +1,1 @@
+export { TabStrip as Header } from "./component/tab-strip";

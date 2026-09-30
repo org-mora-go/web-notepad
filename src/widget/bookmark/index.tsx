@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, Trash2, X } from "lucide-react";
+import { Bookmark as BookmarkIcon, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type { BookmarkEntry } from "@/src/entity/notepad";
@@ -73,7 +73,7 @@ function BookmarkItem({ bookmark, onOpen, onRemove }: BookmarkItemProps) {
       )}
       <div className="bookmark-actions">
         <button type="button" onClick={() => onOpen(bookmark.id)}>
-          <Bookmark size={14} />
+          <BookmarkIcon size={14} />
           열기
         </button>
         <button
@@ -90,7 +90,7 @@ function BookmarkItem({ bookmark, onOpen, onRemove }: BookmarkItemProps) {
   );
 }
 
-export function BookmarkPanel({
+export function Bookmark({
   bookmarks,
   open,
   onClose,
@@ -136,7 +136,7 @@ export function BookmarkPanel({
         <div className="bookmark-list">
           {bookmarks.length === 0 ? (
             <div className="bookmark-empty">
-              <Bookmark size={26} strokeWidth={1.4} />
+              <BookmarkIcon size={26} strokeWidth={1.4} />
               <p>Empty Bookmarks</p>
             </div>
           ) : filteredBookmarks.length === 0 ? (

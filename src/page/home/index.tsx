@@ -3,9 +3,9 @@
 import "./style/index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { BookmarkPanel, GroupPanel, NotepadPane } from "@/src/widget";
+import { Bookmark, Group } from "@/src/widget";
 
-import { Loading, StatusBar } from "./component";
+import { Loading, PaneView, StatusBar } from "./component";
 
 export function Home() {
   const {
@@ -39,8 +39,8 @@ export function Home() {
     <main className="home">
       <section className="workspace">
         <div className={`pane-group ${split ? "is-split" : ""}`}>
-          {leftPaneProps && <NotepadPane {...leftPaneProps} />}
-          {rightPaneProps && <NotepadPane {...rightPaneProps} />}
+          {leftPaneProps && <PaneView {...leftPaneProps} />}
+          {rightPaneProps && <PaneView {...rightPaneProps} />}
         </div>
 
         <StatusBar
@@ -61,7 +61,7 @@ export function Home() {
         />
       </section>
 
-      <BookmarkPanel
+      <Bookmark
         bookmarks={bookmarks}
         open={bookmarksOpen}
         onClose={() => setBookmarksOpen(false)}
@@ -71,7 +71,7 @@ export function Home() {
         }}
         onRemove={removeBookmark}
       />
-      <GroupPanel
+      <Group
         groups={groups}
         activeGroupId={activeGroupId}
         open={groupsOpen}

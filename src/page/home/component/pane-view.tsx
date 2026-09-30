@@ -1,9 +1,10 @@
 "use client";
 
-import { NotePaneBody, PaneDivider, TabStrip } from "./component";
-import type { NotepadPaneProps } from "./type";
+import { Body, Header, PaneDivider } from "@/src/widget";
 
-export function NotepadPane({
+import type { PaneViewProps } from "../type";
+
+export function PaneView({
   tabs,
   activeTab,
   tabStrip,
@@ -26,7 +27,7 @@ export function NotepadPane({
   onToggleBookmark,
   onAdd,
   onChange,
-}: NotepadPaneProps) {
+}: PaneViewProps) {
   return (
     <>
       {onResize && <PaneDivider onResize={onResize} />}
@@ -39,7 +40,7 @@ export function NotepadPane({
           onFocusCapture={onActivate}
           onPointerDownCapture={onActivate}
         >
-          <TabStrip
+          <Header
             tabs={tabs}
             activeTabId={activeTab.id}
             tabsScrollRef={tabStrip.tabsScrollRef}
@@ -55,8 +56,7 @@ export function NotepadPane({
             onToggleBookmark={onToggleBookmark}
             onAdd={onAdd}
           />
-          
-          <NotePaneBody
+          <Body
             activeTab={activeTab}
             editorRef={editorRef}
             composingRef={composingRef}
@@ -70,5 +70,3 @@ export function NotepadPane({
     </>
   );
 }
-
-export { NotepadPane as NotePane };
