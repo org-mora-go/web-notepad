@@ -77,6 +77,21 @@ test('middle-clicking a tab closes it', async ({ page }) => {
   await expect(tabs).toHaveCount(1);
 });
 
+test('tabs fit short titles and grow within the title-based width limit', async ({ page }) => {
+  await page.goto('http://localhost:3000');
+
+  const shortTab = page.locator('.tab-item').first();
+  const shortWidth = await shortTab.evaluate((element) => element.getBoundingClientRect().width);
+  const editor = page.locator('textarea').first();
+  await editor.fill('A title long enough to expand this tab');
+
+  const activeTab = page.locator('.tab-item.is-active');
+  await expect(activeTab.locator('.tab-title')).toContainText('A title long enough');
+  const expandedWidth = await activeTab.evaluate((element) => element.getBoundingClientRect().width);
+  expect(expandedWidth).toBeGreaterThan(shortWidth);
+  expect(expandedWidth).toBeLessThanOrEqual(301);
+});
+
 test('Tab inserts once at the caret and waits for Korean composition to finish', async ({ page }) => {
   await page.goto('http://localhost:3000');
 
