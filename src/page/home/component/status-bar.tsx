@@ -4,11 +4,12 @@ import { Bookmark } from "lucide-react";
 
 type Props = {
   lineCount: number;
+  bookmarkCount: number;
   bookmarksOpen: boolean;
   onToggleBookmarks: () => void;
 };
 
-export function StatusBar({ lineCount, bookmarksOpen, onToggleBookmarks }: Props) {
+export function StatusBar({ lineCount, bookmarkCount, bookmarksOpen, onToggleBookmarks }: Props) {
   return (
     <footer className="status-bar">
       <div className="save-state">
@@ -26,7 +27,7 @@ export function StatusBar({ lineCount, bookmarksOpen, onToggleBookmarks }: Props
             aria-controls="bookmarks-panel"
           >
             <Bookmark size={13} strokeWidth={1.8} />
-            <span>BOOKMARKS</span>
+            <span>BOOKMARKS{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}</span>
           </button>
         </div>
       </div>

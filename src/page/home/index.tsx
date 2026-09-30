@@ -36,6 +36,7 @@ export function Home() {
 
         <StatusBar
           lineCount={lineCount}
+          bookmarkCount={bookmarks.length}
           bookmarksOpen={bookmarksOpen}
           onToggleBookmarks={() => setBookmarksOpen((open) => !open)}
         />
