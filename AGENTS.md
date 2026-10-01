@@ -15,3 +15,9 @@ After completing code changes, suggest a Korean commit message that matches the 
 ## E2E Test Structure
 
 When writing E2E tests, create `__mock__/`, `__fixture__/`, or `__util__/` folders when shared test doubles, fixtures, or helpers are needed. Put broadly reusable resources under `tests/`; put resources used only by one requirement title under that title's folder. Every such folder must include a barrel `index.ts`, and tests should import from the barrel when practical.
+
+## Specification Synchronization
+
+When functionality is added, removed, or improved, update `PRD.md` to match the current implementation in the same change. Treat `PRD.md` as the source of truth for the E2E test scope: when `PRD.md` changes, add, update, or remove the corresponding tests under `tests/` so they fully reflect the current requirements.
+
+Do not consider the work complete until all updated E2E tests pass. Run `npm run test:e2e` and require a 100% pass rate; fix implementation, test, fixture, mock, or utility issues before reporting completion.
