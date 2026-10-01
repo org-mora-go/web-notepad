@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { seedSplitState } from "./__util__/seed-split-state";
+import { seedSplitState } from "./__util__";
 
 test("b. 구분선을 드래그하면 패널 너비 비율이 변경된다", async ({ page }) => {
   await seedSplitState(page);

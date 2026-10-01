@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__/bookmark-active-tab";
+import { bookmarkActiveTab } from "./__util__";
 
 test("b. 원본 탭 내용이 바뀌면 북마크 제목과 내용도 갱신된다", async ({
   page,
