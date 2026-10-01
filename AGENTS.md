@@ -10,7 +10,7 @@ This block is written and re-added by `next dev` — verify at `node_modules/nex
 
 ## Commit Messages
 
-After completing code changes, suggest a commit message using one of `feat:`, `style:`, or `fix:` that matches the change.
+After completing code changes, suggest a Korean commit message that matches the change. Keep one of the prefixes `test:`, `feat:`, `style:`, or `fix:`.
 
 ## 현재 구현된 개발 스펙
 
