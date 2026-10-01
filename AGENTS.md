@@ -15,4 +15,3 @@ After completing code changes, suggest a Korean commit message that matches the 
 ## E2E Test Structure
 
 When writing E2E tests, create `__mock__/`, `__fixture__/`, or `__util__/` folders when shared test doubles, fixtures, or helpers are needed. Put broadly reusable resources under `tests/`; put resources used only by one requirement title under that title's folder. Every such folder must include a barrel `index.ts`, and tests should import from the barrel when practical.
-
