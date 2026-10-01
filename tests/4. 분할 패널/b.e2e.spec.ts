@@ -1,54 +1,6 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, test } from "@playwright/test";
 
-async function seedSplitState(page: Page) {
-  await page.addInitScript(() => {
-    const tabs = [
-      {
-        id: "left",
-        title: "Left",
-        content: "left",
-        savedContent: "left",
-        urgent: false,
-        pinned: false,
-        bookmarked: false,
-        updatedAt: 1,
-      },
-      {
-        id: "right",
-        title: "Right",
-        content: "right",
-        savedContent: "right",
-        urgent: false,
-        pinned: false,
-        bookmarked: false,
-        updatedAt: 2,
-      },
-    ];
-    localStorage.setItem(
-      "web-notepad-storage",
-      JSON.stringify({
-        state: {
-          activeGroupId: "ungrouped",
-          groups: [
-            {
-              id: "ungrouped",
-              name: "Ungrouped",
-              createdAt: 0,
-              tabs,
-              bookmarks: [],
-              activeTabId: "left",
-              rightTabIds: ["right"],
-              activeRightTabId: "right",
-              activePane: "left",
-              splitRatio: 0.5,
-            },
-          ],
-        },
-        version: 0,
-      }),
-    );
-  });
-}
+import { seedSplitState } from "./__util__/seed-split-state";
 
 test("b. 구분선을 드래그하면 패널 너비 비율이 변경된다", async ({ page }) => {
   await seedSplitState(page);

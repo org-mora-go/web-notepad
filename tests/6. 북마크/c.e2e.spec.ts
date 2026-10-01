@@ -1,15 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-async function bookmarkActiveTab(
-  page: import("@playwright/test").Page,
-  content: string,
-) {
-  await page.locator("textarea").fill(content);
-  await page
-    .locator('.tab-item.is-active [role="tab"]')
-    .click({ button: "right" });
-  await page.getByRole("menuitem", { name: "Bookmark" }).click();
-}
+import { bookmarkActiveTab } from "./__util__/bookmark-active-tab";
 
 test("c. 북마크 검색, 펼치기, 원본 열기, 제거를 지원한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
