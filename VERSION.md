@@ -1,5 +1,7 @@
 # 버전 이력
 
+<br>
+
 ## 1.0.0
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. Next.js 프로젝트 및 기본 노트 편집 화면
@@ -8,11 +10,15 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 키보드 단축키 및 E2E 실행 기반
 
+<br>
+
 ## 1.0.1
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 초기 기능 버전 정리
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 대규모 구조 정리 기반
+
+<br>
 
 ## 1.1.0
 
@@ -24,6 +30,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. 폰트 및 SCSS 구조 개선
 
+<br>
+
 ## 1.1.1
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 우측 분할 패널
@@ -31,6 +39,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 탭 이동 사용성 개선
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 줄 번호 영역 및 탭 너비 조정
+
+<br>
 
 ## 1.2.0
 
@@ -40,6 +50,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 긴급 탭 및 `Untitled` 처리 보완
 
+<br>
+
 ## 1.2.1
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 콘텐츠 영역 탭 기능
@@ -48,6 +60,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 노트 편집기·패널 레이어 분리
 
+<br>
+
 ## 1.2.2
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 탭 드래그 `move here` 동작 개선
@@ -55,6 +69,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 탭 끝단 및 긴급 표시 보완
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. `Option+Tab` 입력 유실 수정
+
+<br>
 
 ## 1.2.3
 
@@ -66,11 +82,15 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. 선택 줄 번호 스타일 개선
 
+<br>
+
 ## 1.2.4
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 탭 드래그·새 줄·`Untitled`·중간선 동작 보완
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 탭 너비 및 에디터 레이아웃 조정
+
+<br>
 
 ## 1.2.5
 
@@ -79,6 +99,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 핀 고정 및 북마크 기능
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 노트 스토어 기능별 분리
+
+<br>
 
 ## 1.2.6
 
@@ -90,6 +112,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. 에디터 폰트 가로 폭 조정
 
+<br>
+
 ## 1.2.7
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 고정 탭 상태별 배경 색상
@@ -97,6 +121,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 기본 탭 너비 및 새 탭 번호 생성 개선
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 탭 드래그 이동 버튼 및 상태 표시 보완
+
+<br>
 
 ## 1.2.8
 
@@ -110,6 +136,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;e. 스크롤바 테마 조정
 
+<br>
+
 ## 1.2.9
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 탭 크기 조정
@@ -118,11 +146,15 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 패널 구분선 및 선택 줄 번호 스타일 개선
 
+<br>
+
 ## 1.3.0
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 상태 표시줄 개발자 이름
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 라인 선택 효과 및 에디터 상태 표시 개선
+
+<br>
 
 ## 1.3.1
 
@@ -132,15 +164,21 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 라인 삽입·삭제 시 하이라이트 위치 재계산
 
+<br>
+
 ## 1.3.2
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 빌드 오류 수정
+
+<br>
 
 ## 1.3.3
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 북마크 내용 덮어쓰기 오류 수정
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 탭 가로 크기 및 하단 텍스트 크기 조정
+
+<br>
 
 ## 1.3.4
 
@@ -152,6 +190,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. 탭 최대 너비 조정
 
+<br>
+
 ## 1.3.5
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 에디터 스크롤 시 줄 번호 정렬 오류 수정
@@ -162,6 +202,8 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. 상태 표시줄 북마크 개수
 
+<br>
+
 ## 1.3.6
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a. 북마크 패널 헤더 및 제목 크기 정리
@@ -169,6 +211,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;b. 북마크 리스트 너비 확장
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 커밋 메시지 작성 규칙 문서화
+
+<br>
 
 ## 1.3.7
 
@@ -179,6 +223,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;c. 북마크·그룹 리스트 검색
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d. 그룹 복원 시 탭 ID 충돌 방지 및 회귀 테스트 보강
+
+<br>
 
 ## 1.3.8
 
