@@ -9,9 +9,10 @@ export function useEditorFocus(
   activeGroupId: string,
   activeTabId: string,
   hydrated: boolean,
+  active: boolean,
 ) {
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || !active) return;
 
     const frame = window.requestAnimationFrame(() => {
       const currentTab = useNotepadStore
@@ -29,5 +30,5 @@ export function useEditorFocus(
     });
 
     return () => window.cancelAnimationFrame(frame);
-  }, [activeGroupId, activeTabId, editorRef, hydrated]);
+  }, [active, activeGroupId, activeTabId, editorRef, hydrated]);
 }

@@ -113,6 +113,33 @@ export function useNotepadShortcuts({
         return;
       }
 
+      const isF11 = event.key === "F11" || event.code === "F11";
+      const isF12 = event.key === "F12" || event.code === "F12";
+
+      if (
+        event.altKey &&
+        !event.ctrlKey &&
+        !event.metaKey &&
+        !event.shiftKey &&
+        (isF11 || isF12)
+      ) {
+        event.preventDefault();
+        const targetPane = isF12 ? "right" : "left";
+        if (pane === targetPane || !paneActiveId) return;
+
+        const activeEditor =
+          pane === "right" ? rightEditorRef.current : editorRef.current;
+        if (activeEditor) {
+          state.updateTab(paneActiveId, activeEditor.value);
+        }
+        state.moveTabToPane(paneActiveId, targetPane);
+
+        const targetEditor =
+          targetPane === "right" ? rightEditorRef.current : editorRef.current;
+        window.requestAnimationFrame(() => targetEditor?.focus());
+        return;
+      }
+
       const isArrowUp =
         event.key === "ArrowUp" ||
         event.key === "Up" ||

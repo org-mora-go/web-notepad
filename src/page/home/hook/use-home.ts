@@ -68,12 +68,19 @@ export function useHome() {
   const lineCount = activeTab?.content.split("\n").length ?? 1;
 
   useNotepadShortcuts({ editorRef, rightEditorRef, composingRef });
-  useEditorFocus(editorRef, activeGroupId, activeTabId, hydrated);
+  useEditorFocus(
+    editorRef,
+    activeGroupId,
+    activeTabId,
+    hydrated,
+    activePane !== "right",
+  );
   useEditorFocus(
     rightEditorRef,
     activeGroupId,
     activeRightTabId ?? "",
     hydrated,
+    activePane === "right",
   );
 
   // Keep the caret in the pane that shortcuts just moved to.
