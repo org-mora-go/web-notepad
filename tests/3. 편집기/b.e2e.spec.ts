@@ -11,7 +11,10 @@ test("b. Enter는 줄바꿈을, Tab은 커서 위치의 탭 문자를 삽입한�
   );
   await page.keyboard.press("Tab");
   await expect(editor).toHaveValue("left\t right");
-  await page.keyboard.press("End");
+  await editor.evaluate((element) => {
+    const textarea = element as HTMLTextAreaElement;
+    textarea.setSelectionRange(textarea.value.length, textarea.value.length);
+  });
   await page.keyboard.press("Enter");
   await expect(editor).toHaveValue("left\t right\n");
 });

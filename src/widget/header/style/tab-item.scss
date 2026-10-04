@@ -95,7 +95,7 @@
     cursor: default;
   }
 
-  .tab-pin-toggle {
+  .tab-pin-indicator {
     display: grid;
     width: 16px;
     height: 23px;
@@ -105,7 +105,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    cursor: pointer;
+    cursor: default;
   }
 
   .tab-bookmark-indicator {

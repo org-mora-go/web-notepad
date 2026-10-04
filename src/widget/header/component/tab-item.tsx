@@ -11,7 +11,6 @@ type Props = {
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onToggleUrgent: (tabId: string) => void;
-  onTogglePin: (tabId: string) => void;
   onContextMenu: (tabId: string, clientX: number, clientY: number) => void;
   onDragStateChange: (tabId: string | null) => void;
   onDropTargetChange: (tabId: string | null) => void;
@@ -28,7 +27,6 @@ export function TabItem({
   onSelect,
   onClose,
   onToggleUrgent,
-  onTogglePin,
   onContextMenu,
   onDragStateChange,
   onDropTargetChange,
@@ -86,15 +84,13 @@ export function TabItem({
         title="긴급 표시"
       />
       {tab.pinned && (
-        <button
-          className="tab-pin-toggle"
-          type="button"
-          onClick={() => onTogglePin(tab.id)}
-          aria-label={`${tab.title} 고정 해제`}
-          title="고정 해제"
+        <span
+          className="tab-pin-indicator"
+          aria-label="고정됨"
+          title="고정됨"
         >
           <Pin className="tab-indicator is-pin" size={13} aria-hidden="true" />
-        </button>
+        </span>
       )}
       {tab.bookmarked && (
         <span className="tab-bookmark-indicator" aria-hidden="true">
