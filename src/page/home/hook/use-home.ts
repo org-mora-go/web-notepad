@@ -14,6 +14,7 @@ export function useHome() {
   const hydrated = useStoreHydrated();
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const [groupsOpen, setGroupsOpen] = useState(false);
+  const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [draggingTabId, setDraggingTabId] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
@@ -210,6 +211,8 @@ export function useHome() {
     setBookmarksOpen,
     groupsOpen,
     setGroupsOpen,
+    shortcutsOpen,
+    setShortcutsOpen,
     activeGroupId,
     selectGroup,
     activeTab,

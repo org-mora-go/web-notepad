@@ -1,0 +1,113 @@
+@use "../../../entity/style/variable" as v;
+
+.shortcut-panel {
+  .shortcut-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 10;
+    background: rgba(0, 0, 0, 0.58);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 180ms ease;
+
+    &.is-visible {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+  .shortcut-drawer {
+    position: fixed;
+    top: 0;
+    right: 0;
+    z-index: 20;
+    width: min(462px, 100vw);
+    height: 100vh;
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    border-left: 1px solid #3a3a35;
+    background: #10100f;
+    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
+    transform: translateX(102%);
+    transition: transform 220ms ease;
+
+    &.is-open {
+      transform: translateX(0);
+    }
+  }
+
+  .shortcut-header {
+    min-height: 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 4px 22px;
+    border-bottom: 1px solid v.$line;
+
+    h2 {
+      margin: 0;
+      font-family: v.$sans;
+      font-size: 20px;
+      font-weight: 500;
+    }
+  }
+
+  .shortcut-close {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid v.$line;
+    background: transparent;
+    color: v.$dim;
+    cursor: pointer;
+
+    &:hover {
+      color: v.$ink;
+    }
+  }
+
+  .shortcut-list {
+    min-height: 0;
+    margin: 0;
+    padding: 8px 22px;
+    overflow-y: auto;
+  }
+
+  .shortcut-row {
+    min-height: 52px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 16px;
+    border-bottom: 1px solid v.$line;
+
+    dt {
+      min-width: 0;
+      color: v.$saved;
+      font-size: 13px;
+    }
+
+    dd {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      gap: 5px;
+      margin: 0;
+    }
+
+    kbd {
+      padding: 4px 6px;
+      border: 1px solid v.$line;
+      background: #171716;
+      color: v.$ink;
+      font-family: v.$mono;
+      font-size: 10px;
+      white-space: nowrap;
+    }
+  }
+
+  @media (max-width: 640px) {
+    display: none;
+  }
+}

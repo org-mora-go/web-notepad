@@ -3,7 +3,7 @@
 import "./style/index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { Bookmark, Group } from "@/src/widget";
+import { Bookmark, Group, ShortcutHelp } from "@/src/widget";
 
 import { Loading, PaneView, StatusBar } from "./component";
 
@@ -14,6 +14,8 @@ export function Home() {
     setBookmarksOpen,
     groupsOpen,
     setGroupsOpen,
+    shortcutsOpen,
+    setShortcutsOpen,
     activeGroupId,
     selectGroup,
     activeTab,
@@ -46,17 +48,25 @@ export function Home() {
         <StatusBar
           lineCount={lineCount}
           bookmarkCount={bookmarks.length}
+          shortcutsOpen={shortcutsOpen}
           bookmarksOpen={bookmarksOpen}
           groupCount={groupCount}
           activeGroupName={activeGroupName}
           groupsOpen={groupsOpen}
+          onToggleShortcuts={() => {
+            setShortcutsOpen((open) => !open);
+            setBookmarksOpen(false);
+            setGroupsOpen(false);
+          }}
           onToggleBookmarks={() => {
             setBookmarksOpen((open) => !open);
             setGroupsOpen(false);
+            setShortcutsOpen(false);
           }}
           onToggleGroups={() => {
             setGroupsOpen((open) => !open);
             setBookmarksOpen(false);
+            setShortcutsOpen(false);
           }}
         />
       </section>
@@ -85,6 +95,10 @@ export function Home() {
           setGroupsOpen(false);
         }}
         onRemove={removeGroup}
+      />
+      <ShortcutHelp
+        open={shortcutsOpen}
+        onClose={() => setShortcutsOpen(false)}
       />
     </main>
   );

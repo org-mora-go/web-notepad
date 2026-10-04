@@ -62,34 +62,11 @@ export function useNotepadShortcuts({
         return;
       }
 
-      const shouldAddTab =
-        (event.metaKey &&
-          !event.ctrlKey &&
-          !event.altKey &&
-          event.key.toLowerCase() === "n") ||
-        (event.altKey &&
-          !event.ctrlKey &&
-          !event.metaKey &&
-          event.key.toLowerCase() === "n");
-
-      if (shouldAddTab) {
-        event.preventDefault();
-        const activeEditor =
-          pane === "right" ? rightEditorRef.current : editorRef.current;
-        if (activeEditor && paneActiveId) {
-          state.updateTab(paneActiveId, activeEditor.value);
-        }
-        state.addTab(pane);
-        return;
-      }
-
       const shouldCloseTab =
         event.altKey &&
         !event.ctrlKey &&
         !event.metaKey &&
-        (event.key.toLowerCase() === "w" ||
-          event.key === "Backspace" ||
-          event.code === "Backspace");
+        (event.key === "Backspace" || event.code === "Backspace");
 
       if (shouldCloseTab) {
         event.preventDefault();
