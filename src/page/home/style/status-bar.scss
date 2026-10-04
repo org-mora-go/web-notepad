@@ -20,6 +20,12 @@
     font-size: 10px;
   }
 
+  .creator-credit-prefix {
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+
   .status-light {
     width: 6px;
     height: 6px;

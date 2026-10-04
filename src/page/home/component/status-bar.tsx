@@ -27,7 +27,10 @@ export function StatusBar({
     <footer className="status-bar">
       <div className="save-state">
         <span className="status-light" />
-        <span className="creator-credit">DEVELOPED BY HYUN-WOO YOO</span>
+        <span className="creator-credit" aria-label="DEVELOPED BY HYUN-WOO YOO">
+          <span className="creator-credit-prefix">DEVELOPED BY </span>
+          <span>HYUN-WOO YOO</span>
+        </span>
       </div>
       <div className="status-meta">
         <span className="status-lines">{lineCount} LINES</span>
