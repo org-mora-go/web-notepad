@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("e. Cmd+A와 Alt+A는 에디터 전체를 선택한다", async ({ page }) => {
+test("7-5. Cmd+A와 Alt+A는 에디터 전체를 선택한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const editor = page.locator("textarea");
   await editor.fill("select me");

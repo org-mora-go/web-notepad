@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("c. 저장 상태 복원 전에는 로딩을 거쳐 복원된 편집 화면을 표시한다", async ({
+test("1-3. 저장 상태 복원 전에는 로딩을 거쳐 복원된 편집 화면을 표시한다", async ({
   page,
 }) => {
   await page.addInitScript(() => {

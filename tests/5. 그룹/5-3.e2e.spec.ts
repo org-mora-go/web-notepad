@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("c. 그룹을 삭제하면 노트와 북마크가 Ungrouped로 이동한다", async ({
+test("5-3. 그룹을 삭제하면 노트와 북마크가 Ungrouped로 이동한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

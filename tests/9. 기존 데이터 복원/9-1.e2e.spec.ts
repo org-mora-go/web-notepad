@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("a. 누락되거나 잘못된 저장 필드를 기본값으로 정규화하고 잘못된 선택을 정리한다", async ({
+test("9-1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화하고 잘못된 선택을 정리한다", async ({
   page,
 }) => {
   await page.addInitScript(() => {

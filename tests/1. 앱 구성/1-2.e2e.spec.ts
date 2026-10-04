@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("b. 노트 상태는 web-notepad-storage 키로 저장되고 새로고침 후 복원된다", async ({
+test("1-2. 노트 상태는 web-notepad-storage 키로 저장되고 새로고침 후 복원된다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

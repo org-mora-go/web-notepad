@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("b. 그룹 구조 도입 전 최상위 탭과 북마크를 Ungrouped로 옮겨 복원한다", async ({
+test("9-2. 그룹 구조 도입 전 최상위 탭과 북마크를 Ungrouped로 옮겨 복원한다", async ({
   page,
 }) => {
   await page.addInitScript(() => {

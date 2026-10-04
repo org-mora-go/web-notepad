@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { bookmarkActiveTab } from "./__util__";
 
-test("a. 탭을 북마크하면 제목과 내용과 생성 시각을 가진 항목이 표시된다", async ({
+test("6-1. 탭을 북마크하면 제목과 내용과 생성 시각을 가진 항목이 표시된다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { seedSplitState } from "./__util__";
 
-test("a. 탭을 좌우 패널로 이동하면 분할 화면에 두 패널이 표시된다", async ({
+test("4-1. 탭을 좌우 패널로 이동하면 분할 화면에 두 패널이 표시된다", async ({
   page,
 }) => {
   await seedSplitState(page);

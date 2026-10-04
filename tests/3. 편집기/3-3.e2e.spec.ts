@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("c. Undo와 Redo 단축키가 탭별 편집 기록을 되돌리고 복원한다", async ({
+test("3-3. Undo와 Redo 단축키가 탭별 편집 기록을 되돌리고 복원한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

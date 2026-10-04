@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("a. Cmd+N과 Alt+N은 활성 패널에 새 탭을 추가한다", async ({ page }) => {
+test("7-1. Cmd+N과 Alt+N은 활성 패널에 새 탭을 추가한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const tabs = page.locator('[role="tab"]');
   await expect(tabs).toHaveCount(1);

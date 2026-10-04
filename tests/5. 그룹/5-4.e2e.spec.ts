@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("d. 그룹 이름을 대소문자 구분 없이 검색한다", async ({ page }) => {
+test("5-4. 그룹 이름을 대소문자 구분 없이 검색한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   await page.getByRole("button", { name: /Ungrouped/ }).click();
   await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Work");

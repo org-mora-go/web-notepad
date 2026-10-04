@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { bookmarkActiveTab } from "./__util__";
 
-test("c. 북마크 검색, 펼치기, 원본 열기, 제거를 지원한다", async ({ page }) => {
+test("6-3. 북마크 검색, 펼치기, 원본 열기, 제거를 지원한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   await bookmarkActiveTab(
     page,
