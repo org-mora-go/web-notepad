@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("3-2. Enter는 줄바꿈을, Tab은 커서 위치의 탭 문자를 삽입한다", async ({
+test("4. Enter는 줄바꿈을, Tab은 커서 위치의 탭 문자를 삽입한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

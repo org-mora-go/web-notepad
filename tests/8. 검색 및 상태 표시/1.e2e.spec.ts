@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("8-1. 북마크와 그룹 패널은 대소문자 구분 없는 부분 검색을 제공한다", async ({
+test("1. 북마크와 그룹 패널은 대소문자 구분 없는 부분 검색을 제공한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

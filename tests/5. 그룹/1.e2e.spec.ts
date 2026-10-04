@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("5-1. Ungrouped 외에 이름 있는 그룹을 만들고 전환할 수 있다", async ({
+test("1. Ungrouped 외에 이름 있는 그룹을 만들고 전환할 수 있다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

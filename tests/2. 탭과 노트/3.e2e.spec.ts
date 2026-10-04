@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("2-3. 첫 줄 제목을 trim하고 28자로 제한하며 빈 내용은 하이픈으로 표시한다", async ({
+test("3. 첫 줄 제목을 trim하고 28자로 제한하며 빈 내용은 하이픈으로 표시한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

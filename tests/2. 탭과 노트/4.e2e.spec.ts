@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("2-4. 고정 탭은 닫기 버튼과 가운데 클릭으로 닫히지 않는다", async ({
+test("4. 고정 탭은 닫기 버튼과 가운데 클릭으로 닫히지 않는다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { seedSplitState } from "./__util__";
 
-test("4-2. 구분선을 드래그하면 패널 너비 비율이 변경된다", async ({ page }) => {
+test("2. 구분선을 드래그하면 패널 너비 비율이 변경된다", async ({ page }) => {
   await seedSplitState(page);
   await page.goto("http://localhost:3000");
   const divider = page.getByRole("separator", { name: "영역 크기 조절" });

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("3-1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을 선택한다", async ({
+test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을 선택한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

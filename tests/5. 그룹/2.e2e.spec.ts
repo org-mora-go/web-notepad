@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("5-2. 그룹별 탭과 활성 패널 상태를 분리해 관리한다", async ({ page }) => {
+test("2. 그룹별 탭과 활성 패널 상태를 분리해 관리한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   await page.locator('button[aria-controls="groups-panel"]').click();
   await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Work");
