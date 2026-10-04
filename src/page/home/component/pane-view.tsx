@@ -45,6 +45,8 @@ export function PaneView({
             activeTabId={activeTab.id}
             tabsScrollRef={tabStrip.tabsScrollRef}
             tabsOverflowing={tabStrip.tabsOverflowing}
+            tabsCanScrollLeft={tabStrip.tabsCanScrollLeft}
+            tabsCanScrollRight={tabStrip.tabsCanScrollRight}
             draggingTabId={draggingTabId}
             onSelect={onSelect}
             onClose={onClose}

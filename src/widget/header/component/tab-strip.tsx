@@ -13,6 +13,8 @@ type Props = {
   activeTabId: string;
   tabsScrollRef: RefObject<HTMLDivElement | null>;
   tabsOverflowing: boolean;
+  tabsCanScrollLeft: boolean;
+  tabsCanScrollRight: boolean;
   draggingTabId: string | null;
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
@@ -32,6 +34,8 @@ export function TabStrip({
   activeTabId,
   tabsScrollRef,
   tabsOverflowing,
+  tabsCanScrollLeft,
+  tabsCanScrollRight,
   draggingTabId,
   onSelect,
   onClose,
@@ -64,7 +68,7 @@ export function TabStrip({
 
   return (
     <div
-      className="tab-strip"
+      className={`tab-strip ${tabsCanScrollLeft ? "has-left-overflow" : ""} ${tabsCanScrollRight ? "has-right-overflow" : ""}`}
       role="tablist"
       aria-label="메모 탭"
       onDragEnter={(event) => {

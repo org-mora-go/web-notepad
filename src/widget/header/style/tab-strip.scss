@@ -26,6 +26,43 @@
     }
   }
 
+  &.has-left-overflow .tabs-scroll {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 48px,
+      #000 100%
+    );
+    mask-image: linear-gradient(to right, transparent, #000 48px, #000 100%);
+  }
+
+  &.has-right-overflow .tabs-scroll {
+    -webkit-mask-image: linear-gradient(
+      to left,
+      transparent,
+      #000 48px,
+      #000 100%
+    );
+    mask-image: linear-gradient(to left, transparent, #000 48px, #000 100%);
+  }
+
+  &.has-left-overflow.has-right-overflow .tabs-scroll {
+    -webkit-mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 48px,
+      #000 calc(100% - 48px),
+      transparent
+    );
+    mask-image: linear-gradient(
+      to right,
+      transparent,
+      #000 48px,
+      #000 calc(100% - 48px),
+      transparent
+    );
+  }
+
   .tab-close,
   .add-tab {
     display: grid;
