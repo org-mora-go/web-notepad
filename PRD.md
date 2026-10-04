@@ -18,7 +18,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2-2. 새 탭을 추가하고, 선택하고, 순서를 드래그해 바꾸고, 닫을 수 있다. 가운데 클릭도 탭 닫기로 동작한다.
 
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2-3. 탭 제목은 내용의 첫 번째 비어 있지 않은 줄을 앞뒤 공백 제거 후 최대 28자로 사용한다. 내용이 없으면 `Untitled`로 표시한다.
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2-3. 탭 제목은 내용의 첫 번째 비어 있지 않은 줄을 앞뒤 공백 제거 후 최대 28자로 사용한다. 새 탭 또는 내용이 비어 있는 탭은 `-`로 표시한다. 제목에 탭 번호를 표시하지 않는다.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;2-4. 고정 탭은 일반 닫기 버튼과 닫기 동작을 사용할 수 없다. 상단 핀 아이콘은 표시 전용이며, 우클릭 메뉴에서 고정과 북마크를 전환한다.
 
@@ -33,6 +33,8 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3-2. Enter는 줄바꿈을 삽입하고, Tab은 커서 위치에 탭 문자를 삽입한다. 한글 IME 조합 중 입력도 처리한다.
 
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3-3. Cmd/Ctrl+Z와 Cmd/Ctrl+Shift+Z 또는 Cmd/Ctrl+Y로 실행 취소와 다시 실행을 지원한다. 실행 취소 기록은 탭별로 최대 100개다.
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;3-4. Tab 입력 시 선택 영역을 탭 문자로 교체하고 커서를 삽입 위치 바로 뒤에 둔다.
 
 <br>
 

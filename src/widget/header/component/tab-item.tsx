@@ -52,7 +52,7 @@ export function TabItem({
         event.preventDefault();
         onClose(tab.id);
       }}
-      onDragStart={(event) => {        
+      onDragStart={(event) => {
         event.dataTransfer.setData("text/plain", tab.id);
         onDragStateChange(tab.id);
       }}
@@ -84,17 +84,17 @@ export function TabItem({
         title="긴급 표시"
       />
       {tab.pinned && (
-        <span
-          className="tab-pin-indicator"
-          aria-label="고정됨"
-          title="고정됨"
-        >
+        <span className="tab-pin-indicator" aria-label="고정됨" title="고정됨">
           <Pin className="tab-indicator is-pin" size={13} aria-hidden="true" />
         </span>
       )}
       {tab.bookmarked && (
         <span className="tab-bookmark-indicator" aria-hidden="true">
-          <Bookmark className="tab-indicator is-bookmark" size={13} aria-hidden="true" />
+          <Bookmark
+            className="tab-indicator is-bookmark"
+            size={13}
+            aria-hidden="true"
+          />
         </span>
       )}
       <button

@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus } from "lucide-react";
-import { type RefObject,useState } from "react";
+import { type RefObject, useState } from "react";
 
 import type { NoteTab } from "@/src/entity/notepad";
 

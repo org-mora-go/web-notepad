@@ -2,7 +2,7 @@ import type { NoteTab } from "../type";
 
 export const createNoteTab = (number: number): NoteTab => ({
   id: `tab-${number}`,
-  title: `Untitled ${number}`,
+  title: "-",
   content: "",
   savedContent: "",
   urgent: false,
@@ -24,7 +24,7 @@ export const getNextTabNumber = (
 
 export const getTitleFromContent = (content: unknown, fallback: string) => {
   const text = typeof content === "string" ? content : "";
-  if (!text.trim()) return "Untitled";
+  if (!text.trim()) return "-";
 
   const firstLine = text
     .split("\n")
