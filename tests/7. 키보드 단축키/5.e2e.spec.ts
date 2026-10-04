@@ -1,25 +1,34 @@
 import { expect, test } from "@playwright/test";
 
-test("5. Cmd+A와 Alt+A는 에디터 전체를 선택한다", async ({ page }) => {
+test("5. Option+F11/F12는 활성 탭을 좌우 패널 사이로 이동한다", async ({
+  page,
+}) => {
   await page.goto("http://localhost:3000");
-  const editor = page.locator("textarea");
-  await editor.fill("select me");
-  await page.keyboard.press("Meta+a");
-  await expect
-    .poll(() =>
-      editor.evaluate((element) => [
-        (element as HTMLTextAreaElement).selectionStart,
-        (element as HTMLTextAreaElement).selectionEnd,
-      ]),
-    )
-    .toEqual([0, 9]);
-  await page.keyboard.press("Alt+a");
-  await expect
-    .poll(() =>
-      editor.evaluate((element) => [
-        (element as HTMLTextAreaElement).selectionStart,
-        (element as HTMLTextAreaElement).selectionEnd,
-      ]),
-    )
-    .toEqual([0, 9]);
+  await page.locator("textarea").fill("existing note");
+  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await page.locator("textarea").fill("moving note");
+
+  await page.locator("textarea").press("Alt+F12");
+  await expect(page.locator(".note-pane-body")).toHaveCount(2);
+  await expect(
+    page.locator(".pane-slot").nth(1).locator("textarea"),
+  ).toHaveValue("moving note");
+  await expect(
+    page.locator(".pane-slot").nth(1).locator("textarea"),
+  ).toBeFocused();
+
+  const rightPane = page.locator(".pane-slot").nth(1);
+  await rightPane.locator('button[aria-label="새 탭 추가"]').click();
+  await rightPane.locator(".tab-item").first().locator(".tab-select").click();
+  await expect(rightPane.locator("textarea")).toHaveValue("moving note");
+  await expect(rightPane.locator("textarea")).toBeFocused();
+
+  await page.locator(".pane-slot").nth(1).locator("textarea").press("Alt+F11");
+  await expect(page.locator(".note-pane-body")).toHaveCount(2);
+  await expect(
+    page.locator(".pane-slot").first().locator("textarea"),
+  ).toHaveValue("moving note");
+  await expect(
+    page.locator(".pane-slot").first().locator("textarea"),
+  ).toBeFocused();
 });

@@ -1,13 +1,25 @@
 import { expect, test } from "@playwright/test";
 
-test("4. Alt+위아래 화살표는 탭 사이를 이동한다", async ({ page }) => {
+test("4. Cmd+A와 Alt+A는 에디터 전체를 선택한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  await expect(page.locator('[role="tab"]')).toHaveCount(1);
-  await page.locator('button[aria-label="새 탭 추가"]').click();
-  const tabs = page.locator('[role="tab"]');
-  await expect(tabs).toHaveCount(2);
-  await page.keyboard.press("Alt+ArrowUp");
-  await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
-  await page.keyboard.press("Alt+ArrowDown");
-  await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
+  const editor = page.locator("textarea");
+  await editor.fill("select me");
+  await page.keyboard.press("Meta+a");
+  await expect
+    .poll(() =>
+      editor.evaluate((element) => [
+        (element as HTMLTextAreaElement).selectionStart,
+        (element as HTMLTextAreaElement).selectionEnd,
+      ]),
+    )
+    .toEqual([0, 9]);
+  await page.keyboard.press("Alt+a");
+  await expect
+    .poll(() =>
+      editor.evaluate((element) => [
+        (element as HTMLTextAreaElement).selectionStart,
+        (element as HTMLTextAreaElement).selectionEnd,
+      ]),
+    )
+    .toEqual([0, 9]);
 });
