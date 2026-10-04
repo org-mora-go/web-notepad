@@ -25,4 +25,8 @@ test("2. 상태 표시줄에 줄 수와 그룹 및 북마크 수를 표시하고
   await expect(page.locator(".creator-credit > span").last()).toHaveText(
     "HYUN-WOO YOO",
   );
+  await expect(page.locator(".bookmark-label")).toBeVisible();
+  await expect(page.locator(".bookmark-count")).toHaveText("(0)");
+  await expect(page.locator(".group-name")).toBeVisible();
+  await expect(page.locator(".group-count")).toHaveText("(1)");
 });
