@@ -10,7 +10,7 @@ type Props = {
   dropTarget: boolean;
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
-  onToggleUrgent: (tabId: string) => void;
+  onCycleTabColor: (tabId: string) => void;
   onContextMenu: (tabId: string, clientX: number, clientY: number) => void;
   onDragStateChange: (tabId: string | null) => void;
   onDropTargetChange: (tabId: string | null) => void;
@@ -26,7 +26,7 @@ export function TabItem({
   dropTarget,
   onSelect,
   onClose,
-  onToggleUrgent,
+  onCycleTabColor,
   onContextMenu,
   onDragStateChange,
   onDropTargetChange,
@@ -38,10 +38,11 @@ export function TabItem({
   return (
     <div
       className={`tab-item ${active ? "is-active" : ""} ${dirty ? "is-dirty" : ""} ${
-        tab.urgent ? "is-urgent" : ""
-      } ${draggingTabId === tab.id ? "is-dragging" : ""} ${
-        dropTarget ? "is-drop-target" : ""
-      } ${tab.pinned ? "is-pinned" : ""} ${tab.bookmarked ? "is-bookmarked" : ""}`}
+        draggingTabId === tab.id ? "is-dragging" : ""
+      } ${dropTarget ? "is-drop-target" : ""} ${tab.pinned ? "is-pinned" : ""} ${
+        tab.bookmarked ? "is-bookmarked" : ""
+      }`}
+      data-tab-color={tab.tabColor}
       draggable
       onContextMenu={(event) => {
         event.preventDefault();
@@ -76,12 +77,11 @@ export function TabItem({
       onDragEnd={onDragEnd}
     >
       <button
-        className={`dirty-dot ${dirty ? "is-dirty" : ""} ${tab.urgent ? "is-urgent" : ""}`}
+        className={`dirty-dot ${dirty ? "is-dirty" : ""}`}
         type="button"
-        onClick={() => onToggleUrgent(tab.id)}
-        aria-pressed={tab.urgent}
-        aria-label={`${tab.title} 긴급 표시`}
-        title="긴급 표시"
+        onClick={() => onCycleTabColor(tab.id)}
+        aria-label={`${tab.title} 탭 색상 변경`}
+        title="탭 색상 변경"
       />
       {tab.pinned && (
         <span className="tab-pin-indicator" aria-label="고정됨" title="고정됨">

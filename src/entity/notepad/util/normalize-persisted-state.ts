@@ -5,16 +5,28 @@ import { createNoteTab } from "./note-tab";
 const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
   (Array.isArray(value) ? value : fallback)
     .filter((tab) => tab && typeof tab.id === "string")
-    .map((tab) => ({
-      ...tab,
-      title: typeof tab.title === "string" ? tab.title : "Untitled",
-      content: typeof tab.content === "string" ? tab.content : "",
-      savedContent:
-        typeof tab.savedContent === "string" ? tab.savedContent : "",
-      urgent: Boolean(tab.urgent),
-      pinned: Boolean(tab.pinned),
-      bookmarked: Boolean(tab.bookmarked),
-    }));
+    .map((tab) => {
+      const { urgent, ...tabData } = tab;
+      const tabColor =
+        tab.tabColor === "gray" ||
+        tab.tabColor === "blue" ||
+        tab.tabColor === "green"
+          ? tab.tabColor
+          : urgent === true
+            ? "green"
+            : "gray";
+
+      return {
+        ...tabData,
+        title: typeof tab.title === "string" ? tab.title : "Untitled",
+        content: typeof tab.content === "string" ? tab.content : "",
+        savedContent:
+          typeof tab.savedContent === "string" ? tab.savedContent : "",
+        tabColor,
+        pinned: Boolean(tab.pinned),
+        bookmarked: Boolean(tab.bookmarked),
+      };
+    });
 
 const normalizeBookmarks = (value: unknown, fallback: BookmarkEntry[]) =>
   (Array.isArray(value) ? value : fallback)

@@ -1,9 +1,11 @@
+export type TabColor = "gray" | "blue" | "green";
+
 export type NoteTab = {
   id: string;
   title: string;
   content: string;
   savedContent: string;
-  urgent: boolean;
+  tabColor: TabColor;
   pinned: boolean;
   bookmarked: boolean;
   updatedAt: number;
@@ -43,7 +45,7 @@ export type NotepadState = {
   moveTabToPane: (tabId: string, pane: PaneId) => void;
   setActivePane: (pane: PaneId) => void;
   setSplitRatio: (ratio: number) => void;
-  toggleUrgent: (tabId: string) => void;
+  cycleTabColor: (tabId: string) => void;
   togglePin: (tabId: string) => void;
   toggleBookmark: (tabId: string) => void;
   closeTab: (tabId: string) => void;

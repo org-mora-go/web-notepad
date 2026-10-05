@@ -22,7 +22,7 @@ export function PaneView({
   onMove,
   onAdopt,
   onDragStateChange,
-  onToggleUrgent,
+  onCycleTabColor,
   onTogglePin,
   onToggleBookmark,
   onAdd,
@@ -53,7 +53,7 @@ export function PaneView({
             onMove={onMove}
             onAdopt={onAdopt}
             onDragStateChange={onDragStateChange}
-            onToggleUrgent={onToggleUrgent}
+            onCycleTabColor={onCycleTabColor}
             onTogglePin={onTogglePin}
             onToggleBookmark={onToggleBookmark}
             onAdd={onAdd}

@@ -21,7 +21,7 @@ type Props = {
   onMove: (fromTabId: string, toTabId: string) => void;
   onAdopt: (tabId: string) => void;
   onDragStateChange: (tabId: string | null) => void;
-  onToggleUrgent: (tabId: string) => void;
+  onCycleTabColor: (tabId: string) => void;
   onTogglePin: (tabId: string) => void;
   onToggleBookmark: (tabId: string) => void;
   onAdd: () => void;
@@ -42,7 +42,7 @@ export function TabStrip({
   onMove,
   onAdopt,
   onDragStateChange,
-  onToggleUrgent,
+  onCycleTabColor,
   onTogglePin,
   onToggleBookmark,
   onAdd,
@@ -98,7 +98,7 @@ export function TabStrip({
             dropTarget={dropTargetId === tab.id}
             onSelect={onSelect}
             onClose={onClose}
-            onToggleUrgent={onToggleUrgent}
+            onCycleTabColor={onCycleTabColor}
             onContextMenu={(tabId, clientX, clientY) =>
               setContextMenu({
                 tabId,

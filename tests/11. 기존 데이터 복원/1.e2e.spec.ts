@@ -13,7 +13,7 @@ test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화한
             {
               id: "ungrouped",
               name: "Ungrouped",
-              tabs: [{ id: "tab-1", content: "normalized" }],
+              tabs: [{ id: "tab-1", content: "normalized", urgent: true }],
             },
           ],
         },
@@ -25,4 +25,8 @@ test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화한
   await expect(page.locator("textarea")).toBeVisible();
   await expect(page.locator("textarea")).toHaveValue("normalized");
   await expect(page.locator(".tab-item")).toHaveCount(1);
+  await expect(page.locator(".tab-item")).toHaveAttribute(
+    "data-tab-color",
+    "green",
+  );
 });
