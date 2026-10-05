@@ -22,6 +22,8 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
       };
     });
   const desktopFormat = await getEditorFormat();
+  expect(desktopFormat.topPadding).toBe("0px");
+  expect(desktopFormat.editorPadding).toBe("0px 22px");
   await editor.fill("first\nsecond\nthird");
   const lines = page.locator('.line-rail [role="button"]');
   await expect(lines).toHaveCount(3);

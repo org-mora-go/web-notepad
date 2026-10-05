@@ -2,7 +2,7 @@
 
 .note-editor {
   --editor-line-height: 29.75px;
-  --editor-top-padding: 14px;
+  --editor-top-padding: 0px;
   --selected-line-background: rgba(184, 184, 176, 0.2);
   --selected-line-color: #{v.$saved};
 
@@ -61,7 +61,7 @@
     transform: scaleX(0.95);
     transform-origin: top left;
     resize: none;
-    padding: 14px 22px;
+    padding: 0 22px;
     border: 0;
     outline: none;
     background: transparent;
