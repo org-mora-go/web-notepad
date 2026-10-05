@@ -46,6 +46,8 @@ test("3. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구�
   await page.setViewportSize({ width: 390, height: 844 });
   await expect(shortcut).toBeHidden();
   await expect(lines).toBeHidden();
-  await expect(page.locator(".status-separator:visible")).toHaveCount(2);
+  await expect(bookmark.locator(".status-separator")).toBeHidden();
+  await expect(group.locator(".status-separator")).toBeVisible();
+  await expect(page.locator(".status-separator:visible")).toHaveCount(1);
   await expectMetaRightAligned();
 });
