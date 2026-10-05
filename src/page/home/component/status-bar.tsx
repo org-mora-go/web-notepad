@@ -32,11 +32,7 @@ export function StatusBar({
       <div className="status-left">
         <div className="save-state">
           <span className="status-light" />
-          <span
-            className="creator-credit"
-            aria-label="DEVELOPED BY HYUN-WOO YOO"
-          >
-            <span className="creator-credit-prefix">DEVELOPED BY </span>
+          <span className="creator-credit" aria-label="HYUN-WOO YOO">
             <span>HYUN-WOO YOO</span>
           </span>
         </div>
@@ -48,6 +44,9 @@ export function StatusBar({
           aria-controls="shortcuts-panel"
           aria-label="단축키 안내"
         >
+          <span className="status-separator" aria-hidden="true">
+            |
+          </span>
           <Keyboard size={16} strokeWidth={1.8} />
           <span>SHORTCUT</span>
         </button>
@@ -62,6 +61,9 @@ export function StatusBar({
             aria-expanded={bookmarksOpen}
             aria-controls="bookmarks-panel"
           >
+            <span className="status-separator" aria-hidden="true">
+              |
+            </span>
             <Bookmark size={16} strokeWidth={1.8} />
             <span>
               BOOKMARK{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}
@@ -74,6 +76,9 @@ export function StatusBar({
             aria-expanded={groupsOpen}
             aria-controls="groups-panel"
           >
+            <span className="status-separator" aria-hidden="true">
+              |
+            </span>
             <Layers size={16} strokeWidth={1.8} />
             <span>
               {activeGroupName} ({groupCount})
