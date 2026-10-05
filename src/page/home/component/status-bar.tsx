@@ -65,9 +65,10 @@ export function StatusBar({
               |
             </span>
             <Bookmark size={16} strokeWidth={1.8} />
-            <span>
-              BOOKMARK{bookmarkCount > 0 ? ` (${bookmarkCount})` : ""}
-            </span>
+            <span className="status-label">BOOKMARK</span>
+            {bookmarkCount > 0 && (
+              <span className="status-count">({bookmarkCount})</span>
+            )}
           </button>
           <button
             className={`status-command group-status-command ${groupsOpen ? "is-active" : ""}`}
@@ -80,9 +81,8 @@ export function StatusBar({
               |
             </span>
             <Layers size={16} strokeWidth={1.8} />
-            <span>
-              {activeGroupName} ({groupCount})
-            </span>
+            <span className="group-status-name">{activeGroupName}</span>
+            <span className="status-count">({groupCount})</span>
           </button>
         </div>
       </div>

@@ -23,7 +23,7 @@
   }
 
   .creator-credit {
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .creator-credit-prefix {
@@ -43,6 +43,9 @@
     display: flex;
     align-items: center;
     gap: 0;
+    flex: 1;
+    justify-content: flex-end;
+    min-width: 0;
   }
 
   .status-lines {
@@ -55,6 +58,9 @@
     display: flex;
     align-items: center;
     gap: 0;
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    min-width: 0;
   }
 
   .status-separator {
@@ -85,10 +91,6 @@
 
     > span:not(.status-separator) {
       font-size: 12px;
-
-      @media (max-width: 640px) {
-        display: none;
-      }
     }
   }
 
@@ -98,16 +100,43 @@
     }
   }
 
-  .group-status-command > span:not(.status-separator) {
+  .group-status-command {
+    flex: 0 1 auto;
+    min-width: 0;
+  }
+
+  .group-status-name {
     display: block;
+    flex: 1 1 auto;
+    min-width: 0;
     max-width: 180px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
 
-    @media (max-width: 640px) {
-      display: block;
-      max-width: min(26vw, 86px);
+  .status-count {
+    flex: 0 0 auto;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 640px) {
+    padding: 0 8px;
+
+    .status-command {
+      gap: 3px;
+
+      > span:not(.status-separator) {
+        font-size: 11px;
+      }
+    }
+
+    .status-command .status-separator {
+      margin: 0 2px;
+    }
+
+    .group-status-name {
+      max-width: min(20vw, 60px);
     }
   }
 }
