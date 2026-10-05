@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 import type { PaneDropZone } from "@/src/entity";
 import { useTabStrip } from "@/src/entity/hook";
@@ -8,6 +8,7 @@ import { useNotepadStore } from "@/src/entity/notepad";
 
 import { useEditorFocus } from "./use-editor-focus";
 import { useNotepadShortcuts } from "./use-notepad-shortcuts";
+import { usePanelHistory } from "./use-panel-history";
 import { useStoreHydrated } from "./use-store-hydrated";
 
 export function useHome() {
@@ -50,6 +51,12 @@ export function useHome() {
   const bookmarks = activeGroup?.bookmarks ?? [];
   const groupCount = groups.length;
   const activeGroupName = activeGroup?.name ?? "Ungrouped";
+  const closeSidePanels = useCallback(() => {
+    setBookmarksOpen(false);
+    setGroupsOpen(false);
+  }, []);
+
+  usePanelHistory(bookmarksOpen || groupsOpen, closeSidePanels);
 
   const rightIds = useMemo(
     () => new Set(activeGroup?.rightTabIds ?? []),
