@@ -16,10 +16,10 @@ test("5. 탭 색상과 줄 번호 배경을 동기화한다", async ({ page }) =
     },
     {
       name: "blue",
-      line: "rgba(169, 201, 245, 0.2)",
-      text: "rgb(169, 201, 245)",
-      stripe: "169, 201, 245",
-      tabBackground: "rgba(169, 201, 245, 0.16)",
+      line: "rgba(138, 180, 248, 0.2)",
+      text: "rgb(138, 180, 248)",
+      stripe: "138, 180, 248",
+      tabBackground: "rgba(138, 180, 248, 0.16)",
     },
     {
       name: "green",

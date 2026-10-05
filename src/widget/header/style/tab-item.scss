@@ -22,10 +22,10 @@
 
     &[data-tab-color="blue"] {
       --tab-accent: #{v.$tab-blue};
-      --tab-glow: rgba(169, 201, 245, 0.55);
-      --tab-accent-muted: rgba(169, 201, 245, 0.58);
-      --tab-background: rgba(169, 201, 245, 0.08);
-      --tab-background-active: rgba(169, 201, 245, 0.16);
+      --tab-glow: rgba(138, 180, 248, 0.55);
+      --tab-accent-muted: rgba(138, 180, 248, 0.58);
+      --tab-background: rgba(138, 180, 248, 0.08);
+      --tab-background-active: rgba(138, 180, 248, 0.16);
     }
 
     &[data-tab-color="green"] {
