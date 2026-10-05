@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("2. 상태 표시줄에 줄 수와 그룹 및 북마크 수를 표시하고 패널을 연다", async ({
+test("1. 상태 표시줄에 줄 수와 그룹 및 북마크 수를 표시하고 패널을 연다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구분자를 조정한다", async ({
+test("3. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구분자를 조정한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

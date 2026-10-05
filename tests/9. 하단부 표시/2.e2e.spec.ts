@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("3. SHORTCUT 안내 패널은 왼쪽에 표시되고 패널별 단축키를 설명한다", async ({
+test("2. SHORTCUT 안내 패널은 왼쪽에 표시되고 패널별 단축키를 설명한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");
