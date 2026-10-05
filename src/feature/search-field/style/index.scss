@@ -29,7 +29,7 @@
     background: transparent;
     color: v.$ink;
     font: inherit;
-    font-size: 13px;
+    font-size: 12px;
 
     &::placeholder {
       color: v.$dim;
@@ -47,6 +47,6 @@
   p {
     margin: 0;
     font-family: v.$sans;
-    font-size: 14px;
+    font-size: 13px;
   }
 }

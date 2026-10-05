@@ -8,7 +8,7 @@
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
-  font-size: 13px;
+  font-size: 12px;
 
   .status-left {
     display: flex;
@@ -23,7 +23,7 @@
   }
 
   .creator-credit {
-    font-size: 12px;
+    font-size: 11px;
   }
 
   .creator-credit-prefix {
@@ -90,7 +90,7 @@
     }
 
     > span:not(.status-separator) {
-      font-size: 13px;
+      font-size: 12px;
     }
   }
 
@@ -127,7 +127,7 @@
       gap: 3px;
 
       > span:not(.status-separator) {
-        font-size: 12px;
+        font-size: 11px;
       }
     }
 

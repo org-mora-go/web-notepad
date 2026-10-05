@@ -1,7 +1,7 @@
 @use "../../../entity/style/variable" as v;
 
 .note-editor {
-  --editor-line-height: 31px;
+  --editor-line-height: 29.75px;
   --editor-top-padding: 14px;
   --selected-line-background: rgba(143, 227, 176, 0.2);
 
@@ -22,7 +22,7 @@
     overflow: hidden;
     border-right: 1px solid #242422;
     color: #40403c;
-    font-size: 13px;
+    font-size: 12px;
     user-select: none;
 
     span {
@@ -63,7 +63,7 @@
     background: transparent;
     color: #ffffff;
     caret-color: v.$signal;
-    font-size: 18px;
+    font-size: 17px;
     line-height: var(--editor-line-height);
     tab-size: 4;
 
@@ -73,12 +73,12 @@
 
     @media (max-width: 640px) {
       padding: 12px 14px;
-      font-size: 16px;
+      font-size: 15px;
     }
   }
 
   @media (max-width: 640px) {
-    --editor-line-height: 27.5px;
+    --editor-line-height: 26.25px;
     --editor-top-padding: 12px;
   }
 }
