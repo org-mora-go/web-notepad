@@ -57,3 +57,9 @@ textarea {
 button {
   color: inherit;
 }
+
+button,
+[role="button"],
+[role="tab"] {
+  -webkit-tap-highlight-color: transparent;
+}
