@@ -45,6 +45,7 @@ export const createTabActions: StateCreator<
         rightTabIds: toRight
           ? [...current.rightTabIds, tab.id]
           : current.rightTabIds,
+        splitRatio: toRight ? 0.5 : current.splitRatio,
         activeRightTabId: toRight ? tab.id : current.activeRightTabId,
         activeTabId: toRight ? current.activeTabId : tab.id,
         activePane: toRight ? "right" : "left",

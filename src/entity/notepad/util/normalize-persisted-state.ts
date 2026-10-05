@@ -125,12 +125,6 @@ export function normalizePersistedState(
         : id === UNGROUPED_GROUP_ID
           ? persisted.activePane
           : "left";
-      const sourceSplitRatio = hasWorkspace
-        ? group.splitRatio
-        : id === UNGROUPED_GROUP_ID
-          ? persisted.splitRatio
-          : 0.5;
-
       return {
         id,
         name: typeof group.name === "string" ? group.name : "Untitled Group",
@@ -152,11 +146,7 @@ export function normalizePersistedState(
           sourceActivePane === "right" && rightTabIds.length > 0
             ? "right"
             : "left",
-        splitRatio:
-          typeof sourceSplitRatio === "number" &&
-          Number.isFinite(sourceSplitRatio)
-            ? sourceSplitRatio
-            : 0.5,
+        splitRatio: 0.5,
       };
     });
 

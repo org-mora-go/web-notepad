@@ -1,7 +1,7 @@
 import type { Page } from "@playwright/test";
 
-export async function seedSplitState(page: Page) {
-  await page.addInitScript(() => {
+export async function seedSplitState(page: Page, splitRatio = 0.5) {
+  await page.addInitScript((persistedSplitRatio) => {
     const tabs = [
       {
         id: "left",
@@ -40,12 +40,12 @@ export async function seedSplitState(page: Page) {
               rightTabIds: ["right"],
               activeRightTabId: "right",
               activePane: "left",
-              splitRatio: 0.5,
+              splitRatio: persistedSplitRatio,
             },
           ],
         },
         version: 0,
       }),
     );
-  });
+  }, splitRatio);
 }
