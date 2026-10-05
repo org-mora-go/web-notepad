@@ -54,9 +54,13 @@ export function useHome() {
   const closeSidePanels = useCallback(() => {
     setBookmarksOpen(false);
     setGroupsOpen(false);
+    setShortcutsOpen(false);
   }, []);
 
-  usePanelHistory(bookmarksOpen || groupsOpen, closeSidePanels);
+  usePanelHistory(
+    bookmarksOpen || groupsOpen || shortcutsOpen,
+    closeSidePanels,
+  );
 
   const rightIds = useMemo(
     () => new Set(activeGroup?.rightTabIds ?? []),

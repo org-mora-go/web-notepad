@@ -4,7 +4,25 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
   page,
 }) => {
   await page.goto("http://localhost:3000");
-  await page.locator("textarea").fill("first\nsecond\nthird");
+  const editor = page.locator("textarea");
+  await expect(editor).toHaveCSS("font-size", "17px");
+  const getEditorFormat = () =>
+    page.locator(".note-editor").evaluate((element) => {
+      const lineRail = element.querySelector(".line-rail")!;
+      const firstLine = lineRail.querySelector("span")!;
+      const textarea = element.querySelector(".note-area")!;
+      const editorStyle = getComputedStyle(element);
+
+      return {
+        lineRailWidth: lineRail.getBoundingClientRect().width,
+        lineHeight: editorStyle.getPropertyValue("--editor-line-height").trim(),
+        topPadding: editorStyle.getPropertyValue("--editor-top-padding").trim(),
+        lineNumberPadding: getComputedStyle(firstLine).paddingRight,
+        editorPadding: getComputedStyle(textarea).padding,
+      };
+    });
+  const desktopFormat = await getEditorFormat();
+  await editor.fill("first\nsecond\nthird");
   const lines = page.locator('.line-rail [role="button"]');
   await expect(lines).toHaveCount(3);
   await expect(lines.first()).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
@@ -19,4 +37,7 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
     "background-image",
     /rgba\(184, 184, 176, 0\.2\)/,
   );
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(editor).toHaveCSS("font-size", "17px");
+  expect(await getEditorFormat()).toEqual(desktopFormat);
 });

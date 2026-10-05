@@ -125,10 +125,6 @@
 
     .status-command {
       gap: 3px;
-
-      > span:not(.status-separator) {
-        font-size: 11px;
-      }
     }
 
     .status-command .status-separator {

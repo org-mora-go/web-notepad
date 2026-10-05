@@ -30,4 +30,16 @@ test("2. 상태 표시줄의 북마크와 그룹 명령으로 각 패널을 연�
     "aria-hidden",
     "true",
   );
+
+  await page.setViewportSize({ width: 1280, height: 800 });
+  await page.getByRole("button", { name: "단축키 안내" }).click();
+  await expect(page.locator("#shortcuts-panel")).toHaveAttribute(
+    "aria-hidden",
+    "false",
+  );
+  await page.goBack();
+  await expect(page.locator("#shortcuts-panel")).toHaveAttribute(
+    "aria-hidden",
+    "true",
+  );
 });
