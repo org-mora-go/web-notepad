@@ -1,21 +1,26 @@
 import { expect, test } from "@playwright/test";
 
-test("7. 모바일에서 탭을 선택해도 에디터에 자동 포커스하지 않는다", async ({
-  browser,
+test("7. 핀 아이콘은 표시 전용이며 우클릭 메뉴에서 고정과 북마크를 전환한다", async ({
+  page,
 }) => {
-  const page = await browser.newPage({
-    hasTouch: true,
-    isMobile: true,
-    viewport: { width: 390, height: 844 },
-  });
   await page.goto("http://localhost:3000");
-  await page.locator('button[aria-label="새 탭 추가"]').click();
-  await page.locator("textarea").focus();
+  const tab = page.locator(".tab-item").first();
+  const tabButton = tab.locator('[role="tab"]');
 
-  const tabs = page.locator('[role="tab"]');
-  await tabs.first().click();
+  await tabButton.click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Pin" }).click();
+  const pinIndicator = tab.locator(".tab-pin-indicator");
+  await expect(pinIndicator).toBeVisible();
+  await expect(pinIndicator).not.toHaveRole("button");
+  await pinIndicator.click();
+  await expect(tab).toHaveClass(/is-pinned/);
 
-  await expect(tabs.first()).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator("textarea")).not.toBeFocused();
-  await page.close();
+  await tabButton.click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Unpin" }).click();
+  await expect(tab).not.toHaveClass(/is-pinned/);
+
+  await tabButton.click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Bookmark" }).click();
+  await expect(tab).toHaveClass(/is-bookmarked/);
+  await expect(tab.locator(".tab-bookmark-indicator")).toBeVisible();
 });

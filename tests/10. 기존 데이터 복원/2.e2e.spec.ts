@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("2. 그룹 구조 도입 전 최상위 탭과 북마크를 Ungrouped로 옮겨 복원한다", async ({
+test("2. 존재하지 않는 그룹과 탭 선택을 유효한 기본 선택으로 정리한다", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -8,40 +8,25 @@ test("2. 그룹 구조 도입 전 최상위 탭과 북마크를 Ungrouped로 옮
       "web-notepad-storage",
       JSON.stringify({
         state: {
-          tabs: [
+          activeGroupId: "missing-group",
+          groups: [
             {
-              id: "legacy-tab",
-              title: "Legacy",
-              content: "legacy content",
-              savedContent: "legacy content",
-              urgent: false,
-              pinned: false,
-              bookmarked: true,
-              updatedAt: 1,
+              id: "ungrouped",
+              name: "Ungrouped",
+              activeTabId: "missing-tab",
+              tabs: [{ id: "valid-tab", content: "fallback note" }],
+              rightTabIds: ["missing-tab"],
+              activeRightTabId: "missing-tab",
+              activePane: "right",
             },
           ],
-          activeTabId: "legacy-tab",
-          rightTabIds: [],
-          activeRightTabId: null,
-          activePane: "left",
-          splitRatio: 0.5,
-          bookmarks: [
-            {
-              id: "legacy-bookmark",
-              sourceTabId: "legacy-tab",
-              title: "Legacy",
-              content: "legacy content",
-              createdAt: 1,
-            },
-          ],
-          groups: [{ id: "legacy-group", name: "Legacy", createdAt: 1 }],
         },
         version: 0,
       }),
     );
   });
   await page.goto("http://localhost:3000");
-  await expect(page.locator("textarea")).toHaveValue("legacy content");
-  await page.getByRole("button", { name: "BOOKMARK" }).click();
-  await expect(page.locator(".bookmark-item")).toContainText("legacy content");
+  await expect(page.locator("textarea")).toHaveValue("fallback note");
+  await expect(page.locator(".note-pane-body")).toHaveCount(1);
+  await expect(page.getByRole("button", { name: /Ungrouped/ })).toBeVisible();
 });

@@ -1,38 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-test("6. 탭이 가로로 넘칠 때 스크롤 가능한 가장자리에 페이드 효과를 표시한다", async ({
+test("6. 고정 탭은 닫기 버튼과 가운데 클릭으로 닫히지 않는다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");
-  const strip = page.locator(".tab-strip").first();
-  const scroller = strip.locator(".tabs-scroll");
-
-  for (let index = 0; index < 11; index += 1) {
-    await page.locator('button[aria-label="새 탭 추가"]').click();
-  }
-
-  await expect(scroller).toHaveClass(/is-overflowing/);
-  await scroller.evaluate((element) => {
-    element.scrollLeft = 0;
-    element.dispatchEvent(new Event("scroll"));
-  });
-  await expect(strip).not.toHaveClass(/has-left-overflow/);
-  await expect(strip).toHaveClass(/has-right-overflow/);
-  await expect(scroller).toHaveCSS("mask-image", /48px/);
-
-  await scroller.evaluate((element) => {
-    element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2;
-    element.dispatchEvent(new Event("scroll"));
-  });
-  await expect(strip).toHaveClass(/has-left-overflow/);
-  await expect(strip).toHaveClass(/has-right-overflow/);
-  await expect(scroller).toHaveCSS("mask-image", /linear-gradient/);
-
-  await scroller.evaluate((element) => {
-    element.scrollLeft = element.scrollWidth;
-    element.dispatchEvent(new Event("scroll"));
-  });
-  await expect(strip).toHaveClass(/has-left-overflow/);
-  await expect(strip).not.toHaveClass(/has-right-overflow/);
-  await expect(scroller).toHaveCSS("mask-image", /linear-gradient/);
+  const tab = page.locator(".tab-item").first();
+  await tab.locator('[role="tab"]').click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Pin" }).click();
+  await expect(tab).toHaveClass(/is-pinned/);
+  await expect(tab.locator(".tab-close")).toHaveCount(0);
+  await tab.locator('[role="tab"]').click({ button: "middle" });
+  await expect(tab).toHaveClass(/is-pinned/);
 });

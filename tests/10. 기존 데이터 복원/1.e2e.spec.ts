@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화하고 잘못된 선택을 정리한다", async ({
+test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화한다", async ({
   page,
 }) => {
   await page.addInitScript(() => {
@@ -8,7 +8,7 @@ test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화하
       "web-notepad-storage",
       JSON.stringify({
         state: {
-          activeGroupId: "missing-group",
+          activeGroupId: "ungrouped",
           groups: [
             {
               id: "ungrouped",
@@ -23,5 +23,6 @@ test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화하
   });
   await page.goto("http://localhost:3000");
   await expect(page.locator("textarea")).toBeVisible();
+  await expect(page.locator("textarea")).toHaveValue("normalized");
   await expect(page.locator(".tab-item")).toHaveCount(1);
 });

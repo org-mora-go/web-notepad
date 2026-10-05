@@ -1,10 +1,14 @@
 import { expect, test } from "@playwright/test";
 
-test("5. 탭의 긴급 표시와 변경 표시를 전환할 수 있다", async ({ page }) => {
+test("5. 첫 줄 제목을 trim하고 28자로 제한하며 빈 내용은 하이픈으로 표시한다", async ({
+  page,
+}) => {
   await page.goto("http://localhost:3000");
-  const tab = page.locator(".tab-item.is-active");
-  await tab.locator(".dirty-dot").click();
-  await expect(tab).toHaveClass(/is-urgent/);
-  await page.locator("textarea").fill("changed");
-  await expect(tab).toHaveClass(/is-dirty/);
+  const title = page.locator(".tab-item.is-active .tab-title");
+  await page.locator("textarea").fill("  First title  \nsecond line");
+  await expect(title).toHaveText("First title");
+  await page.locator("textarea").fill("A".repeat(40));
+  await expect(title).toHaveText("A".repeat(28));
+  await page.locator("textarea").fill("");
+  await expect(title).toHaveText("-");
 });
