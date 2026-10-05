@@ -2,7 +2,7 @@
 
 .note-editor {
   --editor-line-height: 29.75px;
-  --editor-top-padding: 0px;
+  --editor-top-padding: 10px;
   --selected-line-background: rgba(184, 184, 176, 0.2);
   --selected-line-color: #{v.$saved};
 
@@ -31,6 +31,12 @@
     color: #40403c;
     font-size: 12px;
     user-select: none;
+
+    &.has-first-line-selected {
+      background:
+        linear-gradient(var(--selected-line-background), var(--selected-line-background))
+        0 0 / 100% var(--editor-top-padding) no-repeat;
+    }
 
     span {
       display: block;
@@ -61,7 +67,7 @@
     transform: scaleX(0.95);
     transform-origin: top left;
     resize: none;
-    padding: 0 22px;
+    padding: var(--editor-top-padding) 22px;
     border: 0;
     outline: none;
     background: transparent;

@@ -52,7 +52,11 @@ export function Editor({
       className={`note-editor ${selectedLines.length > 0 ? "has-selected-line" : ""}`}
       data-tab-color={tab.tabColor}
     >
-      <div className="line-rail" ref={lineRailRef} aria-label="라인 번호">
+      <div
+        className={`line-rail ${selectedLines.includes(0) ? "has-first-line-selected" : ""}`}
+        ref={lineRailRef}
+        aria-label="라인 번호"
+      >
         {Array.from({ length: lineCount }, (_, index) => (
           <span
             key={index}
@@ -97,13 +101,13 @@ export function Editor({
             backgroundSize: selectedLineRanges
               .map(
                 ({ start, end }) =>
-                  `100% calc(var(--editor-line-height) * ${end - start + 1})`,
+                  `100% calc(var(--editor-line-height) * ${end - start + 1} + ${start === 0 ? "var(--editor-top-padding)" : "0px"})`,
               )
               .join(", "),
             backgroundPosition: selectedLineRanges
               .map(
                 ({ start }) =>
-                  `0 calc(var(--editor-top-padding) + var(--editor-line-height) * ${start})`,
+                  `0 ${start === 0 ? "0px" : `calc(var(--editor-top-padding) + var(--editor-line-height) * ${start})`}`,
               )
               .join(", "),
             backgroundRepeat: selectedLineRanges
