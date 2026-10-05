@@ -48,7 +48,7 @@
     h2 {
       margin: 0;
       font-family: v.$sans;
-      font-size: 20px;
+      font-size: 21px;
       font-weight: 500;
     }
   }
@@ -61,7 +61,7 @@
 
   .eyebrow {
     color: v.$signal;
-    font-size: 10px;
+    font-size: 11px;
   }
 
   .panel-close {
@@ -102,7 +102,7 @@
       overflow: hidden;
       color: v.$saved;
       font-family: v.$sans;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.5;
       white-space: pre-wrap;
       overflow-wrap: anywhere;
@@ -118,7 +118,7 @@
       border: 0;
       background: transparent;
       color: v.$dim;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
 
       &:hover {
@@ -135,12 +135,12 @@
 
     strong {
       color: v.$signal;
-      font-size: 13px;
+      font-size: 14px;
     }
 
     time {
       color: #6f6f69;
-      font-size: 10px;
+      font-size: 11px;
     }
   }
 
@@ -158,7 +158,7 @@
       border: 1px solid v.$line;
       background: transparent;
       color: #a9a9a2;
-      font-size: 11px;
+      font-size: 12px;
       cursor: pointer;
 
       &:hover {
@@ -187,7 +187,7 @@
       max-width: 220px;
       margin: 0;
       font-family: v.$sans;
-      font-size: 14px;
+      font-size: 15px;
       line-height: 1.5;
     }
   }
