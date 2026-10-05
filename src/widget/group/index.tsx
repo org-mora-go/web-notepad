@@ -63,6 +63,12 @@ export function Group({
             <X size={16} />
           </button>
         </div>
+        <SearchField
+          value={searchQuery}
+          ariaLabel="그룹 검색"
+          placeholder="그룹 검색"
+          onChange={setSearchQuery}
+        />
         <form className="group-create-form" onSubmit={handleSubmit}>
           <input
             type="text"
@@ -80,12 +86,6 @@ export function Group({
             <Plus size={16} />
           </button>
         </form>
-        <SearchField
-          value={searchQuery}
-          ariaLabel="그룹 검색"
-          placeholder="그룹 검색"
-          onChange={setSearchQuery}
-        />
         <div className="group-list">
           {groups.length === 0 ? (
             <div className="group-empty">
