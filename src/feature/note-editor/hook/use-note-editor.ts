@@ -1,9 +1,10 @@
 import type { ChangeEvent, KeyboardEvent, UIEvent } from "react";
-import { type RefObject, useEffect, useRef, useState } from "react";
+import { type RefObject, useEffect, useRef } from "react";
 
 import type { NoteTab } from "@/src/entity/notepad";
 
 import { handleEditorKeyDown, insertAtSelection } from "../util";
+import { useLineSelection } from "./use-line-selection";
 
 type Options = {
   tab: NoteTab;
@@ -16,56 +17,12 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const undoHistoryRef = useRef(new Map<string, string[]>());
   const redoHistoryRef = useRef(new Map<string, string[]>());
   const contentRef = useRef(tab.content);
-  const [selectedLinesByTab, setSelectedLinesByTab] = useState<
-    Record<string, number[]>
-  >({});
-  const selectedLines = selectedLinesByTab[tab.id] ?? [];
-  const previousTabIdRef = useRef(tab.id);
-  const previousContentRef = useRef(tab.content);
   const pendingTabInsertionRef = useRef<HTMLTextAreaElement | null>(null);
+  const { selectedLines, toggleLineSelection } = useLineSelection(tab);
 
   useEffect(() => {
     contentRef.current = tab.content;
-    if (previousTabIdRef.current === tab.id) {
-      const previousLines = previousContentRef.current.split("\n");
-      const nextLines = tab.content.split("\n");
-      if (nextLines.length !== previousLines.length) {
-        const shorterLength = Math.min(previousLines.length, nextLines.length);
-        let commonPrefix = 0;
-        while (
-          commonPrefix < shorterLength &&
-          previousLines[commonPrefix] === nextLines[commonPrefix]
-        ) {
-          commonPrefix += 1;
-        }
-
-        let commonSuffix = 0;
-        while (
-          commonSuffix < shorterLength - commonPrefix &&
-          previousLines[previousLines.length - 1 - commonSuffix] ===
-            nextLines[nextLines.length - 1 - commonSuffix]
-        ) {
-          commonSuffix += 1;
-        }
-
-        // Positive when lines were inserted (e.g. Enter), negative when removed.
-        const lineCountDelta = nextLines.length - previousLines.length;
-        const unchangedSuffixStart = previousLines.length - commonSuffix;
-        setSelectedLinesByTab((current) => {
-          const selected = current[tab.id] ?? [];
-          const remapped = selected.flatMap((lineIndex) => {
-            if (lineIndex < commonPrefix) return [lineIndex];
-            if (lineIndex >= unchangedSuffixStart)
-              return [lineIndex + lineCountDelta];
-            return [];
-          });
-          return { ...current, [tab.id]: remapped };
-        });
-      }
-    }
-    previousTabIdRef.current = tab.id;
-    previousContentRef.current = tab.content;
-  }, [tab.content, tab.id]);
+  }, [tab.content]);
 
   const commitContent = (content: string) => {
     const previousContent = contentRef.current;
@@ -139,16 +96,6 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
     if (lineRailRef.current) {
       lineRailRef.current.scrollTop = event.currentTarget.scrollTop;
     }
-  };
-
-  const toggleLineSelection = (lineIndex: number) => {
-    setSelectedLinesByTab((current) => {
-      const selected = current[tab.id] ?? [];
-      const next = selected.includes(lineIndex)
-        ? selected.filter((selectedIndex) => selectedIndex !== lineIndex)
-        : [...selected, lineIndex];
-      return { ...current, [tab.id]: next };
-    });
   };
 
   return {

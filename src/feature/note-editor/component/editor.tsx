@@ -15,7 +15,7 @@ type Props = {
   lineRailRef: RefObject<HTMLDivElement | null>;
   selectedLines: number[];
   autoFocus: boolean;
-  onToggleLineSelection: (lineIndex: number) => void;
+  onToggleLineSelection: (lineIndex: number, extendSelection?: boolean) => void;
   onChange: (event: ChangeEvent<HTMLTextAreaElement>) => void;
   onKeyDown: (event: KeyboardEvent<HTMLTextAreaElement>) => void;
   onCompositionStart: () => void;
@@ -48,7 +48,9 @@ export function Editor({
   }
 
   return (
-    <div className={`note-editor ${selectedLines.length > 0 ? "has-selected-line" : ""}`}>
+    <div
+      className={`note-editor ${selectedLines.length > 0 ? "has-selected-line" : ""}`}
+    >
       <div className="line-rail" ref={lineRailRef} aria-label="라인 번호">
         {Array.from({ length: lineCount }, (_, index) => (
           <span
@@ -57,7 +59,7 @@ export function Editor({
             role="button"
             tabIndex={0}
             aria-pressed={selectedLines.includes(index)}
-            onClick={() => onToggleLineSelection(index)}
+            onClick={(event) => onToggleLineSelection(index, event.shiftKey)}
             onKeyDown={(event) => {
               if (event.key === "Enter" || event.key === " ") {
                 event.preventDefault();
@@ -103,7 +105,9 @@ export function Editor({
                   `0 calc(var(--editor-top-padding) + var(--editor-line-height) * ${start})`,
               )
               .join(", "),
-            backgroundRepeat: selectedLineRanges.map(() => "no-repeat").join(", "),
+            backgroundRepeat: selectedLineRanges
+              .map(() => "no-repeat")
+              .join(", "),
             backgroundAttachment: "local",
           } as CSSProperties
         }

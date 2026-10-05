@@ -14,6 +14,7 @@ test("3. SHORTCUT 안내 패널은 왼쪽에 표시되고 패널별 단축키를
   await expect(shortcutsPanel).toHaveAttribute("aria-hidden", "false");
   await expect(shortcutsPanel).toContainText("Option + F12");
   await expect(shortcutsPanel).toContainText("Option + F11");
+  await expect(shortcutsPanel).toContainText("Shift + 클릭");
   await page.getByRole("button", { name: "단축키 닫기" }).click();
   await expect(shortcutsPanel).toHaveAttribute("aria-hidden", "true");
 

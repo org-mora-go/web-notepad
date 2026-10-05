@@ -15,6 +15,7 @@ const shortcuts = [
   { action: "오른쪽 패널로 이동", keys: ["Option + F12"] },
   { action: "왼쪽 패널로 이동", keys: ["Option + F11"] },
   { action: "탭 문자 삽입", keys: ["Tab"] },
+  { action: "라인 범위 선택 및 해제", keys: ["Shift + 클릭"] },
 ];
 
 export function ShortcutHelp({ open, onClose }: Props) {
