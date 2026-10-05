@@ -86,7 +86,10 @@ export function Editor({
         style={
           {
             backgroundImage: selectedLineRanges
-              .map(() => "linear-gradient(rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.11))")
+              .map(
+                () =>
+                  "linear-gradient(var(--selected-line-background), var(--selected-line-background))",
+              )
               .join(", "),
             backgroundSize: selectedLineRanges
               .map(

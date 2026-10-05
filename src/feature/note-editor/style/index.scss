@@ -3,6 +3,7 @@
 .note-editor {
   --editor-line-height: 29.75px;
   --editor-top-padding: 14px;
+  --selected-line-background: rgba(143, 227, 176, 0.2);
 
   min-height: 0;
   display: grid;
@@ -34,8 +35,8 @@
       text-align: right;
 
       &.is-selected {
-        background: rgba(255, 255, 255, 0.15);
-        color: #a8a8a2;
+        background: var(--selected-line-background);
+        color: v.$signal;
         font-weight: 600;
       }
 
