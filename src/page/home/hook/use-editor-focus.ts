@@ -21,6 +21,12 @@ export function useEditorFocus(
         ?.tabs.find((tab) => tab.id === activeTabId);
       const editor = editorRef.current;
       if (!currentTab || !editor) return;
+      if (
+        window.matchMedia("(pointer: coarse)").matches &&
+        document.activeElement !== editor
+      ) {
+        return;
+      }
 
       editor.focus();
       editor.setSelectionRange(
