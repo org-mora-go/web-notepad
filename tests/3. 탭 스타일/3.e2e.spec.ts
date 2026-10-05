@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("9. 탭이 가로로 넘칠 때 스크롤 가능한 가장자리에 페이드 효과를 표시한다", async ({
+test("3. 탭이 가로로 넘칠 때 스크롤 가능한 가장자리에 페이드 효과를 표시한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("5. 첫 줄 제목을 trim하고 28자로 제한하며 빈 내용은 하이픈으로 표시한다", async ({
+test("1. 탭 제목의 길이와 빈 제목 표기를 일관되게 유지한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

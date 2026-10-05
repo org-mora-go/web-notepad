@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("10. 모바일에서 탭을 선택해도 에디터에 자동 포커스하지 않는다", async ({
+test("8. 모바일에서 탭을 선택해도 에디터에 자동 포커스하지 않는다", async ({
   browser,
 }) => {
   const page = await browser.newPage({
