@@ -12,6 +12,32 @@
     border-right: 1px solid v.$line;
     color: v.$muted;
 
+    &[data-tab-color="gray"] {
+      --tab-accent: #{v.$saved};
+      --tab-glow: rgba(184, 184, 176, 0.55);
+      --tab-accent-muted: rgba(184, 184, 176, 0.58);
+      --tab-background: rgba(184, 184, 176, 0.08);
+      --tab-background-active: rgba(184, 184, 176, 0.16);
+    }
+
+    &[data-tab-color="blue"] {
+      --tab-accent: #{v.$tab-blue};
+      --tab-glow: rgba(138, 180, 248, 0.55);
+      --tab-accent-muted: rgba(138, 180, 248, 0.58);
+      --tab-background: rgba(138, 180, 248, 0.08);
+      --tab-background-active: rgba(138, 180, 248, 0.16);
+    }
+
+    &[data-tab-color="green"] {
+      --tab-accent: #{v.$signal};
+      --tab-glow: rgba(143, 227, 176, 0.55);
+      --tab-accent-muted: rgba(143, 227, 176, 0.58);
+      --tab-background: rgba(143, 227, 176, 0.08);
+      --tab-background-active: rgba(143, 227, 176, 0.16);
+    }
+
+    background: var(--tab-background, transparent);
+
     &.is-dragging {
       opacity: 0.4;
     }
@@ -22,57 +48,29 @@
     }
 
     &.is-active {
-      background: v.$panel;
+      background: var(--tab-background-active, #{v.$panel});
       color: v.$ink;
-      box-shadow: inset 0 2px v.$saved;
-
-      &.is-dirty {
-        box-shadow: inset 0 2px v.$signal;
-      }
+      box-shadow: inset 0 2px var(--tab-accent, #{v.$saved});
     }
 
     &.is-pinned {
-      background: #121512;
-      border-right-color: #35463a;
+      background: var(--tab-background);
+      border-right-color: var(--tab-accent-muted, #35463a);
 
       .tab-select {
         // No close button renders on pinned tabs, so add back the trailing space it would occupy.
         padding-right: 14px;
-        color: #b9ddc5;
+        color: var(--tab-accent, #b9ddc5);
       }
 
       .tab-indicator.is-pin {
-        color: v.$signal;
+        color: var(--tab-accent, #{v.$signal});
       }
     }
 
     &.is-pinned.is-active {
-      background: #171c18;
-      box-shadow: inset 0 2px v.$signal;
-    }
-
-    &.is-urgent,
-    &.is-urgent.is-active,
-    &.is-urgent.is-active.is-dirty {
-      box-shadow: inset 0 2px v.$urgent;
-    }
-
-    &.is-pinned.is-urgent {
-      background: #171212;
-      border-right-color: #553638;
-
-      .tab-select {
-        color: #e2b9b9;
-      }
-
-      .tab-indicator.is-pin {
-        color: v.$urgent;
-      }
-    }
-
-    &.is-pinned.is-urgent.is-active {
-      background: #1d1516;
-      box-shadow: inset 0 2px v.$urgent;
+      background: var(--tab-background-active);
+      box-shadow: inset 0 2px var(--tab-accent, #{v.$saved});
     }
 
     @media (max-width: 640px) {
@@ -143,26 +141,21 @@
       left: 50%;
       width: 9px;
       height: 9px;
-      background: v.$saved;
+      background: var(--tab-accent, #{v.$saved});
+      box-shadow: 0 0 8px var(--tab-glow, rgba(184, 184, 176, 0.55));
       content: "";
       transform: translate(-50%, -50%);
     }
 
     &.is-dirty::before {
-      background: v.$signal;
-      box-shadow: 0 0 8px rgba(143, 227, 176, 0.55);
-    }
-
-    &.is-urgent::before {
-      background: v.$urgent;
-      box-shadow: 0 0 8px rgba(224, 90, 90, 0.55);
+      filter: brightness(1.15);
     }
   }
 
   .tab-title {
     flex: 0 1 auto;
     overflow: hidden;
-    font-size: 13px;
+    font-size: 14px;
     text-overflow: ellipsis;
     white-space: nowrap;
   }

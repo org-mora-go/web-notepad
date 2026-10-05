@@ -4,4 +4,5 @@ export type {
   NotepadState,
   NoteTab,
   PaneId,
+  TabColor,
 } from "./notepad";

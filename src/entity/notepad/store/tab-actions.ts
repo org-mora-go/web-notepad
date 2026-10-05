@@ -1,6 +1,6 @@
 import type { StateCreator } from "zustand";
 
-import type { NotepadState } from "../type";
+import type { NotepadState, TabColor } from "../type";
 import { createNoteTab, getNextTabNumber, getTitleFromContent } from "../util";
 import {
   getActiveGroup,
@@ -15,10 +15,12 @@ type TabActions = Pick<
   | "selectTab"
   | "updateTab"
   | "moveTab"
-  | "toggleUrgent"
+  | "cycleTabColor"
   | "togglePin"
   | "closeTab"
 >;
+
+const TAB_COLORS: TabColor[] = ["gray", "blue", "green"];
 
 export const createTabActions: StateCreator<
   NotepadState,
@@ -106,14 +108,17 @@ export const createTabActions: StateCreator<
         tabs,
       }));
     }),
-  toggleUrgent: (tabId) =>
+  cycleTabColor: (tabId) =>
     set((state) => {
       const group = getActiveGroup(state);
-      if (!group) return state;
+      const tab = group?.tabs.find((item) => item.id === tabId);
+      if (!group || !tab) return state;
+      const colorIndex = TAB_COLORS.indexOf(tab.tabColor);
+      const nextColor = TAB_COLORS[(colorIndex + 1) % TAB_COLORS.length];
       return updateGroup(state, group.id, (current) => ({
         ...current,
         tabs: current.tabs.map((tab) =>
-          tab.id === tabId ? { ...tab, urgent: !tab.urgent } : tab,
+          tab.id === tabId ? { ...tab, tabColor: nextColor } : tab,
         ),
       }));
     }),

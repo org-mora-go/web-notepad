@@ -50,6 +50,7 @@ export function Editor({
   return (
     <div
       className={`note-editor ${selectedLines.length > 0 ? "has-selected-line" : ""}`}
+      data-tab-color={tab.tabColor}
     >
       <div className="line-rail" ref={lineRailRef} aria-label="라인 번호">
         {Array.from({ length: lineCount }, (_, index) => (

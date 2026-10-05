@@ -3,7 +3,18 @@
 .note-editor {
   --editor-line-height: 29.75px;
   --editor-top-padding: 14px;
-  --selected-line-background: rgba(143, 227, 176, 0.2);
+  --selected-line-background: rgba(184, 184, 176, 0.2);
+  --selected-line-color: #{v.$saved};
+
+  &[data-tab-color="blue"] {
+    --selected-line-background: rgba(138, 180, 248, 0.2);
+    --selected-line-color: #{v.$tab-blue};
+  }
+
+  &[data-tab-color="green"] {
+    --selected-line-background: rgba(143, 227, 176, 0.2);
+    --selected-line-color: #{v.$signal};
+  }
 
   min-height: 0;
   display: grid;
@@ -36,7 +47,7 @@
 
       &.is-selected {
         background: var(--selected-line-background);
-        color: v.$signal;
+        color: var(--selected-line-color);
         font-weight: 600;
       }
 
