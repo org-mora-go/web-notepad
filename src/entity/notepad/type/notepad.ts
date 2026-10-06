@@ -56,6 +56,7 @@ export type NotepadState = {
   openBookmark: (bookmarkId: string) => void;
   removeBookmark: (bookmarkId: string) => void;
   createGroup: (name: string) => void;
+  renameGroup: (groupId: string, name: string) => void;
   removeGroup: (groupId: string) => void;
   selectGroup: (groupId: string) => void;
 };

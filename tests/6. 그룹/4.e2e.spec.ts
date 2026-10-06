@@ -10,6 +10,7 @@ test("4. 그룹 이름을 대소문자 구분 없이 검색한다", async ({ pag
     await toggle.click();
   const search = page.getByRole("searchbox", { name: "그룹 검색" });
   await expect(search).toBeVisible();
+  await expect(search).toHaveAttribute("placeholder", "Search groups");
   await search.fill("work");
   await expect(page.locator(".group-item")).toContainText("Work");
 });

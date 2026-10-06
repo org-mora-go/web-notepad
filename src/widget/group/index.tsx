@@ -1,11 +1,13 @@
 "use client";
 
-import { Layers, Plus, Trash2, X } from "lucide-react";
+import { Check, Layers, Pencil, Plus, Trash2, X } from "lucide-react";
 import { type FormEvent, useState } from "react";
 
 import type { GroupEntry } from "@/src/entity/notepad";
 import { UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
 import { matchesSearchQuery, SearchField } from "@/src/feature";
+
+import { GroupDeletePopup } from "./component";
 
 type Props = {
   groups: GroupEntry[];
@@ -15,6 +17,7 @@ type Props = {
   onCreate: (name: string) => void;
   onSelect: (groupId: string) => void;
   onRemove: (groupId: string) => void;
+  onRename: (groupId: string, name: string) => void;
 };
 
 export function Group({
@@ -25,9 +28,14 @@ export function Group({
   onCreate,
   onSelect,
   onRemove,
+  onRename,
 }: Props) {
   const [groupName, setGroupName] = useState("");
   const [searchQuery, setSearchQuery] = useState("");
+  const [editingGroupId, setEditingGroupId] = useState<string | null>(null);
+  const [editingName, setEditingName] = useState("");
+  const [deletingGroupId, setDeletingGroupId] = useState<string | null>(null);
+  const groupToDelete = groups.find((group) => group.id === deletingGroupId);
   const filteredGroups = groups.filter((group) =>
     matchesSearchQuery(searchQuery, group.name),
   );
@@ -38,6 +46,14 @@ export function Group({
     if (!trimmedName) return;
     onCreate(trimmedName);
     setGroupName("");
+  };
+
+  const handleRename = (event: FormEvent<HTMLFormElement>, groupId: string) => {
+    event.preventDefault();
+    const trimmedName = editingName.trim();
+    if (!trimmedName) return;
+    onRename(groupId, trimmedName);
+    setEditingGroupId(null);
   };
 
   return (
@@ -66,7 +82,7 @@ export function Group({
         <SearchField
           value={searchQuery}
           ariaLabel="그룹 검색"
-          placeholder="그룹 검색"
+          placeholder="Search groups"
           onChange={setSearchQuery}
         />
         <form className="group-create-form" onSubmit={handleSubmit}>
@@ -74,7 +90,7 @@ export function Group({
             type="text"
             value={groupName}
             onChange={(event) => setGroupName(event.target.value)}
-            placeholder="그룹 이름"
+            placeholder="Group name"
             aria-label="새 그룹 이름"
             maxLength={60}
           />
@@ -102,29 +118,79 @@ export function Group({
                 className={`group-item ${group.id === activeGroupId ? "is-active" : ""}`}
                 key={group.id}
               >
-                <button
-                  className="group-select"
-                  type="button"
-                  aria-pressed={group.id === activeGroupId}
-                  onClick={() => onSelect(group.id)}
-                >
-                  <strong>{group.name}</strong>
-                </button>
-                {group.id !== UNGROUPED_GROUP_ID && (
-                  <button
-                    type="button"
-                    onClick={() => onRemove(group.id)}
-                    aria-label={`${group.name} 그룹 삭제`}
-                    title="그룹 삭제"
-                  >
-                    <Trash2 size={14} />
-                  </button>
+                {editingGroupId === group.id ? (
+                  <form className="group-edit-form" onSubmit={(event) => handleRename(event, group.id)}>
+                    <input
+                      type="text"
+                      value={editingName}
+                      onChange={(event) => setEditingName(event.target.value)}
+                      aria-label={`${group.name} 그룹 이름 수정`}
+                      maxLength={60}
+                      autoFocus
+                      onKeyDown={(event) => {
+                        if (event.key === "Escape") {
+                          event.preventDefault();
+                          setEditingGroupId(null);
+                        }
+                      }}
+                    />
+                    <button type="submit" aria-label="그룹 수정 저장" title="저장" disabled={!editingName.trim()}>
+                      <Check size={14} />
+                    </button>
+                    <button type="button" aria-label="그룹 수정 취소" title="취소" onClick={() => setEditingGroupId(null)}>
+                      <X size={14} />
+                    </button>
+                  </form>
+                ) : (
+                  <>
+                    <button
+                      className="group-select"
+                      type="button"
+                      aria-pressed={group.id === activeGroupId}
+                      onClick={() => onSelect(group.id)}
+                    >
+                      <strong>{group.name}</strong>
+                    </button>
+                    {group.id !== UNGROUPED_GROUP_ID && (
+                      <>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setEditingGroupId(group.id);
+                            setEditingName(group.name);
+                          }}
+                          aria-label={`${group.name} 그룹 수정`}
+                          title="그룹 수정"
+                        >
+                          <Pencil size={14} />
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setDeletingGroupId(group.id)}
+                          aria-label={`${group.name} 그룹 삭제`}
+                          title="그룹 삭제"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </>
+                    )}
+                  </>
                 )}
               </article>
             ))
           )}
         </div>
       </aside>
+      {open && groupToDelete && (
+        <GroupDeletePopup
+          groupName={groupToDelete.name}
+          onCancel={() => setDeletingGroupId(null)}
+          onConfirm={() => {
+            onRemove(groupToDelete.id);
+            setDeletingGroupId(null);
+          }}
+        />
+      )}
     </div>
   );
 }
