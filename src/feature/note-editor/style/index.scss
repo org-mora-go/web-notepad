@@ -1,7 +1,7 @@
 @use "../../../entity/style/variable" as v;
 
 .note-editor {
-  --editor-line-height: 29.75px;
+  --editor-line-height: 33px;
   --editor-top-padding: 10px;
   --selected-line-background: rgba(184, 184, 176, 0.2);
   --selected-line-color: #{v.$saved};
@@ -73,7 +73,7 @@
     background: transparent;
     color: #ffffff;
     caret-color: v.$signal;
-    font-size: 17px;
+    font-size: 19px;
     line-height: var(--editor-line-height);
     tab-size: 4;
 

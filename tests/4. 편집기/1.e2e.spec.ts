@@ -5,7 +5,8 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
 }) => {
   await page.goto("http://localhost:3000");
   const editor = page.locator("textarea");
-  await expect(editor).toHaveCSS("font-size", "17px");
+  await expect(editor).toHaveCSS("font-size", "19px");
+  await expect(editor).toHaveCSS("line-height", "33px");
   const getEditorFormat = () =>
     page.locator(".note-editor").evaluate((element) => {
       const lineRail = element.querySelector(".line-rail")!;
@@ -22,11 +23,14 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
       };
     });
   const desktopFormat = await getEditorFormat();
+  expect(desktopFormat.lineHeight).toBe("33px");
   expect(desktopFormat.topPadding).toBe("10px");
   expect(desktopFormat.editorPadding).toBe("10px 22px");
   await editor.fill("first\nsecond\nthird");
   const lines = page.locator('.line-rail [role="button"]');
   await expect(lines).toHaveCount(3);
+  await expect(lines.first()).toHaveCSS("height", "33px");
+  await expect(lines.first()).toHaveCSS("line-height", "33px");
   await expect(lines.first()).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await lines.first().click();
   await expect(lines.first()).toHaveAttribute("aria-pressed", "true");
@@ -44,7 +48,7 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
   );
   await expect(editor).toHaveCSS(
     "background-size",
-    "100% 39.75px",
+    "100% 43px",
   );
   await lines.first().click();
   await lines.nth(1).click();
@@ -59,6 +63,9 @@ test("1. 여러 줄 텍스트와 줄 번호를 표시하고 줄 번호로 줄을
     /rgba\(184, 184, 176, 0\.2\)/,
   );
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(editor).toHaveCSS("font-size", "17px");
+  await expect(editor).toHaveCSS("font-size", "19px");
+  await expect(editor).toHaveCSS("line-height", "33px");
+  await expect(lines.first()).toHaveCSS("height", "33px");
+  await expect(lines.first()).toHaveCSS("line-height", "33px");
   expect(await getEditorFormat()).toEqual(desktopFormat);
 });

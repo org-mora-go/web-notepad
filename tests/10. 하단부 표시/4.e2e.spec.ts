@@ -5,6 +5,7 @@ test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구�
 }) => {
   await page.goto("http://localhost:3000");
 
+  const statusBar = page.locator(".status-bar");
   const shortcut = page.locator(".shortcut-command");
   const lines = page.locator(".status-lines");
   const bookmark = page.locator(".status-actions .status-command").first();
@@ -31,6 +32,8 @@ test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구�
     ).toBeLessThan(1);
   };
 
+  await expect(statusBar).toHaveCSS("padding", "1px 14px");
+  expect((await statusBar.boundingBox())!.height).toBe(36);
   await expect(separators).toHaveCount(3);
   await expect(separators).toHaveText(["|", "|", "|"]);
   await expect(shortcut.locator(".status-separator")).toHaveCount(1);
@@ -44,6 +47,8 @@ test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구�
   await expectMetaRightAligned();
 
   await page.setViewportSize({ width: 390, height: 844 });
+  await expect(statusBar).toHaveCSS("padding", "1px 8px");
+  expect((await statusBar.boundingBox())!.height).toBe(36);
   await expect(shortcut).toBeHidden();
   await expect(lines).toBeHidden();
   await expect(bookmark.locator(".status-separator")).toBeHidden();
