@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("3. SHORTCUT 패널에 키보드 단축키와 줄 범위 선택 안내를 표시한다", async ({
+test("2. SHORTCUT 패널에 키보드 단축키와 줄 범위 선택 안내를 표시한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

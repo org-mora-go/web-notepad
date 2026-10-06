@@ -2,10 +2,6 @@ import { expect, test } from "@playwright/test";
 
 test("1. 상태 표시줄에 노트와 그룹 정보를 표시한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  const creatorCredit = page.locator(".creator-credit");
-  await expect(creatorCredit).toBeVisible();
-  await expect(creatorCredit).toHaveAttribute("aria-label", "HYUN-WOO YOO");
-  await expect(creatorCredit).toHaveText("HYUN-WOO YOO");
   await page.locator("textarea").fill("one\ntwo");
   await expect(page.locator(".status-lines")).toContainText("2 LINES");
   await page

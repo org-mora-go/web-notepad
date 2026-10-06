@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("7. 그룹 이름을 PC와 모바일 최대 너비에 맞춰 한 줄 말줄임한다", async ({ page }) => {
+test("6. 그룹 이름을 PC와 모바일 최대 너비에 맞춰 한 줄 말줄임한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   await page.locator('button[aria-controls="groups-panel"]').click();
   await page.getByRole("textbox", { name: "새 그룹 이름" }).fill(
