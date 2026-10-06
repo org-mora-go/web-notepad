@@ -23,12 +23,27 @@ test("10. 모바일에서는 더블탭으로만 탭의 고정과 북마크 메�
   await page.getByRole("menuitem", { name: "Pin", exact: true }).tap();
   await expect(tab).toHaveClass(/is-pinned/);
 
+  await page.locator("textarea").tap();
+  await tab.locator(".tab-pin-indicator").tap();
+  await tab.locator(".tab-pin-indicator").tap();
+  await expect(page.getByRole("menuitem", { name: "Unpin", exact: true })).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Bookmark", exact: true })).toBeVisible();
+  await expect(tab).toHaveClass(/is-pinned/);
+  await page.keyboard.press("Escape");
+
   await tabButton.dblclick();
   await page.getByRole("menuitem", { name: "Unpin", exact: true }).tap();
   await expect(tab).not.toHaveClass(/is-pinned/);
   await tabButton.dblclick();
   await page.getByRole("menuitem", { name: "Bookmark", exact: true }).tap();
   await expect(tab).toHaveClass(/is-bookmarked/);
+  await page.locator("textarea").tap();
+  await tab.locator(".tab-bookmark-indicator").tap();
+  await tab.locator(".tab-bookmark-indicator").tap();
+  await expect(page.getByRole("menuitem", { name: "Pin", exact: true })).toBeVisible();
+  await expect(page.getByRole("menuitem", { name: "Remove bookmark", exact: true })).toBeVisible();
+  await expect(tab).toHaveClass(/is-bookmarked/);
+  await page.keyboard.press("Escape");
   await tabButton.dblclick();
   await page.getByRole("menuitem", { name: "Remove bookmark", exact: true }).tap();
   await expect(tab).not.toHaveClass(/is-bookmarked/);

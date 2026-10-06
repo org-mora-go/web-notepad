@@ -84,24 +84,11 @@ export function TabItem({
         aria-label={`${tab.title} 탭 색상 변경`}
         title="탭 색상 변경"
       />
-      {tab.pinned && (
-        <span className="tab-pin-indicator" aria-label="고정됨" title="고정됨">
-          <Pin className="tab-indicator is-pin" size={13} aria-hidden="true" />
-        </span>
-      )}
-      {tab.bookmarked && (
-        <span className="tab-bookmark-indicator" aria-hidden="true">
-          <Bookmark
-            className="tab-indicator is-bookmark"
-            size={13}
-            aria-hidden="true"
-          />
-        </span>
-      )}
       <button
         className="tab-select"
         type="button"
         role="tab"
+        aria-label={tab.title}
         aria-selected={active}
         onClick={() => onSelect(tab.id)}
         onDoubleClick={(event) => {
@@ -110,6 +97,20 @@ export function TabItem({
           onContextMenu(tab.id, event.clientX, event.clientY);
         }}
       >
+        {tab.pinned && (
+          <span className="tab-pin-indicator" aria-label="고정됨" title="고정됨">
+            <Pin className="tab-indicator is-pin" size={13} aria-hidden="true" />
+          </span>
+        )}
+        {tab.bookmarked && (
+          <span className="tab-bookmark-indicator" aria-hidden="true">
+            <Bookmark
+              className="tab-indicator is-bookmark"
+              size={13}
+              aria-hidden="true"
+            />
+          </span>
+        )}
         <span className="tab-title">{tab.title}</span>
       </button>
       {!tab.pinned && (
