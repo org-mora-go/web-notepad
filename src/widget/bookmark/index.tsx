@@ -4,7 +4,8 @@ import { Bookmark as BookmarkIcon, Trash2, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 
 import type { BookmarkEntry } from "@/src/entity/notepad";
-import { matchesSearchQuery, SearchField } from "@/src/feature";
+import { SearchField } from "@/src/feature";
+import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
 const formatDate = (timestamp: number) =>
   new Intl.DateTimeFormat("ko-KR", {
@@ -103,7 +104,7 @@ export function Bookmark({
   );
 
   return (
-    <div className="bookmark-panel">
+    <div className="bookmark">
       <div
         className={`bookmark-backdrop ${open ? "is-visible" : ""}`}
         onClick={onClose}

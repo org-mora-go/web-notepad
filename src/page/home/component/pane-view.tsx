@@ -1,8 +1,9 @@
 "use client";
 
-import { Body, Header, PaneDivider } from "@/src/widget";
+import { Body, Header } from "@/src/widget";
 
 import type { PaneViewProps } from "../type";
+import { PaneDivider } from "./pane-divider";
 
 export function PaneView({
   tabs,

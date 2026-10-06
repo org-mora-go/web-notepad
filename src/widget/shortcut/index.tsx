@@ -18,9 +18,9 @@ const shortcuts = [
   { action: "라인 범위 선택 및 해제", keys: ["Shift + 클릭"] },
 ];
 
-export function ShortcutHelp({ open, onClose }: Props) {
+export function Shortcut({ open, onClose }: Props) {
   return (
-    <div className="shortcut-panel">
+    <div className="shortcut">
       <div
         className={`shortcut-backdrop ${open ? "is-visible" : ""}`}
         onClick={onClose}
@@ -33,7 +33,7 @@ export function ShortcutHelp({ open, onClose }: Props) {
         aria-label="키보드 단축키"
       >
         <div className="shortcut-header">
-          <h2>Keyboard Shortcuts</h2>
+          <h2>Shortcut</h2>
           <button
             className="shortcut-close"
             type="button"

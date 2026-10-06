@@ -1,13 +1,15 @@
-@use "../../../entity/style/variable" as v;
-@use "../../../widget/header/style/index" as header;
-@use "../../../widget/body/style/index" as body;
-@use "../../../feature/note-editor/style/index" as note-editor;
-@use "../../../widget/bookmark/style/index" as bookmark;
-@use "../../../widget/group/style/index" as group;
-@use "../../../widget/shortcut-help/style/index" as shortcut-help;
-@use "../../../feature/search-field/style/index" as search-field;
-@use "./status-bar";
-@use "./loading.scss";
+@use "../../entity/style/variable" as v;
+@use "../../widget/header";
+@use "../../widget/body";
+@use "../../feature/note-editor";
+@use "../../widget/bookmark";
+@use "../../widget/group";
+@use "../../widget/shortcut";
+@use "../../feature/search-field";
+@use "./style/status-bar";
+@use "./style/loading";
+@use "./style/search-empty-state";
+@use "./style/pane-divider";
 
 .home {
   width: 100%;

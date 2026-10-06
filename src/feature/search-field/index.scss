@@ -1,4 +1,4 @@
-@use "../../../entity/style/variable" as v;
+@use "../../entity/style/variable" as v;
 
 .search-field {
   height: 36px;
@@ -34,19 +34,5 @@
     &::placeholder {
       color: v.$dim;
     }
-  }
-}
-
-.search-empty-state {
-  min-height: 220px;
-  display: grid;
-  place-content: center;
-  color: v.$dim;
-  text-align: center;
-
-  p {
-    margin: 0;
-    font-family: v.$sans;
-    font-size: 13px;
   }
 }

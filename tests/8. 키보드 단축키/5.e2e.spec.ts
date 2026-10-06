@@ -9,7 +9,7 @@ test("5. Option+F11/F12는 활성 탭을 좌우 패널 사이로 이동한다", 
   await page.locator("textarea").fill("moving note");
 
   await page.locator("textarea").press("Alt+F12");
-  await expect(page.locator(".note-pane-body")).toHaveCount(2);
+  await expect(page.locator(".body")).toHaveCount(2);
   await expect(
     page.locator(".pane-slot").nth(1).locator("textarea"),
   ).toHaveValue("moving note");
@@ -24,7 +24,7 @@ test("5. Option+F11/F12는 활성 탭을 좌우 패널 사이로 이동한다", 
   await expect(rightPane.locator("textarea")).toBeFocused();
 
   await page.locator(".pane-slot").nth(1).locator("textarea").press("Alt+F11");
-  await expect(page.locator(".note-pane-body")).toHaveCount(2);
+  await expect(page.locator(".body")).toHaveCount(2);
   await expect(
     page.locator(".pane-slot").first().locator("textarea"),
   ).toHaveValue("moving note");

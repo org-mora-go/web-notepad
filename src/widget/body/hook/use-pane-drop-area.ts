@@ -1,13 +1,9 @@
 "use client";
 
-import { type DragEvent as ReactDragEvent,useEffect, useState } from "react";
+import { type DragEvent as ReactDragEvent, useState } from "react";
 
 export function usePaneDropArea(dragActive: boolean, onDrop: () => void) {
   const [dropAreaHovered, setDropAreaHovered] = useState(false);
-
-  useEffect(() => {
-    if (!dragActive) setDropAreaHovered(false);
-  }, [dragActive]);
 
   const handleDragEnter = (event: ReactDragEvent<HTMLDivElement>) => {
     if (!dragActive) return;
@@ -34,6 +30,7 @@ export function usePaneDropArea(dragActive: boolean, onDrop: () => void) {
 
   return {
     dropAreaHovered,
+    clearDropAreaHovered: () => setDropAreaHovered(false),
     handleDragEnter,
     handleDragLeave,
     handleDragOver,
