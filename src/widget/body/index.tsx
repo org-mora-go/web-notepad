@@ -56,6 +56,7 @@ export function Body({
             onDrop={(event) => {
               event.preventDefault();
               event.stopPropagation();
+              dropArea.clearDropAreaHovered();
               zone.onDrop();
             }}
           >
