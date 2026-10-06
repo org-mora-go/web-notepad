@@ -116,7 +116,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: v.$saved;
+    color: var(--tab-accent, #{v.$saved});
   }
 
   .tab-item[draggable="true"] .tab-title {
@@ -170,7 +170,7 @@
     }
 
     &.is-bookmark {
-      color: v.$saved;
+      color: var(--tab-accent, #{v.$saved});
     }
   }
 
