@@ -9,6 +9,9 @@ import { matchesSearchQuery, SearchField } from "@/src/feature";
 
 import { GroupDeletePopup } from "./component";
 
+const groupNameCollator = new Intl.Collator("ko", { sensitivity: "base" });
+const koreanInitial = /^[\u1100-\u11ff\u3130-\u318f\uac00-\ud7a3]/u;
+
 type Props = {
   groups: GroupEntry[];
   activeGroupId: string;
@@ -36,9 +39,17 @@ export function Group({
   const [editingName, setEditingName] = useState("");
   const [deletingGroupId, setDeletingGroupId] = useState<string | null>(null);
   const groupToDelete = groups.find((group) => group.id === deletingGroupId);
-  const filteredGroups = groups.filter((group) =>
-    matchesSearchQuery(searchQuery, group.name),
-  );
+  const filteredGroups = groups
+    .filter((group) => matchesSearchQuery(searchQuery, group.name))
+    .sort((first, second) => {
+      const firstIsUngrouped = first.id === UNGROUPED_GROUP_ID;
+      const secondIsUngrouped = second.id === UNGROUPED_GROUP_ID;
+      if (firstIsUngrouped !== secondIsUngrouped) return firstIsUngrouped ? -1 : 1;
+      const firstIsKorean = koreanInitial.test(first.name);
+      const secondIsKorean = koreanInitial.test(second.name);
+      if (firstIsKorean !== secondIsKorean) return firstIsKorean ? -1 : 1;
+      return groupNameCollator.compare(first.name, second.name);
+    });
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
