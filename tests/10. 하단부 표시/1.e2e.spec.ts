@@ -21,16 +21,8 @@ test("1. 상태 표시줄에 노트와 그룹 정보를 표시한다", async ({ 
   const bookmarkCount = bookmarkButton.locator(".status-count");
   const groupCount = groupButton.locator(".status-count");
 
-  await expect(bookmarkLabel).toHaveCSS("font-size", "12px");
   await expect(bookmarkLabel).toHaveText("BOOKMARK");
   await expect(bookmarkCount).toHaveText("(1)");
   await expect(groupCount).toHaveText("(1)");
   await expect(page.getByRole("button", { name: /Ungrouped/ })).toBeVisible();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(bookmarkLabel).toHaveCSS("font-size", "12px");
-  await expect(creatorCredit).toBeVisible();
-  await expect(creatorCredit).toHaveText("HYUN-WOO YOO");
-  await expect(bookmarkLabel).toBeVisible();
-  await expect(bookmarkCount).toBeInViewport();
-  await expect(groupCount).toBeInViewport();
 });

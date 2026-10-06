@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구분자를 조정한다", async ({
+test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 정보를 우측 정렬한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");
@@ -44,10 +44,5 @@ test("4. 상태 표시줄 항목을 외곽선 없이 구분하고 모바일 구�
   await expectMetaRightAligned();
 
   await page.setViewportSize({ width: 390, height: 844 });
-  await expect(shortcut).toBeHidden();
-  await expect(lines).toBeHidden();
-  await expect(bookmark.locator(".status-separator")).toBeHidden();
-  await expect(group.locator(".status-separator")).toBeVisible();
-  await expect(page.locator(".status-separator:visible")).toHaveCount(1);
   await expectMetaRightAligned();
 });

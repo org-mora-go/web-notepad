@@ -9,12 +9,14 @@ const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
       const { urgent, ...tabData } = tab;
       const tabColor =
         tab.tabColor === "gray" ||
-        tab.tabColor === "blue" ||
+        tab.tabColor === "red" ||
         tab.tabColor === "green"
           ? tab.tabColor
-          : urgent === true
-            ? "green"
-            : "gray";
+          : tab.tabColor === "blue"
+            ? "red"
+            : urgent === false
+              ? "gray"
+              : "green";
 
       return {
         ...tabData,

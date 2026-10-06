@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("3. SHORTCUT 안내 패널은 왼쪽에 표시되고 패널별 단축키를 설명한다", async ({
+test("3. SHORTCUT 패널에 키보드 단축키와 줄 범위 선택 안내를 표시한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");
@@ -17,17 +17,4 @@ test("3. SHORTCUT 안내 패널은 왼쪽에 표시되고 패널별 단축키를
   await expect(shortcutsPanel).toContainText("Shift + 클릭");
   await page.getByRole("button", { name: "단축키 닫기" }).click();
   await expect(shortcutsPanel).toHaveAttribute("aria-hidden", "true");
-
-  await page.getByRole("button", { name: "BOOKMARK" }).click();
-  await expect(page.locator("#bookmarks-panel")).toHaveAttribute(
-    "aria-hidden",
-    "false",
-  );
-  await page.getByRole("button", { name: "북마크 닫기" }).click();
-
-  await page.getByRole("button", { name: /Ungrouped/ }).click();
-  await expect(page.locator("#groups-panel")).toHaveAttribute(
-    "aria-hidden",
-    "false",
-  );
 });

@@ -20,7 +20,7 @@ type TabActions = Pick<
   | "closeTab"
 >;
 
-const TAB_COLORS: TabColor[] = ["gray", "blue", "green"];
+const TAB_COLORS: TabColor[] = ["green", "gray", "red"];
 
 export const createTabActions: StateCreator<
   NotepadState,

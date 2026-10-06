@@ -1,0 +1,1 @@
+export { tabColors } from "./tab-colors";

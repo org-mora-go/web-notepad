@@ -20,12 +20,12 @@
       --tab-background-active: rgba(184, 184, 176, 0.16);
     }
 
-    &[data-tab-color="blue"] {
-      --tab-accent: #{v.$tab-blue};
-      --tab-glow: rgba(138, 180, 248, 0.55);
-      --tab-accent-muted: rgba(138, 180, 248, 0.58);
-      --tab-background: rgba(138, 180, 248, 0.08);
-      --tab-background-active: rgba(138, 180, 248, 0.16);
+    &[data-tab-color="red"] {
+      --tab-accent: #{v.$tab-red};
+      --tab-glow: rgba(242, 139, 130, 0.55);
+      --tab-accent-muted: rgba(242, 139, 130, 0.58);
+      --tab-background: rgba(242, 139, 130, 0.08);
+      --tab-background-active: rgba(242, 139, 130, 0.16);
     }
 
     &[data-tab-color="green"] {
@@ -124,8 +124,8 @@
   }
 
   .dirty-dot {
-    width: 13px;
-    height: 13px;
+    width: 14px;
+    height: 14px;
     flex: 0 0 auto;
     position: relative;
     margin-left: 11px;
@@ -139,8 +139,8 @@
       position: absolute;
       top: 50%;
       left: 50%;
-      width: 9px;
-      height: 9px;
+      width: 10px;
+      height: 10px;
       background: var(--tab-accent, #{v.$saved});
       box-shadow: 0 0 8px var(--tab-glow, rgba(184, 184, 176, 0.55));
       content: "";

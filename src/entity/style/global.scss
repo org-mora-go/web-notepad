@@ -54,6 +54,11 @@ textarea {
   font: inherit;
 }
 
+input,
+textarea {
+  caret-color: v.$saved;
+}
+
 button {
   color: inherit;
 }
