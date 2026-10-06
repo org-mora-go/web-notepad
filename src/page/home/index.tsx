@@ -29,6 +29,7 @@ export function Home() {
     openBookmark,
     removeBookmark,
     createGroup,
+    renameGroup,
     removeGroup,
   } = useHome();
 
@@ -93,6 +94,7 @@ export function Home() {
           setGroupsOpen(false);
         }}
         onRemove={removeGroup}
+        onRename={renameGroup}
       />
       <ShortcutHelp
         open={shortcutsOpen}

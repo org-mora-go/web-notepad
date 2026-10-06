@@ -15,14 +15,12 @@
     display: flex;
     overflow-x: auto;
     overflow-y: hidden;
-    scrollbar-width: thin;
+    scrollbar-width: none;
 
-    &.is-overflowing {
-      scrollbar-width: none;
-
-      &::-webkit-scrollbar {
-        display: none;
-      }
+    &::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
     }
   }
 
@@ -81,7 +79,6 @@
     width: 33px;
     min-width: 33px;
     height: 37px;
-    border-right: 1px solid v.$line;
   }
 }
 

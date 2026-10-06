@@ -9,7 +9,6 @@
     flex: 0 0 auto;
     display: flex;
     align-items: center;
-    border-right: 1px solid v.$line;
     color: v.$muted;
 
     &[data-tab-color="gray"] {
@@ -55,7 +54,6 @@
 
     &.is-pinned {
       background: var(--tab-background);
-      border-right-color: var(--tab-accent-muted, #35463a);
 
       .tab-select {
         // No close button renders on pinned tabs, so add back the trailing space it would occupy.

@@ -38,6 +38,7 @@ export function useHome() {
     openBookmark,
     removeBookmark,
     createGroup,
+    renameGroup,
     removeGroup,
   } = useNotepadStore();
 
@@ -236,6 +237,7 @@ export function useHome() {
     openBookmark,
     removeBookmark,
     createGroup,
+    renameGroup,
     removeGroup,
   };
 }

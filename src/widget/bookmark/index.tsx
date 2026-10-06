@@ -130,7 +130,7 @@ export function Bookmark({
         <SearchField
           value={searchQuery}
           ariaLabel="북마크 검색"
-          placeholder="북마크 검색"
+          placeholder="Search bookmarks"
           onChange={setSearchQuery}
         />
         <div className="bookmark-list">

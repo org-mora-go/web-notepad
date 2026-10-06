@@ -10,5 +10,8 @@ test("3. 그룹을 삭제하면 노트와 북마크가 Ungrouped로 이동한다
   await page.locator("textarea").fill("archived note");
   await page.getByRole("button", { name: /Archive/ }).click();
   await page.getByRole("button", { name: "Archive 그룹 삭제" }).click();
+  const popup = page.getByRole("alertdialog", { name: "Delete group" });
+  await expect(popup).toContainText("Do you want to delete Archive?");
+  await popup.getByRole("button", { name: "Delete", exact: true }).click();
   await expect(page.locator("textarea")).toHaveValue("archived note");
 });

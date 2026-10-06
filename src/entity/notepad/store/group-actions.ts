@@ -7,7 +7,7 @@ import { getAllTabs, getReservedTabIds } from "./workspace";
 
 type GroupActions = Pick<
   NotepadState,
-  "createGroup" | "removeGroup" | "selectGroup"
+  "createGroup" | "renameGroup" | "removeGroup" | "selectGroup"
 >;
 
 export const createGroupActions: StateCreator<
@@ -48,6 +48,16 @@ export const createGroupActions: StateCreator<
       nextTabNumber: number + 1,
     });
   },
+  renameGroup: (groupId, name) =>
+    set((state) => {
+      const trimmedName = name.trim().slice(0, 60);
+      if (groupId === UNGROUPED_GROUP_ID || !trimmedName) return state;
+      return {
+        groups: state.groups.map((group) =>
+          group.id === groupId ? { ...group, name: trimmedName } : group,
+        ),
+      };
+    }),
   removeGroup: (groupId) =>
     set((state) => {
       if (groupId === UNGROUPED_GROUP_ID) return state;
