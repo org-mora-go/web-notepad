@@ -1,4 +1,4 @@
-export type TabColor = "gray" | "blue" | "green";
+export type TabColor = "gray" | "red" | "green";
 
 export type NoteTab = {
   id: string;

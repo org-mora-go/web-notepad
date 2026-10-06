@@ -12,7 +12,7 @@ test("8. 클릭과 키보드로 줄을 선택하고 첫 줄의 상단 여백까�
   await expect(lines.first()).toHaveAttribute("aria-pressed", "true");
   await expect(page.locator(".line-rail")).toHaveCSS(
     "background-image",
-    /rgba\(184, 184, 176, 0\.2\)/,
+    /rgba\(143, 227, 176, 0\.2\)/,
   );
   await expect(page.locator(".line-rail")).toHaveCSS("background-size", "100% 10px");
   await expect(editor).toHaveCSS("background-position", /0px 0px/);
@@ -21,7 +21,7 @@ test("8. 클릭과 키보드로 줄을 선택하고 첫 줄의 상단 여백까�
   await lines.nth(1).focus();
   await lines.nth(1).press("Enter");
   await expect(lines.nth(1)).toHaveAttribute("aria-pressed", "true");
-  await expect(lines.nth(1)).toHaveCSS("background-color", "rgba(184, 184, 176, 0.2)");
-  await expect(lines.nth(1)).toHaveCSS("color", "rgb(184, 184, 176)");
-  await expect(editor).toHaveCSS("background-image", /rgba\(184, 184, 176, 0\.2\)/);
+  await expect(lines.nth(1)).toHaveCSS("background-color", "rgba(143, 227, 176, 0.2)");
+  await expect(lines.nth(1)).toHaveCSS("color", "rgb(143, 227, 176)");
+  await expect(editor).toHaveCSS("background-image", /rgba\(143, 227, 176, 0\.2\)/);
 });

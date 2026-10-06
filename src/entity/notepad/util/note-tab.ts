@@ -5,7 +5,7 @@ export const createNoteTab = (number: number): NoteTab => ({
   title: "-",
   content: "",
   savedContent: "",
-  tabColor: "gray",
+  tabColor: "green",
   pinned: false,
   bookmarked: false,
   updatedAt: 0,

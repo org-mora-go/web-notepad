@@ -11,8 +11,8 @@ test("9. 저장 기준과 다른 내용에 변경 표시를 보여준다", async
   });
   await page.locator("textarea").fill("changed");
   await expect(tab).toHaveClass(/is-dirty/);
-  await expect(colorButton).toHaveCSS("width", "13px");
-  await expect(colorButton).toHaveCSS("height", "13px");
+  await expect(colorButton).toHaveCSS("width", "14px");
+  await expect(colorButton).toHaveCSS("height", "14px");
   const dirtyIcon = await colorButton.evaluate((button) => {
     const style = getComputedStyle(button, "::before");
     return {

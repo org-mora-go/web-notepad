@@ -6,9 +6,9 @@
   --selected-line-background: rgba(184, 184, 176, 0.2);
   --selected-line-color: #{v.$saved};
 
-  &[data-tab-color="blue"] {
-    --selected-line-background: rgba(138, 180, 248, 0.2);
-    --selected-line-color: #{v.$tab-blue};
+  &[data-tab-color="red"] {
+    --selected-line-background: rgba(242, 139, 130, 0.2);
+    --selected-line-color: #{v.$tab-red};
   }
 
   &[data-tab-color="green"] {

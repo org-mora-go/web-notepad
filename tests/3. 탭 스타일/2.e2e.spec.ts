@@ -10,9 +10,9 @@ test("2. 고정 탭의 핀 아이콘은 표시 전용이다", async ({ page }) =
   await expect(pinIndicator).toBeVisible();
   await expect(pinIndicator).not.toHaveRole("button");
   const colors = [
-    { name: "gray", rgb: "rgb(184, 184, 176)" },
-    { name: "blue", rgb: "rgb(138, 180, 248)" },
     { name: "green", rgb: "rgb(143, 227, 176)" },
+    { name: "red", rgb: "rgb(242, 139, 130)" },
+    { name: "gray", rgb: "rgb(184, 184, 176)" },
   ];
 
   for (const [index, color] of colors.entries()) {
