@@ -4,7 +4,7 @@ test("6. 모바일에서도 제작자와 북마크 및 그룹 수를 표시한�
   await page.setViewportSize({ width: 390, height: 844 });
   await page.goto("http://localhost:3000");
   await page.locator("textarea").fill("note");
-  await page.locator('.tab-item.is-active [role="tab"]').click({ button: "right" });
+  await page.locator('.tab-item.is-active [role="tab"]').dblclick();
   await page.getByRole("menuitem", { name: "Bookmark" }).click();
   const creator = page.locator(".creator-credit");
   await expect(creator).toHaveText("HYUN-WOO YOO");

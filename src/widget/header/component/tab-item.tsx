@@ -46,6 +46,7 @@ export function TabItem({
       draggable
       onContextMenu={(event) => {
         event.preventDefault();
+        if (window.matchMedia("(max-width: 640px), (pointer: coarse)").matches) return;
         onContextMenu(tab.id, event.clientX, event.clientY);
       }}
       onAuxClick={(event) => {
@@ -103,6 +104,11 @@ export function TabItem({
         role="tab"
         aria-selected={active}
         onClick={() => onSelect(tab.id)}
+        onDoubleClick={(event) => {
+          if (!window.matchMedia("(max-width: 640px), (pointer: coarse)").matches) return;
+          event.preventDefault();
+          onContextMenu(tab.id, event.clientX, event.clientY);
+        }}
       >
         <span className="tab-title">{tab.title}</span>
       </button>
