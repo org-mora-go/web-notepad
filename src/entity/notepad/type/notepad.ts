@@ -17,6 +17,8 @@ export type BookmarkEntry = {
   sourceTabId: string;
   title: string;
   content: string;
+  tabColor: TabColor;
+  selectedLines: number[];
   createdAt: number;
 };
 

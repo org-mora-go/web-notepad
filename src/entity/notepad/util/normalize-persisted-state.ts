@@ -1,6 +1,24 @@
 import { UNGROUPED_GROUP_ID } from "../constant";
-import type { BookmarkEntry, GroupEntry, NotepadState, NoteTab } from "../type";
+import type { BookmarkEntry, GroupEntry, NotepadState, NoteTab, TabColor } from "../type";
 import { createNoteTab } from "./note-tab";
+
+const normalizeTabColor = (value: unknown, urgent?: unknown): TabColor =>
+  value === "gray" || value === "red" || value === "green"
+    ? value
+    : value === "blue"
+      ? "red"
+      : urgent === false
+        ? "gray"
+        : "green";
+
+const normalizeSelectedLines = (value: unknown, content: string): number[] => {
+  if (!Array.isArray(value)) return [];
+  const lineCount = content.split("\n").length;
+  return [...new Set(value.filter(
+    (line: unknown): line is number =>
+      typeof line === "number" && Number.isInteger(line) && line >= 0 && line < lineCount,
+  ))].sort((first, second) => first - second);
+};
 
 const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
   (Array.isArray(value) ? value : fallback)
@@ -8,23 +26,8 @@ const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
     .map((tab) => {
       const { urgent, ...tabData } = tab;
       const content = typeof tab.content === "string" ? tab.content : "";
-      const lineCount = content.split("\n").length;
-      const selectedLines = Array.isArray(tab.selectedLines)
-        ? [...new Set<number>(tab.selectedLines.filter(
-            (line: unknown): line is number =>
-              typeof line === "number" && Number.isInteger(line) && line >= 0 && line < lineCount,
-          ))].sort((first, second) => first - second)
-        : [];
-      const tabColor =
-        tab.tabColor === "gray" ||
-        tab.tabColor === "red" ||
-        tab.tabColor === "green"
-          ? tab.tabColor
-          : tab.tabColor === "blue"
-            ? "red"
-            : urgent === false
-              ? "gray"
-              : "green";
+      const selectedLines = normalizeSelectedLines(tab.selectedLines, content);
+      const tabColor = normalizeTabColor(tab.tabColor, urgent);
 
       return {
         ...tabData,
@@ -42,18 +45,23 @@ const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
 const normalizeBookmarks = (value: unknown, fallback: BookmarkEntry[]) =>
   (Array.isArray(value) ? value : fallback)
     .filter((bookmark) => bookmark && typeof bookmark.id === "string")
-    .map((bookmark) => ({
-      ...bookmark,
-      sourceTabId:
-        typeof bookmark.sourceTabId === "string" ? bookmark.sourceTabId : "",
-      title: typeof bookmark.title === "string" ? bookmark.title : "Untitled",
-      content: typeof bookmark.content === "string" ? bookmark.content : "",
-      createdAt:
-        typeof bookmark.createdAt === "number" &&
-        Number.isFinite(bookmark.createdAt)
-          ? bookmark.createdAt
-          : Date.now(),
-    }));
+    .map((bookmark) => {
+      const content = typeof bookmark.content === "string" ? bookmark.content : "";
+      return {
+        ...bookmark,
+        sourceTabId:
+          typeof bookmark.sourceTabId === "string" ? bookmark.sourceTabId : "",
+        title: typeof bookmark.title === "string" ? bookmark.title : "Untitled",
+        content,
+        tabColor: normalizeTabColor(bookmark.tabColor),
+        selectedLines: normalizeSelectedLines(bookmark.selectedLines, content),
+        createdAt:
+          typeof bookmark.createdAt === "number" &&
+          Number.isFinite(bookmark.createdAt)
+            ? bookmark.createdAt
+            : Date.now(),
+      };
+    });
 
 export function normalizePersistedState(
   persistedState: unknown,

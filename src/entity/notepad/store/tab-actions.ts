@@ -109,6 +109,11 @@ export const createTabActions: StateCreator<
         tabs: current.tabs.map((item) =>
           item.id === tabId ? { ...item, selectedLines: nextLines } : item,
         ),
+        bookmarks: current.bookmarks.map((bookmark) =>
+          bookmark.sourceTabId === tabId
+            ? { ...bookmark, selectedLines: [...nextLines] }
+            : bookmark,
+        ),
       }));
     }),
   moveTab: (fromTabId, toTabId) =>
@@ -138,6 +143,11 @@ export const createTabActions: StateCreator<
         ...current,
         tabs: current.tabs.map((tab) =>
           tab.id === tabId ? { ...tab, tabColor: nextColor } : tab,
+        ),
+        bookmarks: current.bookmarks.map((bookmark) =>
+          bookmark.sourceTabId === tabId
+            ? { ...bookmark, tabColor: nextColor }
+            : bookmark,
         ),
       }));
     }),
