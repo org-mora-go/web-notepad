@@ -77,7 +77,6 @@ export function useHome() {
     (activePane === "right"
       ? (activeRightTab ?? leftActiveTab)
       : (leftActiveTab ?? activeRightTab)) ?? rightTabs[0];
-  const lineCount = activeTab?.content.split("\n").length ?? 1;
 
   useNotepadShortcuts({ editorRef, rightEditorRef, composingRef });
   useEditorFocus(
@@ -227,7 +226,6 @@ export function useHome() {
     activeGroupId,
     selectGroup,
     activeTab,
-    lineCount,
     split,
     bookmarks,
     groups,

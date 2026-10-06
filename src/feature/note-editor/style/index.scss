@@ -36,6 +36,7 @@
       background:
         linear-gradient(var(--selected-line-background), var(--selected-line-background))
         0 0 / 100% var(--editor-top-padding) no-repeat;
+      background-attachment: local;
     }
 
     span {

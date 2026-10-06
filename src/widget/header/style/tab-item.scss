@@ -85,8 +85,8 @@
     height: 37px;
     display: flex;
     align-items: center;
-    gap: 6px;
-    padding: 0 4px 0 6px;
+    gap: 0;
+    padding: 0 4px 0 0;
     border: 0;
     background: transparent;
     color: inherit;
@@ -116,7 +116,7 @@
     padding: 0;
     border: 0;
     background: transparent;
-    color: v.$saved;
+    color: var(--tab-accent, #{v.$saved});
   }
 
   .tab-item[draggable="true"] .tab-title {
@@ -154,6 +154,7 @@
 
   .tab-title {
     flex: 0 1 auto;
+    margin-left: 6px;
     overflow: hidden;
     font-size: 14px;
     text-overflow: ellipsis;
@@ -170,7 +171,7 @@
     }
 
     &.is-bookmark {
-      color: v.$saved;
+      color: var(--tab-accent, #{v.$saved});
     }
   }
 

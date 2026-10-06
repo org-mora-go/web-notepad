@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("9. 단축키 패널을 다른 패널과 동시에 열지 않고 모바일 진입을 숨긴다", async ({ page }) => {
+test("4. 단축키 패널을 북마크와 그룹 패널과 동시에 열지 않는다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const shortcuts = page.locator("#shortcuts-panel");
   for (const { panel, closeLabel } of [
@@ -17,6 +17,4 @@ test("9. 단축키 패널을 다른 패널과 동시에 열지 않고 모바일 
     await expect(page.locator("#groups-panel")).toHaveAttribute("aria-hidden", "true");
     await page.getByRole("button", { name: "단축키 닫기" }).click();
   }
-  await page.setViewportSize({ width: 390, height: 844 });
-  await expect(page.getByRole("button", { name: "단축키 안내" })).toBeHidden();
 });

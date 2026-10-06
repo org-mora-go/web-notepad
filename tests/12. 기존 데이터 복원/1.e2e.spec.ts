@@ -40,4 +40,5 @@ test("1. 누락되거나 잘못된 저장 필드를 기본값으로 정규화한
     "data-tab-color",
     "gray",
   );
+  await expect(page.locator('.line-rail [role="button"]').first()).toHaveAttribute("aria-pressed", "false");
 });

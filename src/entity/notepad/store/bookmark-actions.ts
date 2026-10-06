@@ -53,6 +53,8 @@ export const createBookmarkActions: StateCreator<
             sourceTabId: tabId,
             title: getTitleFromContent(tab.content, tab.title),
             content: tab.content,
+            tabColor: tab.tabColor,
+            selectedLines: [...tab.selectedLines],
             createdAt,
           },
           ...current.bookmarks,
@@ -96,6 +98,8 @@ export const createBookmarkActions: StateCreator<
       title: bookmark.title,
       content: bookmark.content,
       savedContent: bookmark.content,
+      tabColor: bookmark.tabColor,
+      selectedLines: [...bookmark.selectedLines],
       bookmarked: true,
       updatedAt: bookmark.createdAt,
     };

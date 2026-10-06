@@ -14,6 +14,7 @@ type TabActions = Pick<
   | "addTab"
   | "selectTab"
   | "updateTab"
+  | "setTabSelectedLines"
   | "moveTab"
   | "cycleTabColor"
   | "togglePin"
@@ -92,6 +93,29 @@ export const createTabActions: StateCreator<
         ),
       }));
     }),
+  setTabSelectedLines: (tabId, selectedLines) =>
+    set((state) => {
+      const group = getActiveGroup(state);
+      const tab = group?.tabs.find((item) => item.id === tabId);
+      if (!group || !tab) return state;
+      const lineCount = tab.content.split("\n").length;
+      const nextLines = [...new Set(selectedLines.filter(
+        (line) => Number.isInteger(line) && line >= 0 && line < lineCount,
+      ))].sort((first, second) => first - second);
+      if (nextLines.length === tab.selectedLines.length &&
+          nextLines.every((line, index) => line === tab.selectedLines[index])) return state;
+      return updateGroup(state, group.id, (current) => ({
+        ...current,
+        tabs: current.tabs.map((item) =>
+          item.id === tabId ? { ...item, selectedLines: nextLines } : item,
+        ),
+        bookmarks: current.bookmarks.map((bookmark) =>
+          bookmark.sourceTabId === tabId
+            ? { ...bookmark, selectedLines: [...nextLines] }
+            : bookmark,
+        ),
+      }));
+    }),
   moveTab: (fromTabId, toTabId) =>
     set((state) => {
       const group = getActiveGroup(state);
@@ -119,6 +143,11 @@ export const createTabActions: StateCreator<
         ...current,
         tabs: current.tabs.map((tab) =>
           tab.id === tabId ? { ...tab, tabColor: nextColor } : tab,
+        ),
+        bookmarks: current.bookmarks.map((bookmark) =>
+          bookmark.sourceTabId === tabId
+            ? { ...bookmark, tabColor: nextColor }
+            : bookmark,
         ),
       }));
     }),

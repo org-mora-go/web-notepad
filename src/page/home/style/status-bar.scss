@@ -48,12 +48,6 @@
     min-width: 0;
   }
 
-  .status-lines {
-    @media (max-width: 640px) {
-      display: none;
-    }
-  }
-
   .status-actions {
     display: flex;
     align-items: center;
@@ -130,10 +124,6 @@
 
     .status-command .status-separator {
       margin: 0 2px;
-    }
-
-    .status-actions > .status-command:first-child > .status-separator {
-      display: none;
     }
 
     .group-status-name {
