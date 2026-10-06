@@ -25,3 +25,11 @@ When functionality is added, removed, or improved, update `PRD.md` to match the 
 Keep the numbered structure in `PRD.md` and `tests/` in exact sync. Each `## N. Title` section must have a matching `tests/N. Title/` directory, and each numbered requirement under that section must have exactly one corresponding `N.e2e.spec.ts` file in that directory. The test file numbers and total count must match the PRD requirement numbers and count, with no missing or extra requirement tests. For example, if `## 10. 하단부 표시` has four numbered requirements, `tests/10. 하단부 표시/` must contain `1.e2e.spec.ts` through `4.e2e.spec.ts`, each covering its matching requirement. Update `tests/**` whenever a PRD requirement is added, changed, or removed, and update `PRD.md` whenever the requirement scope changes.
 
 Do not consider the work complete until all updated E2E tests pass. Run `npm run test:e2e` and require a 100% pass rate; fix implementation, test, fixture, mock, or utility issues before reporting completion.
+
+## Feature and Widget Module Structure
+
+- Each feature or widget module directly under `src/feature/` or `src/widget/` must implement its main module in its own `index.tsx`.
+- `src/feature/index.ts` and `src/widget/index.ts` must export the public modules for their respective directories.
+- Those top-level barrels may export only each module's main implementation from `./<module>` (resolved through that module's `index.tsx`); do not export subcomponents such as `PaneDivider` from them. Apply this restriction equally to feature and widget modules.
+- Export subcomponents from the submodule's `component/index.ts` or `component/index.tsx` barrel, and import and use those subcomponents from the submodule's `index.tsx`.
+- `page/home` and other consumers must import feature and widget modules through the public `feature/index.ts` and `widget/index.ts` barrels.
