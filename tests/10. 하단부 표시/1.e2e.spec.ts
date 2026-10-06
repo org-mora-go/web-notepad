@@ -36,6 +36,8 @@ test("1. 상태 표시줄에 노트와 그룹 정보를 표시한다", async ({ 
   await expect(bookmarkCount).toHaveCSS("font-size", "14px");
   await expect(groupCount).toHaveCSS("font-size", "14px");
   await expect(groupName).toHaveCSS("font-size", "14px");
+  await expect(groupName).toHaveCSS("max-width", "180px");
+  await expect(groupName).toHaveCSS("text-overflow", "ellipsis");
   await expect(bookmarkLabel).toHaveText("BOOKMARK");
   await expect(bookmarkCount).toHaveText("(1)");
   await expect(groupCount).toHaveText("(1)");
@@ -45,6 +47,8 @@ test("1. 상태 표시줄에 노트와 그룹 정보를 표시한다", async ({ 
   await expect(bookmarkCount).toHaveCSS("font-size", "14px");
   await expect(groupCount).toHaveCSS("font-size", "14px");
   await expect(groupName).toHaveCSS("font-size", "14px");
+  await expect(groupName).toHaveCSS("max-width", "90px");
+  await expect(groupName).toHaveCSS("text-overflow", "ellipsis");
   await expect(creatorCredit).toHaveCSS("font-size", "13px");
   await expect(creatorCredit).toBeVisible();
   await expect(creatorCredit).toHaveText("HYUN-WOO YOO");
