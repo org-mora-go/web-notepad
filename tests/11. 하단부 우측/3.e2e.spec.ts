@@ -5,7 +5,6 @@ test("3. 상태 표시줄 항목을 외곽선 없이 구분하고 정보를 우�
 }) => {
   await page.goto("http://localhost:3000");
 
-  const lines = page.locator(".status-lines");
   const bookmark = page.locator(".status-actions .status-command").first();
   const group = page.locator(".status-actions .status-command").nth(1);
   const separators = page.locator(".status-meta .status-separator");
@@ -30,10 +29,9 @@ test("3. 상태 표시줄 항목을 외곽선 없이 구분하고 정보를 우�
     ).toBeLessThan(1);
   };
 
-  await expect(separators).toHaveCount(2);
-  await expect(separators).toHaveText(["|", "|"]);
-  await expect(lines.locator(".status-separator")).toHaveCount(0);
-  await expect(bookmark.locator(".status-separator")).toHaveCount(1);
+  await expect(separators).toHaveCount(1);
+  await expect(separators).toHaveText(["|"]);
+  await expect(bookmark.locator(".status-separator")).toHaveCount(0);
   await expect(group.locator(".status-separator")).toHaveCount(1);
   await expect(bookmark).toHaveCSS("border-top-width", "0px");
   await expect(group).toHaveCSS("border-top-width", "0px");

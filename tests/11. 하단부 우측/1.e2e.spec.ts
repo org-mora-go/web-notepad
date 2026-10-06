@@ -1,9 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("1. 상태 표시줄에 노트와 그룹 정보를 표시한다", async ({ page }) => {
+test("1. 상태 표시줄에 그룹과 북마크 정보를 표시하고 줄 수는 표시하지 않는다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   await page.locator("textarea").fill("one\ntwo");
-  await expect(page.locator(".status-lines")).toContainText("2 LINES");
   await page
     .locator('.tab-item.is-active [role="tab"]')
     .click({ button: "right" });
@@ -21,4 +20,11 @@ test("1. 상태 표시줄에 노트와 그룹 정보를 표시한다", async ({ 
   await expect(bookmarkCount).toHaveText("(1)");
   await expect(groupCount).toHaveText("(1)");
   await expect(page.getByRole("button", { name: /Ungrouped/ })).toBeVisible();
+  for (const width of [1280, 390]) {
+    await page.setViewportSize({ width, height: 844 });
+    await expect(page.locator(".status-meta")).not.toContainText(/\b\d+ LINES\b/);
+    await expect(bookmarkLabel).toBeVisible();
+    await expect(bookmarkCount).toBeInViewport();
+    await expect(groupCount).toBeInViewport();
+  }
 });

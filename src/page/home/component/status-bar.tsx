@@ -3,7 +3,6 @@
 import { Bookmark, Keyboard, Layers } from "lucide-react";
 
 type Props = {
-  lineCount: number;
   bookmarkCount: number;
   shortcutsOpen: boolean;
   bookmarksOpen: boolean;
@@ -16,7 +15,6 @@ type Props = {
 };
 
 export function StatusBar({
-  lineCount,
   bookmarkCount,
   shortcutsOpen,
   bookmarksOpen,
@@ -52,7 +50,6 @@ export function StatusBar({
         </button>
       </div>
       <div className="status-meta">
-        <span className="status-lines">{lineCount} LINES</span>
         <div className="status-actions">
           <button
             className={`status-command ${bookmarksOpen ? "is-active" : ""}`}
@@ -61,9 +58,6 @@ export function StatusBar({
             aria-expanded={bookmarksOpen}
             aria-controls="bookmarks-panel"
           >
-            <span className="status-separator" aria-hidden="true">
-              |
-            </span>
             <Bookmark size={16} strokeWidth={1.8} />
             <span className="status-label">BOOKMARK</span>
             {bookmarkCount > 0 && (

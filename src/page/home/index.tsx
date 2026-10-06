@@ -19,7 +19,6 @@ export function Home() {
     activeGroupId,
     selectGroup,
     activeTab,
-    lineCount,
     split,
     bookmarks,
     groups,
@@ -46,7 +45,6 @@ export function Home() {
         </div>
 
         <StatusBar
-          lineCount={lineCount}
           bookmarkCount={bookmarks.length}
           shortcutsOpen={shortcutsOpen}
           bookmarksOpen={bookmarksOpen}

@@ -9,7 +9,7 @@ test("4. PC와 모바일에서 우측 글자 크기를 14px로 유지한다", as
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 844 });
     const labels = page.locator(
-      ".status-lines, .status-meta .status-command > span",
+      ".status-meta .status-command > span",
     );
     for (const label of await labels.all()) {
       await expect(label).toHaveCSS("font-size", "14px");
