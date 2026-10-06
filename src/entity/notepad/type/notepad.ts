@@ -5,6 +5,7 @@ export type NoteTab = {
   title: string;
   content: string;
   savedContent: string;
+  selectedLines: number[];
   tabColor: TabColor;
   pinned: boolean;
   bookmarked: boolean;
@@ -41,6 +42,7 @@ export type NotepadState = {
   addTab: (pane?: PaneId) => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
+  setTabSelectedLines: (tabId: string, selectedLines: number[]) => void;
   moveTab: (fromTabId: string, toTabId: string) => void;
   moveTabToPane: (tabId: string, pane: PaneId) => void;
   setActivePane: (pane: PaneId) => void;

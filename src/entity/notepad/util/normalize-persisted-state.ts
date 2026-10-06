@@ -7,6 +7,14 @@ const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
     .filter((tab) => tab && typeof tab.id === "string")
     .map((tab) => {
       const { urgent, ...tabData } = tab;
+      const content = typeof tab.content === "string" ? tab.content : "";
+      const lineCount = content.split("\n").length;
+      const selectedLines = Array.isArray(tab.selectedLines)
+        ? [...new Set<number>(tab.selectedLines.filter(
+            (line: unknown): line is number =>
+              typeof line === "number" && Number.isInteger(line) && line >= 0 && line < lineCount,
+          ))].sort((first, second) => first - second)
+        : [];
       const tabColor =
         tab.tabColor === "gray" ||
         tab.tabColor === "red" ||
@@ -21,7 +29,8 @@ const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
       return {
         ...tabData,
         title: typeof tab.title === "string" ? tab.title : "Untitled",
-        content: typeof tab.content === "string" ? tab.content : "",
+        content,
+        selectedLines,
         savedContent:
           typeof tab.savedContent === "string" ? tab.savedContent : "",
         tabColor,
