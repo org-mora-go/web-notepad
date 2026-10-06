@@ -20,7 +20,7 @@ const shortcuts = [
 
 export function ShortcutHelp({ open, onClose }: Props) {
   return (
-    <div className="shortcut-panel">
+    <div className="shortcut-help">
       <div
         className={`shortcut-backdrop ${open ? "is-visible" : ""}`}
         onClick={onClose}

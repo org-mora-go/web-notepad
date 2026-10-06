@@ -1,6 +1,6 @@
-@use "../../../entity/style/variable" as v;
+@use "../../entity/style/variable" as v;
 
-.bookmark-panel {
+.bookmark {
   .bookmark-backdrop {
     position: fixed;
     inset: 0;

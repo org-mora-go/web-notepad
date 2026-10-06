@@ -1,0 +1,17 @@
+@use "../../../entity/style/variable" as v;
+
+.home {
+  .search-empty-state {
+    min-height: 220px;
+    display: grid;
+    place-content: center;
+    color: v.$dim;
+    text-align: center;
+
+    p {
+      margin: 0;
+      font-family: v.$sans;
+      font-size: 13px;
+    }
+  }
+}

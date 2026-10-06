@@ -4,7 +4,7 @@ test("3. 탭이 가로로 넘칠 때 스크롤 가능한 가장자리에 페이�
   page,
 }) => {
   await page.goto("http://localhost:3000");
-  const strip = page.locator(".tab-strip").first();
+  const strip = page.locator(".header").first();
   const scroller = strip.locator(".tabs-scroll");
 
   for (let index = 0; index < 11; index += 1) {

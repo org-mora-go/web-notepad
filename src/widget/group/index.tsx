@@ -5,7 +5,8 @@ import { type FormEvent, useState } from "react";
 
 import type { GroupEntry } from "@/src/entity/notepad";
 import { UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
-import { matchesSearchQuery, SearchField } from "@/src/feature";
+import { SearchField } from "@/src/feature";
+import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
 import { GroupDeletePopup } from "./component";
 
@@ -68,7 +69,7 @@ export function Group({
   };
 
   return (
-    <div className="group-panel">
+    <div className="group">
       <div
         className={`group-backdrop ${open ? "is-visible" : ""}`}
         onClick={onClose}
@@ -113,7 +114,7 @@ export function Group({
             <Plus size={16} />
           </button>
         </form>
-        <div className="group-list">
+      <div className="group-list">
           {groups.length === 0 ? (
             <div className="group-empty">
               <Layers size={24} strokeWidth={1.5} />

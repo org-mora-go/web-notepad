@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 test("10. 오버플로우 감지 전후 가로 스크롤바를 숨기고 스크롤과 페이드를 유지한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  const strip = page.locator(".tab-strip");
+  const strip = page.locator(".header");
   const scroller = strip.locator(".tabs-scroll");
   await expect(scroller).not.toHaveClass(/is-overflowing/);
   await expect(scroller).toHaveCSS("scrollbar-width", "none");

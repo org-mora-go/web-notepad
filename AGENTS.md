@@ -33,3 +33,8 @@ Do not consider the work complete until all updated E2E tests pass. Run `npm run
 - Those top-level barrels may export only each module's main implementation from `./<module>` (resolved through that module's `index.tsx`); do not export subcomponents such as `PaneDivider` from them. Apply this restriction equally to feature and widget modules.
 - Export subcomponents from the submodule's `component/index.ts` or `component/index.tsx` barrel, and import and use those subcomponents from the submodule's `index.tsx`.
 - `page/home` and other consumers must import feature and widget modules through the public `feature/index.ts` and `widget/index.ts` barrels.
+
+## Feature, Widget, and Page Stylesheets
+
+- Each feature, widget, or page module must keep its main stylesheet in `index.scss` next to its `index.tsx`. Put optional SCSS files for subcomponents under that module's `style/` directory.
+- The top-level class selector in a module's `index.scss` must match the module directory name (for example, `.body` in `body/index.scss` or `.bookmark` in `bookmark/index.scss`). Apply these stylesheet rules equally to `src/feature/`, `src/widget/`, and `src/page/` modules.

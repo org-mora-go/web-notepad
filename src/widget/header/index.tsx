@@ -67,7 +67,7 @@ export function Header({
 
   return (
     <div
-      className={`tab-strip ${tabsCanScrollLeft ? "has-left-overflow" : ""} ${tabsCanScrollRight ? "has-right-overflow" : ""}`}
+      className={`header ${tabsCanScrollLeft ? "has-left-overflow" : ""} ${tabsCanScrollRight ? "has-right-overflow" : ""}`}
       role="tablist"
       aria-label="메모 탭"
       onDragEnter={(event) => {

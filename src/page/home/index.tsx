@@ -1,6 +1,6 @@
 "use client";
 
-import "./style/index.scss";
+import "./index.scss";
 
 import { useHome } from "@/src/page/home/hook";
 import { Bookmark, Group, ShortcutHelp } from "@/src/widget";

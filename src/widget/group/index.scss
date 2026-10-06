@@ -1,6 +1,6 @@
-@use "../../../entity/style/variable" as v;
+@use "../../entity/style/variable" as v;
 
-.group-panel {
+.group {
   .group-backdrop {
     position: fixed;
     inset: 0;

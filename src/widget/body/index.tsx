@@ -8,8 +8,6 @@ import { NoteEditor } from "@/src/feature";
 
 import { usePaneDropArea } from "./hook";
 
-export { PaneDivider } from "./component";
-
 type Props = {
   activeTab: NoteTab;
   editorRef: RefObject<HTMLTextAreaElement | null>;
@@ -35,7 +33,7 @@ export function Body({
 
   return (
     <div
-      className="note-pane-body"
+      className="body"
       onDragEnter={dropArea.handleDragEnter}
       onDragLeave={dropArea.handleDragLeave}
       onDragOver={dropArea.handleDragOver}
