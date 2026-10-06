@@ -3,7 +3,7 @@
 import "./index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { Bookmark, Group, ShortcutHelp } from "@/src/widget";
+import { Bookmark, Group, Shortcut } from "@/src/widget";
 
 import { Loading, PaneView, StatusBar } from "./component";
 
@@ -96,7 +96,7 @@ export function Home() {
         onRemove={removeGroup}
         onRename={renameGroup}
       />
-      <ShortcutHelp
+      <Shortcut
         open={shortcutsOpen}
         onClose={() => setShortcutsOpen(false)}
       />
