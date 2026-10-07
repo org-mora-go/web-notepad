@@ -4,6 +4,8 @@ import { type RefObject, useEffect } from "react";
 
 import { useNotepadStore } from "@/src/entity/notepad";
 
+import { useSelectAllShortcut } from "./use-select-all-shortcut";
+
 type Options = {
   editorRef: RefObject<HTMLTextAreaElement | null>;
   rightEditorRef: RefObject<HTMLTextAreaElement | null>;
@@ -15,6 +17,8 @@ export function useNotepadShortcuts({
   rightEditorRef,
   composingRef,
 }: Options) {
+  useSelectAllShortcut({ editorRef, rightEditorRef });
+
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
       const state = useNotepadStore.getState();
@@ -41,25 +45,6 @@ export function useNotepadShortcuts({
         composingRef.current = false;
         editor.blur();
         editor.focus();
-      }
-
-      if (
-        (event.metaKey || event.altKey) &&
-        !event.ctrlKey &&
-        (event.key.toLowerCase() === "a" || event.code === "KeyA")
-      ) {
-        const active = document.activeElement;
-        const target = active instanceof HTMLTextAreaElement ? active : editor;
-        if (!target) return;
-        event.preventDefault();
-        const selectAll = () => {
-          target.focus();
-          target.setSelectionRange(0, target.value.length);
-        };
-        selectAll();
-        window.requestAnimationFrame(selectAll);
-        window.setTimeout(selectAll, 50);
-        return;
       }
 
       const shouldCloseTab =

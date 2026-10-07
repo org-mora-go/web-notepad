@@ -20,6 +20,7 @@
   }
 
   input {
+    color-scheme: dark;
     width: 100%;
     min-width: 0;
     height: 100%;
@@ -33,6 +34,11 @@
 
     &::placeholder {
       color: v.$dim;
+    }
+
+    &::-webkit-search-cancel-button {
+      filter: brightness(0.4);
+      cursor: pointer;
     }
   }
 }
