@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+
 import { seedDeletableGroup } from "./__util__";
 
 test("7. 그룹 삭제 팝업을 취소하면 모든 경로에서 그룹과 노트·북마크를 유지한다", async ({ page }) => {

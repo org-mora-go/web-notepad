@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+
 import { seedDeletableGroup } from "./__util__";
 
 test("8. 그룹 삭제 팝업은 취소 버튼에 초기 포커스를 두고 키보드 포커스를 가둔다", async ({ page }) => {

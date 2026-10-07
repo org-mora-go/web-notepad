@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+
 import { seedDeletableGroup } from "./__util__";
 
 test("6. 그룹 삭제는 실제 그룹 이름을 표시하는 앱 내부 확인 팝업을 연다", async ({ page }) => {

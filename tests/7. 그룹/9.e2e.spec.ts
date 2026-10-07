@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+
 import { seedDeletableGroup } from "./__util__";
 
 test("9. 그룹 삭제를 확인하면 그룹의 노트와 북마크를 Ungrouped로 옮긴다", async ({ page }) => {
