@@ -47,7 +47,7 @@
     h2 {
       margin: 0;
       font-family: v.$sans;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 500;
     }
   }
@@ -95,7 +95,7 @@
       background: #151514;
       color: v.$ink;
       font: inherit;
-      font-size: 12px;
+      font-size: 14px;
 
       &:focus {
         border-color: v.$hover-line;
@@ -161,7 +161,7 @@
       min-width: 0;
       overflow-wrap: anywhere;
       color: v.$signal;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 500;
     }
 
@@ -189,7 +189,7 @@
       background: #151514;
       color: v.$ink;
       font: inherit;
-      font-size: 13px;
+      font-size: 15px;
 
       &:focus {
         border-color: v.$hover-line;
@@ -312,7 +312,7 @@
     p {
       margin: 0;
       font-family: v.$sans;
-      font-size: 13px;
+      font-size: 15px;
     }
   }
 }
