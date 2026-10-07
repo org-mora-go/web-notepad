@@ -4,6 +4,7 @@ import { type RefObject, useEffect, useRef } from "react";
 import type { NoteTab } from "@/src/entity/notepad";
 
 import { handleEditorKeyDown, insertAtSelection } from "../util";
+import { useEditorCaretScroll } from "./use-editor-caret-scroll";
 import { useLineSelection } from "./use-line-selection";
 
 type Options = {
@@ -18,6 +19,7 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   const redoHistoryRef = useRef(new Map<string, string[]>());
   const contentRef = useRef(tab.content);
   const pendingTabInsertionRef = useRef<HTMLTextAreaElement | null>(null);
+  const followCaretOnEnter = useEditorCaretScroll(lineRailRef);
   const { selectedLines, toggleLineSelection } = useLineSelection(tab);
 
   useEffect(() => {
@@ -60,6 +62,12 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
   };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
+    const shouldFollowEnter =
+      event.key === "Enter" &&
+      !event.nativeEvent.isComposing &&
+      !composingRef.current;
+    const textarea = event.currentTarget;
+
     handleEditorKeyDown(event, {
       tabId: tab.id,
       undoHistoryRef,
@@ -74,6 +82,8 @@ export function useNoteEditor({ tab, composingRef, onChange }: Options) {
         pendingTabInsertionRef.current = textarea;
       },
     });
+
+    if (shouldFollowEnter) followCaretOnEnter(textarea);
   };
 
   const handleCompositionStart = () => {
