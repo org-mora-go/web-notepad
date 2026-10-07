@@ -1,18 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-test("3. PC와 모바일에서 우측 글자 크기를 14px로 유지한다", async ({ page }) => {
+test("3. PC와 모바일에서 상태 표시줄 높이와 상하 및 좌우 패딩을 적용한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  await page.locator("textarea").fill("note");
-  await page.locator('.tab-item.is-active [role="tab"]').click({ button: "right" });
-  await page.getByRole("menuitem", { name: "Bookmark" }).click();
-
-  for (const width of [1280, 390]) {
-    await page.setViewportSize({ width, height: 844 });
-    const labels = page.locator(
-      ".status-meta .status-command > span",
-    );
-    for (const label of await labels.all()) {
-      await expect(label).toHaveCSS("font-size", "14px");
-    }
-  }
+  const statusBar = page.locator(".status-bar");
+  await expect(statusBar).toHaveCSS("padding", "1px 14px");
+  expect((await statusBar.boundingBox())!.height).toBe(36);
+  await page.setViewportSize({ width: 390, height: 844 });
+  await expect(statusBar).toHaveCSS("padding", "1px 8px");
+  expect((await statusBar.boundingBox())!.height).toBe(36);
 });
