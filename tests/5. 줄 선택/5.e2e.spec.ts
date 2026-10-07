@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("11. 그룹 전환과 분할 패널 이동 후에도 선택한 줄을 복원한다", async ({ page }) => {
+test("5. 그룹 전환과 분할 패널 이동 후에도 선택한 줄을 복원한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   await page.locator("textarea").fill("one\ntwo\nthree");
   const lines = page.locator('.line-rail [role="button"]');

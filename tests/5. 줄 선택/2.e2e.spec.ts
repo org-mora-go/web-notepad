@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("8. 클릭과 키보드로 줄을 선택하고 첫 줄의 상단 여백까지 강조한다", async ({
+test("2. 클릭과 키보드로 줄을 선택하고 첫 줄의 상단 여백까지 강조한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

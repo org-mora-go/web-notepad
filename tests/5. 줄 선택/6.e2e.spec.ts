@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("12. 줄 삽입과 삭제로 이동한 선택 위치도 저장한다", async ({ page }) => {
+test("6. 줄 삽입과 삭제로 이동한 선택 위치도 저장한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const editor = page.locator("textarea");
   const lines = page.locator('.line-rail [role="button"]');

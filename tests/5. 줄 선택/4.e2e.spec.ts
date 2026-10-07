@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("10. Shift 클릭으로 대상 줄이 속한 연속 선택 블록만 해제한다", async ({
+test("4. Shift 클릭으로 대상 줄이 속한 연속 선택 블록만 해제한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

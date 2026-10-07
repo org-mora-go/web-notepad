@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("9. 줄 선택과 해제를 탭별로 저장하고 새로고침 후 복원한다", async ({ page }) => {
+test("3. 줄 선택과 해제를 탭별로 저장하고 새로고침 후 복원한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const editor = page.locator("textarea");
   const lines = page.locator('.line-rail [role="button"]');

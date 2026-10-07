@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("7. Ungrouped를 최상단에 고정하고 나머지 그룹은 한글 우선 문자순으로 재정렬한다", async ({ page }) => {
+test("10. Ungrouped를 최상단에 고정하고 나머지 그룹은 한글 우선 문자순으로 재정렬한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const toggle = page.locator('button[aria-controls="groups-panel"]');
   const names = page.locator(".group-item .group-select strong");
