@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { bookmarkActiveTab } from "../__util__";
 
-test("6. 원본 탭이 남아 있는 북마크를 열면 해당 탭을 활성화한다", async ({
+test("8. 원본 탭이 남아 있는 북마크를 열면 해당 탭을 활성화한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { bookmarkActiveTab } from "../__util__";
 
-test("7. 원본 탭이 없으면 내용과 탭 색상 및 선택한 줄을 복원한다", async ({
+test("9. 원본 탭이 없으면 내용과 탭 색상 및 선택한 줄을 복원한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

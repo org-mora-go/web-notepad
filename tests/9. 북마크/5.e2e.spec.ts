@@ -1,11 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { restoreStoredBookmark } from "../__util__";
 
-test("5. 북마크 패널에서 북마크를 제거할 수 있다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
-  await bookmarkActiveTab(page, "bookmark to remove");
-  await page.locator('button[aria-controls="bookmarks-panel"]').click();
-  await page.locator(".bookmark-item .remove-bookmark").click();
-  await expect(page.locator(".bookmark-item")).toHaveCount(0);
+test("5. 기존 북마크의 그레이 색상과 첫 줄 선택을 유지한다", async ({ page }) => {
+  await restoreStoredBookmark(page, { tabColor: "gray", selectedLines: [0] });
+  await expect(page.locator("textarea")).toHaveValue("one\ntwo\nthree");
+  await expect(page.locator(".tab-item.is-active")).toHaveAttribute("data-tab-color", "gray");
+  const lines = page.locator('.line-rail [role="button"]');
+  await expect(lines.first()).toHaveAttribute("aria-pressed", "true");
+  await expect(lines.nth(1)).toHaveAttribute("aria-pressed", "false");
+  await expect(lines.nth(2)).toHaveAttribute("aria-pressed", "false");
 });

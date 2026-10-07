@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { bookmarkActiveTab } from "../__util__";
 
 test("1. 북마크에 제목과 내용과 생성 시각 및 탭 색상과 선택한 줄을 저장한다", async ({
   page,

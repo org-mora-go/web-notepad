@@ -1,8 +1,8 @@
 import { expect, test } from "@playwright/test";
 
-test("3. 모바일에서도 그룹 수를 표시한다", async ({ page }) => {
-  await page.setViewportSize({ width: 390, height: 844 });
+test("3. 상태 표시줄에 현재 그룹 이름과 그룹 수를 표시한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  await expect(page.locator(".group-status-command .status-count")).toHaveText("(1)");
-  await expect(page.locator(".group-status-command .status-count")).toBeInViewport();
+  const groupCommand = page.locator(".group-status-command");
+  await expect(groupCommand).toContainText("Ungrouped");
+  await expect(groupCommand.locator(".status-count")).toHaveText("(1)");
 });

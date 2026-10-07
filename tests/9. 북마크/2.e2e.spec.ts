@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { bookmarkActiveTab } from "../__util__";
 
 test("2. 원본 탭의 내용과 색상 및 줄 선택 변경을 북마크에 반영한다", async ({
   page,

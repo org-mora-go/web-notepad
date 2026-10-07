@@ -1,18 +1,13 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { restoreStoredBookmark } from "../__util__";
 
-test("3. 북마크 패널에서 북마크를 검색한다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
-  await bookmarkActiveTab(
-    page,
-    Array.from({ length: 10 }, (_, i) => `line ${i}`).join("\n"),
-  );
-  await page.locator('button[aria-controls="bookmarks-panel"]').click();
-  await expect(page.getByRole("searchbox", { name: "북마크 검색" })).toHaveAttribute("placeholder", "Search bookmarks");
-  await page.getByRole("searchbox", { name: "북마크 검색" }).fill("line 1");
-  await expect(page.locator(".bookmark-item")).toHaveCount(1);
-  await page.getByRole("searchbox", { name: "북마크 검색" }).fill("");
-  await page.getByRole("searchbox", { name: "북마크 검색" }).fill("missing");
-  await expect(page.locator(".bookmark-item")).toHaveCount(0);
+test("3. 색상과 줄 선택 정보가 없는 기존 북마크는 그린과 선택 없음으로 복원한다", async ({ page }) => {
+  await restoreStoredBookmark(page, {});
+  await expect(page.locator("textarea")).toHaveValue("one\ntwo\nthree");
+  await expect(page.locator(".tab-item.is-active")).toHaveAttribute("data-tab-color", "green");
+  const lines = page.locator('.line-rail [role="button"]');
+  for (let index = 0; index < 3; index += 1) {
+    await expect(lines.nth(index)).toHaveAttribute("aria-pressed", "false");
+  }
 });

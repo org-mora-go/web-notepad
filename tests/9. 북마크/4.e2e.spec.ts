@@ -1,17 +1,16 @@
 import { expect, test } from "@playwright/test";
 
-import { bookmarkActiveTab } from "./__util__";
+import { restoreStoredBookmark } from "../__util__";
 
-test("4. 북마크 내용을 펼치거나 접을 수 있다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
-  await bookmarkActiveTab(
-    page,
-    Array.from({ length: 10 }, (_, index) => `line ${index}`).join("\n"),
-  );
-  await page.locator('button[aria-controls="bookmarks-panel"]').click();
-  await page.getByRole("button", { name: "더보기" }).click();
-  const contentToggle = page.locator(".bookmark-content-toggle");
-  await expect(contentToggle).toHaveAttribute("aria-expanded", "true");
-  await contentToggle.click();
-  await expect(contentToggle).toHaveAttribute("aria-expanded", "false");
+test("4. 기존 블루 북마크를 레드로 복원하고 잘못된 선택 줄을 정리한다", async ({ page }) => {
+  await restoreStoredBookmark(page, {
+    tabColor: "blue",
+    selectedLines: [2, 1, 1, -1, 3, 0.5, "0"],
+  });
+  await expect(page.locator("textarea")).toHaveValue("one\ntwo\nthree");
+  await expect(page.locator(".tab-item.is-active")).toHaveAttribute("data-tab-color", "red");
+  const lines = page.locator('.line-rail [role="button"]');
+  await expect(lines.first()).toHaveAttribute("aria-pressed", "false");
+  await expect(lines.nth(1)).toHaveAttribute("aria-pressed", "true");
+  await expect(lines.nth(2)).toHaveAttribute("aria-pressed", "true");
 });
