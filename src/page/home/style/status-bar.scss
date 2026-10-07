@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 1px 14px;
+  padding: 3px 16px;
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
@@ -87,7 +87,7 @@
   }
 
   @media (max-width: 640px) {
-    padding: 1px 8px;
+    padding: 3px 10px;
 
     .status-command {
       gap: 3px;
