@@ -10,25 +10,6 @@
   color: v.$muted;
   font-size: 14px;
 
-  .status-left {
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
-
-  .save-state {
-    display: flex;
-    align-items: center;
-    gap: 9px;
-  }
-
-  .status-light {
-    width: 6px;
-    height: 6px;
-    flex: 0 0 auto;
-    background: v.$saved;
-  }
-
   .status-meta {
     display: flex;
     align-items: center;
@@ -54,7 +35,7 @@
   }
 
   .status-command .status-separator {
-    margin: 0 5px;
+    margin: 0 7px;
   }
 
   .status-command {
@@ -113,7 +94,7 @@
     }
 
     .status-command .status-separator {
-      margin: 0 2px;
+      margin: 0 4px;
     }
 
     .group-status-name {

@@ -27,27 +27,22 @@ export function StatusBar({
 }: Props) {
   return (
     <footer className="status-bar">
-      <div className="status-left">
-        <div className="save-state">
-          <span className="status-light" />
-        </div>
-        <button
-          className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
-          type="button"
-          onClick={onToggleShortcuts}
-          aria-expanded={shortcutsOpen}
-          aria-controls="shortcuts-panel"
-          aria-label="단축키 안내"
-        >
-          <span className="status-separator" aria-hidden="true">
-            |
-          </span>
-          <Keyboard size={16} strokeWidth={1.8} />
-          <span>SHORTCUT</span>
-        </button>
-      </div>
       <div className="status-meta">
         <div className="status-actions">
+          <button
+            className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
+            type="button"
+            onClick={onToggleShortcuts}
+            aria-expanded={shortcutsOpen}
+            aria-controls="shortcuts-panel"
+            aria-label="단축키 안내"
+          >
+            <Keyboard size={16} strokeWidth={1.8} />
+            <span>SHORTCUT</span>
+            <span className="status-separator" aria-hidden="true">
+              |
+            </span>
+          </button>
           <button
             className={`status-command ${bookmarksOpen ? "is-active" : ""}`}
             type="button"
@@ -60,6 +55,9 @@ export function StatusBar({
             {bookmarkCount > 0 && (
               <span className="status-count">({bookmarkCount})</span>
             )}
+            <span className="status-separator" aria-hidden="true">
+              |
+            </span>
           </button>
           <button
             className={`status-command group-status-command ${groupsOpen ? "is-active" : ""}`}
@@ -68,9 +66,6 @@ export function StatusBar({
             aria-expanded={groupsOpen}
             aria-controls="groups-panel"
           >
-            <span className="status-separator" aria-hidden="true">
-              |
-            </span>
             <Layers size={16} strokeWidth={1.8} />
             <span className="group-status-name">{activeGroupName}</span>
             <span className="status-count">({groupCount})</span>

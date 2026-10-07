@@ -6,7 +6,7 @@ test("6. SHORTCUT 패널에 키보드 단축키와 줄 범위 선택 안내를 �
   await page.goto("http://localhost:3000");
 
   const shortcutButton = page.getByRole("button", { name: "단축키 안내" });
-  await expect(page.locator(".save-state + .shortcut-command")).toHaveCount(1);
+  await expect(page.locator(".status-actions > .shortcut-command")).toHaveCount(1);
   await expect(shortcutButton).toBeVisible();
   await shortcutButton.click();
 

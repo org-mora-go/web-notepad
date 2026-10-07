@@ -5,7 +5,7 @@ test("3. 모바일에서도 북마크 개수를 표시한다", async ({ page }) 
   await page.goto("http://localhost:3000");
   await page.locator('.tab-item.is-active [role="tab"]').dblclick();
   await page.getByRole("menuitem", { name: "Bookmark" }).click();
-  const count = page.locator(".status-actions .status-command").first().locator(".status-count");
+  const count = page.locator('.status-command[aria-controls="bookmarks-panel"] .status-count');
   await expect(count).toHaveText("(1)");
   await expect(count).toBeInViewport();
 });
