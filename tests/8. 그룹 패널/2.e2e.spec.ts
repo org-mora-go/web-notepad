@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("2. Ungrouped를 최하단에 고정하고 나머지 그룹은 한글 우선 문자순으로 재정렬한다", async ({ page }) => {
+test("2. Ungrouped를 최상단에 고정하고 나머지 그룹은 한글 우선 문자순으로 재정렬한다", async ({ page }) => {
   await page.addInitScript(() => {
     if (sessionStorage.getItem("group-sort-seed")) return;
 
@@ -47,38 +47,38 @@ test("2. Ungrouped를 최하단에 고정하고 나머지 그룹은 한글 우�
   await toggle.click();
 
   await expect(names).toHaveText([
+    "Ungrouped",
     "가방",
     "나무",
     "다람쥐",
     "Alpha",
     "Zulu",
-    "Ungrouped",
   ]);
 
   const createInput = page.getByRole("textbox", { name: "새 그룹 이름" });
   await createInput.fill("Beta");
   await page.getByRole("button", { name: "그룹 생성" }).click();
   await expect(names).toHaveText([
+    "Ungrouped",
     "가방",
     "나무",
     "다람쥐",
     "Alpha",
     "Beta",
     "Zulu",
-    "Ungrouped",
   ]);
 
   await page.getByRole("button", { name: "Zulu 그룹 수정" }).click();
   await page.getByRole("textbox", { name: "Zulu 그룹 이름 수정" }).fill("Aardvark");
   await page.getByRole("button", { name: "그룹 수정 저장" }).click();
   const finalOrder = [
+    "Ungrouped",
     "가방",
     "나무",
     "다람쥐",
     "Aardvark",
     "Alpha",
     "Beta",
-    "Ungrouped",
   ];
   await expect(names).toHaveText(finalOrder);
 
@@ -86,7 +86,7 @@ test("2. Ungrouped를 최하단에 고정하고 나머지 그룹은 한글 우�
   await search.fill("a");
   await expect(names).toHaveText(["Aardvark", "Alpha", "Beta"]);
   await search.fill("r");
-  await expect(names).toHaveText(["Aardvark", "Ungrouped"]);
+  await expect(names).toHaveText(["Ungrouped", "Aardvark"]);
   await search.fill("");
   await expect(names).toHaveText(finalOrder);
 

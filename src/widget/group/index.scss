@@ -37,11 +37,11 @@
   }
 
   .group-header {
-    min-height: 45px;
+    min-height: 55px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 4px 22px;
+    padding: 9px 22px;
     border-bottom: 1px solid v.$line;
 
     h2 {
@@ -87,7 +87,7 @@
 
     input {
       min-width: 0;
-      height: 36px;
+      height: 42px;
       flex: 1;
       padding: 0 10px;
       border: 1px solid v.$line;
@@ -108,7 +108,7 @@
 
     button {
       width: 36px;
-      height: 36px;
+      height: 42px;
       border-color: #505050;
       color: v.$ink;
 
@@ -121,7 +121,7 @@
 
   .group-list {
     min-height: 0;
-    padding: 14px;
+    padding: 20px 14px;
     overflow-y: auto;
   }
 
@@ -186,7 +186,7 @@
     input {
       min-width: 0;
       flex: 1;
-      height: 30px;
+      height: 36px;
       padding: 0 8px;
       border: 1px solid v.$line;
       outline: none;

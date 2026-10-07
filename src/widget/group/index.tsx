@@ -45,7 +45,7 @@ export function Group({
     .sort((first, second) => {
       const firstIsUngrouped = first.id === UNGROUPED_GROUP_ID;
       const secondIsUngrouped = second.id === UNGROUPED_GROUP_ID;
-      if (firstIsUngrouped !== secondIsUngrouped) return firstIsUngrouped ? 1 : -1;
+      if (firstIsUngrouped !== secondIsUngrouped) return firstIsUngrouped ? -1 : 1;
       const firstIsKorean = koreanInitial.test(first.name);
       const secondIsKorean = koreanInitial.test(second.name);
       if (firstIsKorean !== secondIsKorean) return firstIsKorean ? -1 : 1;
