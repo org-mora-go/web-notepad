@@ -15,13 +15,17 @@ test("8. 그룹 패널의 제목과 입력란 및 그룹 이름 글자 크기를
   await panel.locator('button[aria-label="Alpha 그룹 수정"]').click();
   const editInput = panel.locator('input[aria-label="Alpha 그룹 이름 수정"]');
   await expect(editInput).toHaveCSS("font-size", "15px");
+  await expect(editInput).toHaveCSS("height", "36px");
   await editInput.press("Escape");
 
   for (const width of [1280, 390]) {
     await page.setViewportSize({ width, height: 844 });
     await expect(panel.locator("h2")).toHaveCSS("font-size", "22px");
     await expect(search).toHaveCSS("font-size", "14px");
+    await expect(search).toHaveCSS("height", "40px");
+    await expect(search.locator("xpath=..")).toHaveCSS("height", "42px");
     await expect(createInput).toHaveCSS("font-size", "14px");
+    await expect(createInput).toHaveCSS("height", "42px");
     await expect(
       panel.locator('.group-item:has-text("Alpha") strong'),
     ).toHaveCSS("font-size", "15px");
