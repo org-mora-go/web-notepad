@@ -11,7 +11,6 @@ test("8. 그룹 패널의 제목과 입력란 및 그룹 이름 글자 크기를
   const createInput = panel.locator('input[aria-label="새 그룹 이름"]');
   await createInput.fill("Alpha");
   await page.getByRole("button", { name: "그룹 생성" }).click();
-  await page.locator('button[aria-controls="groups-panel"]').click();
 
   await panel.locator('button[aria-label="Alpha 그룹 수정"]').click();
   const editInput = panel.locator('input[aria-label="Alpha 그룹 이름 수정"]');

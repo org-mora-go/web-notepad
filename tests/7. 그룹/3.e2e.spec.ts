@@ -7,8 +7,11 @@ test("3. 그룹을 삭제하면 노트와 북마크가 Ungrouped로 이동한다
   await page.locator('button[aria-controls="groups-panel"]').click();
   await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Archive");
   await page.getByRole("button", { name: "그룹 생성" }).click();
+  await page.getByRole("button", { name: "그룹 닫기" }).click();
   await page.locator("textarea").fill("archived note");
-  await page.getByRole("button", { name: /Archive/ }).click();
+  await page.locator('button[aria-controls="groups-panel"]').click();
+  await page.locator(".group-item").getByRole("button", { name: "Archive", exact: true }).click();
+  await page.locator('button[aria-controls="groups-panel"]').click();
   await page.getByRole("button", { name: "Archive 그룹 삭제" }).click();
   const popup = page.getByRole("alertdialog", { name: "Delete group" });
   await expect(popup).toContainText("Do you want to delete Archive?");

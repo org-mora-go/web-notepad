@@ -87,7 +87,6 @@ export function Home() {
         onClose={() => setGroupsOpen(false)}
         onCreate={(name) => {
           createGroup(name);
-          setGroupsOpen(false);
         }}
         onSelect={(groupId) => {
           selectGroup(groupId);

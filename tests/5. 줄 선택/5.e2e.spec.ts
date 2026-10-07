@@ -10,6 +10,7 @@ test("5. 그룹 전환과 분할 패널 이동 후에도 선택한 줄을 복원
   await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Work");
   await page.getByRole("button", { name: "그룹 생성" }).click();
   await expect(lines.first()).toHaveAttribute("aria-pressed", "false");
+  await page.getByRole("button", { name: "그룹 닫기" }).click();
   await page.locator('button[aria-controls="groups-panel"]').click();
   await page.locator(".group-item").getByRole("button", { name: "Ungrouped", exact: true }).click();
   await expect(lines.nth(1)).toHaveAttribute("aria-pressed", "true");

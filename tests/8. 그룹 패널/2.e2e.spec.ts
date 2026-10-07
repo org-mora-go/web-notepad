@@ -4,6 +4,9 @@ test("2. Ungrouped를 최상단에 고정하고 나머지 그룹은 한글 우�
   await page.goto("http://localhost:3000");
   const toggle = page.locator('button[aria-controls="groups-panel"]');
   const names = page.locator(".group-item .group-select strong");
+  const createInput = page.getByRole("textbox", { name: "새 그룹 이름" });
+  const createButton = page.getByRole("button", { name: "그룹 생성" });
+  await toggle.click();
   for (const { name, order } of [
     { name: "Zulu", order: ["Ungrouped", "Zulu"] },
     { name: "다람쥐", order: ["Ungrouped", "다람쥐", "Zulu"] },
@@ -12,10 +15,9 @@ test("2. Ungrouped를 최상단에 고정하고 나머지 그룹은 한글 우�
     { name: "가방", order: ["Ungrouped", "가방", "나무", "다람쥐", "Alpha", "Zulu"] },
     { name: "Beta", order: ["Ungrouped", "가방", "나무", "다람쥐", "Alpha", "Beta", "Zulu"] },
   ]) {
-    if (await toggle.getAttribute("aria-expanded") === "false") await toggle.click();
-    await page.getByRole("textbox", { name: "새 그룹 이름" }).fill(name);
-    await page.getByRole("button", { name: "그룹 생성" }).click();
-    await toggle.click();
+    await createInput.fill(name);
+    await expect(createButton).toBeEnabled();
+    await createButton.click();
     await expect(names).toHaveText(order);
   }
 
