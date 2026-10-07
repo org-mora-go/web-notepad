@@ -214,6 +214,10 @@
 
 10. 모바일에서는 SHORTCUT 버튼과 해당 구분자를 숨긴다.
 
+11. Shortcut 안내 콘텐츠는 단축키 설명을 15px, 키 표시를 12px로 표시한다.
+
+12. macOS Shortcut 안내 패널에서 Alt modifier 표기는 `Option`으로 표시한다.
+
 <br>
 
 ## 12. 검색
