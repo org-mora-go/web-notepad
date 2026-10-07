@@ -47,7 +47,7 @@
     h2 {
       margin: 0;
       font-family: v.$sans;
-      font-size: 20px;
+      font-size: 22px;
       font-weight: 500;
     }
   }
@@ -95,7 +95,7 @@
       background: #151514;
       color: v.$ink;
       font: inherit;
-      font-size: 12px;
+      font-size: 14px;
 
       &:focus {
         border-color: v.$hover-line;
@@ -131,7 +131,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 12px;
-    margin-bottom: 8px;
+    margin-bottom: 14px;
     padding: 8px 12px;
     border: 1px solid v.$line;
     background: #151514;
@@ -161,8 +161,12 @@
       min-width: 0;
       overflow-wrap: anywhere;
       color: v.$signal;
-      font-size: 13px;
+      font-size: 15px;
       font-weight: 500;
+
+      &.is-ungrouped {
+        color: v.$muted;
+      }
     }
 
     button {
@@ -189,7 +193,7 @@
       background: #151514;
       color: v.$ink;
       font: inherit;
-      font-size: 13px;
+      font-size: 15px;
 
       &:focus {
         border-color: v.$hover-line;
@@ -312,7 +316,7 @@
     p {
       margin: 0;
       font-family: v.$sans;
-      font-size: 13px;
+      font-size: 15px;
     }
   }
 }

@@ -8,10 +8,13 @@ type Props = {
 };
 
 const shortcuts = [
-  { action: "새 탭 추가", keys: ["Alt + Tab"] },
-  { action: "활성 탭 닫기", keys: ["Alt + Backspace"] },
-  { action: "탭 간 이동", keys: ["Alt + Arrow Up", "Alt + Arrow Down"] },
-  { action: "내용 전체 선택", keys: ["Cmd + A", "Alt + A"] },
+  { action: "새 탭 추가", keys: ["Option + Tab"] },
+  { action: "활성 탭 닫기", keys: ["Option + Backspace"] },
+  {
+    action: "탭 간 이동",
+    keys: ["Option + Arrow Up", "Option + Arrow Down"],
+  },
+  { action: "내용 전체 선택", keys: ["Cmd + A", "Option + A"] },
   { action: "오른쪽 패널로 이동", keys: ["Option + F12"] },
   { action: "왼쪽 패널로 이동", keys: ["Option + F11"] },
   { action: "탭 문자 삽입", keys: ["Tab"] },
@@ -33,7 +36,7 @@ export function Shortcut({ open, onClose }: Props) {
         aria-label="키보드 단축키"
       >
         <div className="shortcut-header">
-          <h2>Shortcut</h2>
+          <h2>Shortcut (mac)</h2>
           <button
             className="shortcut-close"
             type="button"

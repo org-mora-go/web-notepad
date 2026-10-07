@@ -45,7 +45,7 @@ export function Group({
     .sort((first, second) => {
       const firstIsUngrouped = first.id === UNGROUPED_GROUP_ID;
       const secondIsUngrouped = second.id === UNGROUPED_GROUP_ID;
-      if (firstIsUngrouped !== secondIsUngrouped) return firstIsUngrouped ? -1 : 1;
+      if (firstIsUngrouped !== secondIsUngrouped) return firstIsUngrouped ? 1 : -1;
       const firstIsKorean = koreanInitial.test(first.name);
       const secondIsKorean = koreanInitial.test(second.name);
       if (firstIsKorean !== secondIsKorean) return firstIsKorean ? -1 : 1;
@@ -161,7 +161,13 @@ export function Group({
                       aria-pressed={group.id === activeGroupId}
                       onClick={() => onSelect(group.id)}
                     >
-                      <strong>{group.name}</strong>
+                      <strong
+                        className={
+                          group.id === UNGROUPED_GROUP_ID ? "is-ungrouped" : ""
+                        }
+                      >
+                        {group.name}
+                      </strong>
                     </button>
                     {group.id !== UNGROUPED_GROUP_ID && (
                       <>

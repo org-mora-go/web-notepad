@@ -64,6 +64,7 @@ export function Editor({
             role="button"
             tabIndex={0}
             aria-pressed={selectedLines.includes(index)}
+            onMouseDown={(event) => event.preventDefault()}
             onClick={(event) => onToggleLineSelection(index, event.shiftKey)}
             onKeyDown={(event) => {
               if (event.key === "Enter" || event.key === " ") {

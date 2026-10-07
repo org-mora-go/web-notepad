@@ -5,6 +5,7 @@ test("4. 그룹 이름을 수정하고 저장 및 취소하며 기존 노트와 
   await page.locator('button[aria-controls="groups-panel"]').click();
   await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Work");
   await page.getByRole("button", { name: "그룹 생성" }).click();
+  await page.getByRole("button", { name: "그룹 닫기" }).click();
   await page.locator("textarea").fill("private note");
   await page.locator('.tab-item.is-active [role="tab"]').click({ button: "right" });
   await page.getByRole("menuitem", { name: "Bookmark", exact: true }).click();

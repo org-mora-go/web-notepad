@@ -20,6 +20,7 @@
   }
 
   input {
+    color-scheme: dark;
     width: 100%;
     min-width: 0;
     height: 100%;
@@ -29,10 +30,15 @@
     background: transparent;
     color: v.$ink;
     font: inherit;
-    font-size: 12px;
+    font-size: 14px;
 
     &::placeholder {
       color: v.$dim;
+    }
+
+    &::-webkit-search-cancel-button {
+      filter: brightness(0.4);
+      cursor: pointer;
     }
   }
 }
