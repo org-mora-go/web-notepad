@@ -11,4 +11,8 @@ test("5. Undo와 Redo 단축키가 탭별 편집 기록을 되돌리고 복원�
   await expect(editor).toHaveValue("first");
   await page.keyboard.press("Meta+Shift+z");
   await expect(editor).toHaveValue("first second");
+  await page.keyboard.press("Control+z");
+  await expect(editor).toHaveValue("first");
+  await page.keyboard.press("Control+y");
+  await expect(editor).toHaveValue("first second");
 });

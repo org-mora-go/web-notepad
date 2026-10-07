@@ -1,38 +1,27 @@
 import { expect, test } from "@playwright/test";
 
-test("3. 탭이 가로로 넘칠 때 스크롤 가능한 가장자리에 페이드 효과를 표시한다", async ({
-  page,
-}) => {
+test("3. 고정 탭의 핀 아이콘은 표시 전용이다", async ({ page }) => {
   await page.goto("http://localhost:3000");
-  const strip = page.locator(".header").first();
-  const scroller = strip.locator(".tabs-scroll");
+  const tab = page.locator(".tab-item").first();
+  await tab.locator('[role="tab"]').click({ button: "right" });
+  await page.getByRole("menuitem", { name: "Pin" }).click();
 
-  for (let index = 0; index < 11; index += 1) {
-    await page.locator('button[aria-label="새 탭 추가"]').click();
+  const pinIndicator = tab.locator(".tab-pin-indicator");
+  await expect(pinIndicator).toBeVisible();
+  await expect(pinIndicator).not.toHaveRole("button");
+  const colors = [
+    { name: "green", rgb: "rgb(143, 227, 176)" },
+    { name: "gray", rgb: "rgb(184, 184, 176)" },
+    { name: "red", rgb: "rgb(242, 139, 130)" },
+  ];
+
+  for (const [index, color] of colors.entries()) {
+    await expect(tab).toHaveAttribute("data-tab-color", color.name);
+    await expect(pinIndicator.locator("svg")).toHaveCSS("color", color.rgb);
+    await expect(tab.locator(".tab-title")).toHaveCSS("color", color.rgb);
+    if (index < colors.length - 1) await tab.locator(".dirty-dot").click();
   }
 
-  await expect(scroller).toHaveClass(/is-overflowing/);
-  await scroller.evaluate((element) => {
-    element.scrollLeft = 0;
-    element.dispatchEvent(new Event("scroll"));
-  });
-  await expect(strip).not.toHaveClass(/has-left-overflow/);
-  await expect(strip).toHaveClass(/has-right-overflow/);
-  await expect(scroller).toHaveCSS("mask-image", /48px/);
-
-  await scroller.evaluate((element) => {
-    element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2;
-    element.dispatchEvent(new Event("scroll"));
-  });
-  await expect(strip).toHaveClass(/has-left-overflow/);
-  await expect(strip).toHaveClass(/has-right-overflow/);
-  await expect(scroller).toHaveCSS("mask-image", /linear-gradient/);
-
-  await scroller.evaluate((element) => {
-    element.scrollLeft = element.scrollWidth;
-    element.dispatchEvent(new Event("scroll"));
-  });
-  await expect(strip).toHaveClass(/has-left-overflow/);
-  await expect(strip).not.toHaveClass(/has-right-overflow/);
-  await expect(scroller).toHaveCSS("mask-image", /linear-gradient/);
+  await pinIndicator.click();
+  await expect(tab).toHaveClass(/is-pinned/);
 });
