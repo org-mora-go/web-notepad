@@ -163,6 +163,10 @@
       color: v.$signal;
       font-size: 15px;
       font-weight: 500;
+
+      &.is-ungrouped {
+        color: v.$muted;
+      }
     }
 
     button {
