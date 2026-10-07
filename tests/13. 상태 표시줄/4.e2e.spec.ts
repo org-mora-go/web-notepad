@@ -11,6 +11,11 @@ test("4. PC와 모바일에서 명령 사이에만 구분자를 표시한다", a
     await expect(bookmark.locator(".status-separator")).toHaveCount(1);
     await expect(group.locator(".status-separator")).toHaveCount(0);
     await expect(bookmark.locator(".status-separator")).toHaveText("|");
+    const expectedMargin = width === 1280 ? "9px" : "6px";
+    await expect(shortcut.locator(".status-separator")).toHaveCSS("margin-left", expectedMargin);
+    await expect(shortcut.locator(".status-separator")).toHaveCSS("margin-right", expectedMargin);
+    await expect(bookmark.locator(".status-separator")).toHaveCSS("margin-left", expectedMargin);
+    await expect(bookmark.locator(".status-separator")).toHaveCSS("margin-right", expectedMargin);
     if (width === 1280) {
       await expect(shortcut.locator(".status-separator")).toBeVisible();
       await expect(page.locator(".status-meta .status-separator:visible")).toHaveCount(2);

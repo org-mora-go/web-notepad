@@ -35,14 +35,14 @@
   }
 
   .status-command .status-separator {
-    margin: 0 7px;
+    margin: 0 9px;
   }
 
   .status-command {
     height: 24px;
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 7px;
     padding: 0;
     border: 0;
     background: transparent;
@@ -90,11 +90,11 @@
     padding: 3px 15px 6px 10px;
 
     .status-command {
-      gap: 3px;
+      gap: 5px;
     }
 
     .status-command .status-separator {
-      margin: 0 4px;
+      margin: 0 6px;
     }
 
     .group-status-name {
