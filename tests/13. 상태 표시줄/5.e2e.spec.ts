@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("9. PC와 모바일에서 북마크 앞 구분자 없이 그룹 구분자만 표시한다", async ({ page }) => {
+test("5. PC와 모바일에서 북마크 앞 구분자 없이 그룹 구분자만 표시한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const bookmark = page.locator(".status-actions .status-command").first();
   const group = page.locator(".status-actions .status-command").nth(1);

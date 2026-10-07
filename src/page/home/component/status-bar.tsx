@@ -30,9 +30,6 @@ export function StatusBar({
       <div className="status-left">
         <div className="save-state">
           <span className="status-light" />
-          <span className="creator-credit" aria-label="HYUN-WOO YOO">
-            <span>HYUN-WOO YOO</span>
-          </span>
         </div>
         <button
           className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}

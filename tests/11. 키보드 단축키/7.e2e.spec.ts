@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("4. 단축키 패널을 북마크와 그룹 패널과 동시에 열지 않는다", async ({ page }) => {
+test("7. 단축키 패널을 북마크와 그룹 패널과 동시에 열지 않는다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const shortcuts = page.locator("#shortcuts-panel");
   for (const { panel, closeLabel } of [

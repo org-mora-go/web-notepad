@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("3. 상태 표시줄 항목을 외곽선 없이 구분하고 정보를 우측 정렬한다", async ({
+test("2. 상태 표시줄 항목을 외곽선 없이 구분하고 정보를 우측 정렬한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");
