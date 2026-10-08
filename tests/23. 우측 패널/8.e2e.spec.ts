@@ -1,17 +1,15 @@
 import { expect, test } from "@playwright/test";
 
-test("8. 그룹·북마크·단축키 안내 패널 헤더의 위아래 패딩을 9px로 표시한다", async ({ page }) => {
+import { RIGHT_PANEL_IDS } from "./__constant__";
+
+test("8. 그룹·북마크·단축키 안내·닫은 탭 패널 헤더의 위아래 패딩을 9px로 표시한다", async ({ page }) => {
   await page.goto("/");
 
-  for (const { panelId, headerClass } of [
-    { panelId: "groups-panel", headerClass: "group-header" },
-    { panelId: "bookmarks-panel", headerClass: "bookmark-header" },
-    { panelId: "shortcuts-panel", headerClass: "shortcut-header" },
-  ]) {
+  for (const panelId of RIGHT_PANEL_IDS) {
     await page.locator(`button[aria-controls="${panelId}"]`).click();
     await expect(page.locator(`#${panelId}`)).toHaveAttribute("aria-hidden", "false");
 
-    const header = page.locator(`#${panelId} .${headerClass}`);
+    const header = page.locator(`#${panelId} .side-panel-header`);
     await expect(header).toHaveCSS("min-height", "55px");
     await expect(header).toHaveCSS("height", "55px");
     await expect(header).toHaveCSS("padding-top", "9px");

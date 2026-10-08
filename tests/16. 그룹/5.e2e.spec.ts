@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { createGroup, groupsCommand, readStoredState } from "../__util__";
+import { createGroup, groupsCommand, groupStatusName, readStoredState } from "../__util__";
 
 test("5. 기본 그룹을 제외한 그룹은 삭제 버튼 왼쪽 수정 버튼으로 이름을 편집하고 공백 제거·60자·빈 이름 제한을 적용한다", async ({
   page,
@@ -28,13 +28,13 @@ test("5. 기본 그룹을 제외한 그룹은 삭제 버튼 왼쪽 수정 버튼
   await nameInput.fill("   ");
   await expect(page.getByRole("button", { name: "그룹 수정 저장" })).toBeDisabled();
   await nameInput.press("Enter");
-  await expect(page.locator(".group-status-name")).toHaveText("Work");
+  await expect(groupStatusName(page)).toHaveText("Work");
 
   await nameInput.fill("B".repeat(70));
   await expect(nameInput).toHaveValue("B".repeat(60));
   await nameInput.fill(" Focus ");
   await page.getByRole("button", { name: "그룹 수정 저장" }).click();
-  await expect(page.locator(".group-status-name")).toHaveText("Focus");
+  await expect(groupStatusName(page)).toHaveText("Focus");
   const names = (await readStoredState(page)).groups.map((group) => group.name);
   expect(names).toContain("Focus");
   expect(names).not.toContain(" Focus ");

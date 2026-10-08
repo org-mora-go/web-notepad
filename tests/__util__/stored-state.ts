@@ -4,7 +4,8 @@ import type { GroupEntry, NotepadState } from "@/src/entity/notepad";
 
 import { STORAGE_KEY } from "../__constant__";
 
-export type StoredState = Pick<NotepadState, "groups" | "activeGroupId" | "nextTabNumber">;
+export type StoredState = Pick<NotepadState, "groups" | "activeGroupId" | "nextTabNumber"> &
+  Partial<Pick<NotepadState, "closedTabs">>;
 
 // Reads the persisted Zustand state from localStorage.
 export const readStoredState = (page: Page): Promise<StoredState> =>

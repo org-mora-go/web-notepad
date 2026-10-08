@@ -1,6 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import {
+  activeTabItem,
   addTabButton,
   bookmarkActiveTab,
   bookmarksCommand,
@@ -23,6 +24,6 @@ test("3. 원본 탭이 남아 있는 북마크를 열면 해당 탭을 활성화
   await page.getByRole("button", { name: "열기" }).click();
 
   await expect(page.locator("textarea")).toHaveValue("bookmark source");
-  await expect(page.locator(".tab-item.is-active")).toHaveAttribute("data-tab-color", "gray");
+  await expect(activeTabItem(page)).toHaveAttribute("data-tab-color", "gray");
   await expectSelectedLines(page, [true]);
 });

@@ -12,7 +12,7 @@ import { usePaneDrag } from "./use-pane-drag";
 import { usePanelHistory } from "./use-panel-history";
 import { useStoreHydrated } from "./use-store-hydrated";
 
-type SidePanel = "bookmarks" | "groups" | "shortcuts";
+type SidePanel = "closed" | "bookmarks" | "groups" | "shortcuts";
 
 export function useHome() {
   const hydrated = useStoreHydrated();
@@ -25,6 +25,9 @@ export function useHome() {
   const {
     groups,
     activeGroupId,
+    closedTabs,
+    restoreClosedTab,
+    removeClosedTab,
     selectGroup,
     selectTab,
     updateTab,
@@ -170,6 +173,9 @@ export function useHome() {
 
   return {
     hydrated,
+    closedTabs,
+    restoreClosedTab,
+    removeClosedTab,
     pendingCloseTabId,
     cancelCloseTab,
     confirmCloseTab,

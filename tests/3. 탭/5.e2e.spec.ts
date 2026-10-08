@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { activeTabItem } from "../__util__";
+
 test("5. 저장 기준과 다른 내용에 변경 표시를 보여준다", async ({ page }) => {
   await page.goto("/");
-  const tab = page.locator(".tab-item.is-active");
+  const tab = activeTabItem(page);
   const colorButton = tab.locator(".dirty-dot");
   const editor = page.locator("textarea");
   const readIcon = () => colorButton.evaluate((button) => {

@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-import { addTabButton } from "../__util__";
+import { activeTabItem, addTabButton } from "../__util__";
 
 test("1. 새 탭의 기본 색상은 파스텔 그린이다", async ({ page }) => {
   await page.goto("/");
-  const tab = page.locator(".tab-item.is-active");
+  const tab = activeTabItem(page);
   await expect(tab).toHaveAttribute("data-tab-color", "green");
   await expect
     .poll(() =>

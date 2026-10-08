@@ -1,0 +1,10 @@
+@use "../../entity/style/mixin";
+@use "./style/closed-item";
+
+.closed {
+  @include mixin.side-panel-list("closed");
+
+  .side-panel-drawer {
+    grid-template-rows: auto auto minmax(0, 1fr);
+  }
+}

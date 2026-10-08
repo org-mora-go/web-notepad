@@ -1,10 +1,14 @@
 @use "../../entity/style/variable" as v;
+@use "../../entity/ui/confirm-popup";
+@use "../../entity/ui/expandable-content";
+@use "../../entity/ui/side-panel";
 @use "../../widget/header";
 @use "../../widget/body";
 @use "../../feature/note-editor";
 @use "../../widget/bookmark";
 @use "../../widget/group";
 @use "../../widget/shortcut";
+@use "../../widget/closed";
 @use "../../feature/search-field";
 @use "./style/status-bar";
 @use "./style/loading";

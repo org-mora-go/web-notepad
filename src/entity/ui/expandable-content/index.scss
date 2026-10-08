@@ -1,0 +1,33 @@
+@use "../../style/variable" as v;
+
+.expandable-content {
+  .expandable-content-text {
+    margin: 18px 0;
+    max-height: 126px;
+    overflow: hidden;
+    color: v.$saved;
+    font-family: v.$sans;
+    font-size: 16px;
+    line-height: 1.5;
+    white-space: pre-wrap;
+    overflow-wrap: anywhere;
+
+    &.is-expanded {
+      max-height: none;
+    }
+  }
+
+  .expandable-content-toggle {
+    margin: -10px 0 14px;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: v.$dim;
+    font-size: 13px;
+    cursor: pointer;
+
+    &:hover {
+      color: v.$ink;
+    }
+  }
+}

@@ -1,7 +1,7 @@
 import { expect, type Page } from "@playwright/test";
 
 import type { Viewport } from "../../__constant__";
-import { groupsCommand, moveGroupSourceTab, openTabMenu } from "../../__util__";
+import { moveGroupSourceTab, openTabMenu } from "../../__util__";
 
 // Moves the seeded "Move me" tab to the "Target" group through the PC or mobile tab menu.
 export async function moveTabToTarget(page: Page, viewport?: Viewport) {
@@ -9,9 +9,4 @@ export async function moveTabToTarget(page: Page, viewport?: Viewport) {
   await page.getByRole("menuitem", { name: "Move Group", exact: true }).click();
   await page.getByRole("menuitem", { name: "Target", exact: true }).click();
   await expect(page.getByRole("menu")).toHaveCount(0);
-}
-
-export async function openTargetGroup(page: Page) {
-  await groupsCommand(page).click();
-  await page.getByRole("button", { name: "Target", exact: true }).click();
 }

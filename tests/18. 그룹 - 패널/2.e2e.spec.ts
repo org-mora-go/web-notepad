@@ -1,8 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import { MOBILE_VIEWPORT } from "../__constant__";
-import { createGroup, groupsCommand } from "../__util__";
-import { seedSortableGroups } from "./__util__";
+import { createGroup, groupsCommand, seedSortableGroups } from "../__util__";
 
 test("2. 그룹 생성·이름 수정 직후와 새로고침 시에도 같은 정렬을 적용한다", async ({ page }) => {
   await seedSortableGroups(page);

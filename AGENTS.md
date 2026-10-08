@@ -34,6 +34,13 @@ Do not consider the work complete until all updated E2E tests pass. Run `npm run
 - Export subcomponents from the submodule's `component/index.ts` or `component/index.tsx` barrel, and import and use those subcomponents from the submodule's `index.tsx`.
 - `page/home` and other consumers must import feature and widget modules through the public `feature/index.ts` and `widget/index.ts` barrels.
 
+## Entity UI Components
+
+- Put common UI components shared by feature, widget, or page modules under `src/entity/ui/`, not under a `component/` directory.
+- Structure each one exactly like a feature, widget, or page module: a `src/entity/ui/<component>/` directory with its main implementation in `index.tsx` and its main stylesheet in `index.scss`. Apply the subcomponent `component/` and `style/` rules below to these modules as well.
+- The top-level class selector in a UI component's `index.scss` must match its directory name (for example, `.side-panel` in `side-panel/index.scss`). Keep shared component styles in that stylesheet instead of SCSS mixins, and load it from the page stylesheet with `@use "../../entity/ui/<component>"`.
+- `src/entity/ui/index.ts` may export only each UI component's main implementation. Consumers import these components through `@/src/entity/ui` (or `@/src/entity`) and put module-specific overrides in their own stylesheet, scoped under their own top-level class.
+
 ## Feature, Widget, and Page Stylesheets
 
 - Each feature, widget, or page module must keep its main stylesheet in `index.scss` next to its `index.tsx`. Put optional SCSS files for subcomponents under that module's `style/` directory.

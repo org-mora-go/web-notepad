@@ -1,158 +1,85 @@
 @use "./variable" as v;
 
-// Right side panel shell: `.{name}-backdrop`, `.{name}-drawer`, `.{name}-header`.
-@mixin side-panel($name, $rows, $title-size: 22px, $header-gap: null) {
-  .#{$name}-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.58);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 180ms ease;
-
-    &.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
+// Side panel body: `.{name}-list` and `.{name}-empty` state.
+@mixin side-panel-list($name) {
+  .#{$name}-list {
+    min-height: 0;
+    padding: 14px;
+    overflow-y: auto;
   }
 
-  .#{$name}-drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 20;
-    width: min(462px, 100vw);
-    height: 100vh;
+  .#{$name}-empty {
+    min-height: 280px;
     display: grid;
-    grid-template-rows: $rows;
-    border-left: 1px solid #3a3a35;
-    background: #10100f;
-    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
-    transform: translateX(102%);
-    transition: transform 220ms ease;
+    place-content: center;
+    justify-items: center;
+    gap: 14px;
+    color: #555550;
+    text-align: center;
 
-    &.is-open {
-      transform: translateX(0);
-    }
-  }
-
-  .#{$name}-header {
-    min-height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: $header-gap;
-    padding: 9px 22px;
-    border-bottom: 1px solid v.$line;
-
-    h2 {
+    p {
+      max-width: 220px;
       margin: 0;
       font-family: v.$sans;
-      font-size: $title-size;
-      font-weight: 500;
+      font-size: 16px;
+      line-height: 1.5;
     }
   }
 }
 
-// Delete confirmation dialog: `.{name}` with `-content`, `-header`, `-title`, `-close`, `-actions`, `-confirm` parts.
-@mixin confirm-popup($name) {
-  .#{$name} {
-    position: fixed;
-    inset: 0;
-    width: min(380px, calc(100vw - 32px));
-    height: fit-content;
-    max-height: calc(100dvh - 32px);
-    margin: auto;
-    padding: 0;
-    overflow: auto;
+// Note card: `.{name}-item` with `-item-heading`, `-actions` and `.remove-{name}`.
+@mixin note-card($name) {
+  .#{$name}-item {
+    margin-bottom: 10px;
+    padding: 16px;
     border: 1px solid v.$line;
-    border-radius: 6px;
-    background: v.$raised;
-    color: v.$ink;
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+    background: #151514;
+  }
 
-    &::backdrop {
-      background: rgba(0, 0, 0, 0.72);
+  .#{$name}-item-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    strong {
+      color: v.$signal;
+      font-size: 15px;
     }
 
-    .#{$name}-content {
-      padding: 20px;
+    time {
+      color: #6f6f69;
+      font-size: 12px;
     }
+  }
 
-    .#{$name}-header,
-    .#{$name}-title {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .#{$name}-header {
-      justify-content: space-between;
-    }
-
-    .#{$name}-title > svg {
-      color: v.$tab-red;
-      flex: 0 0 auto;
-    }
-
-    h3 {
-      margin: 0;
-      font-family: v.$sans;
-      font-size: 16px;
-      font-weight: 500;
-    }
-
-    p {
-      margin: 18px 0 22px;
-      overflow-wrap: anywhere;
-      font-size: 14px;
-      line-height: 1.6;
-    }
+  .#{$name}-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 
     button {
-      min-height: 34px;
+      height: 30px;
       display: flex;
       align-items: center;
-      justify-content: center;
-      gap: 6px;
-      padding: 0 12px;
+      gap: 7px;
+      padding: 0 9px;
       border: 1px solid v.$line;
-      border-radius: 4px;
       background: transparent;
-      color: v.$ink;
+      color: #a9a9a2;
       font-size: 13px;
       cursor: pointer;
 
       &:hover {
         border-color: v.$hover-line;
-      }
-
-      &:focus-visible {
-        outline: 2px solid v.$saved;
-        outline-offset: 2px;
+        color: v.$ink;
       }
     }
 
-    .#{$name}-close {
-      width: 28px;
-      min-height: 28px;
+    .remove-#{$name} {
+      width: 30px;
       padding: 0;
-      border: 0;
-      flex: 0 0 auto;
-      color: v.$muted;
-    }
-
-    .#{$name}-actions {
-      display: flex;
-      justify-content: flex-end;
-      gap: 8px;
-    }
-
-    .#{$name}-confirm {
-      border-color: v.$tab-red;
-      background: v.$tab-red;
-      color: v.$pit;
+      justify-content: center;
     }
   }
 }
