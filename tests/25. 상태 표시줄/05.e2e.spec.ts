@@ -10,11 +10,14 @@ test("5. 상태표시줄 아이콘 크기와 명령 간격을 PC·모바일에�
     await page.setViewportSize(viewport);
     const expectedIconSize = viewport === DESKTOP_VIEWPORT ? "16px" : "20px";
     for (const command of await commands.all()) {
-      await expect(command).toHaveCSS("gap", expectedGap);
-      for (const icon of await command.locator("svg").all()) {
-        await expect(icon).toHaveCSS("width", expectedIconSize);
-        await expect(icon).toHaveCSS("height", expectedIconSize);
-      }
+      const isGroupCommand = await command.evaluate((element) =>
+        element.classList.contains("group-status-command"),
+      );
+      const commandGap =
+        viewport === DESKTOP_VIEWPORT || isGroupCommand ? "7px" : expectedGap;
+      await expect(command).toHaveCSS("gap", commandGap);
+      await expect(command.locator("svg")).toHaveCSS("width", expectedIconSize);
+      await expect(command.locator("svg")).toHaveCSS("height", expectedIconSize);
     }
   }
 });

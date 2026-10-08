@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { DESKTOP_VIEWPORT, MOBILE_VIEWPORT } from "../__constant__";
 import { closeActiveTabWithContent, closedCommand } from "../__util__";
 
-test("2. SHORTCUT 오른쪽에 개수 없이 CLOSED 명령을 PC와 모바일에서 표시한다", async ({ page }) => {
+test("2. SHORTCUT 오른쪽에 CLOSED 명령과 닫은 탭 개수를 PC와 모바일에서 표시한다", async ({ page }) => {
   await page.goto("/");
   await closeActiveTabWithContent(page, "closed note");
   const command = closedCommand(page);
@@ -15,11 +15,12 @@ test("2. SHORTCUT 오른쪽에 개수 없이 CLOSED 명령을 PC와 모바일에
   expect(shortcutBox!.x + shortcutBox!.width).toBeLessThanOrEqual(commandBox!.x + 1);
   await expect(label).toHaveText("CLOSED");
   await expect(label).toBeVisible();
-  await expect(command.locator(".status-count")).toHaveCount(0);
+  await expect(command.locator(".status-count")).toHaveText("(1)");
 
   await page.setViewportSize(MOBILE_VIEWPORT);
   await expect(label).toBeHidden();
   await expect(command.locator("svg")).toBeInViewport();
-  await expect(command.locator(".status-count")).toHaveCount(0);
+  await expect(command.locator(".status-count")).toHaveText("(1)");
+  await expect(command.locator(".status-count")).toBeInViewport();
   await expect(page.locator(".group-status-command .group-status-name")).toBeInViewport();
 });

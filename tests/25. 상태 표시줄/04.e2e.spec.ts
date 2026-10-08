@@ -93,8 +93,10 @@ test("4. 모바일에서는 SEARCH와 그룹을 양끝에 고정하고 나머지
 
   await page.setViewportSize(MOBILE_VIEWPORT);
   await expect(search.locator(".global-search-label")).toBeHidden();
-  await expect(group.locator("svg")).toHaveCount(0);
-  await expect(group.locator(".status-count")).toHaveCount(0);
+  await expect(group.locator("svg")).toHaveCount(1);
+  await expect(group.locator(".status-count")).toHaveText("(1)");
+  await expect(group.locator(".status-count")).toBeInViewport();
+  await expect(group.locator(".status-count")).toBeInViewport();
   await expectSearchLeftAligned();
   await expectMetaRightAligned();
 });

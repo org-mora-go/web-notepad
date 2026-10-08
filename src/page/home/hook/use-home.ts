@@ -45,6 +45,7 @@ export function useHome() {
   const activePane = activeGroup?.activePane ?? "left";
   const splitRatio = activeGroup?.splitRatio ?? 0.5;
   const bookmarks = activeGroup?.bookmarks ?? [];
+  const groupCount = groups.length;
   const activeGroupName = activeGroup?.name ?? "Ungrouped";
 
   const rightIds = new Set(activeGroup?.rightTabIds ?? []);
@@ -67,7 +68,13 @@ export function useHome() {
     moveToGroup,
     cancelCloseTab,
     confirmCloseTab,
-  } = useHomeTabActions({ editorRef, rightEditorRef, activeTabId, activeRightTabId, tabs });
+  } = useHomeTabActions({
+    editorRef,
+    rightEditorRef,
+    activeTabId,
+    activeRightTabId,
+    tabs,
+  });
 
   const navigation = useHomeNavigation({ hydrated, addTabToPane });
   const {
@@ -120,8 +127,18 @@ export function useHome() {
     hydrated,
   );
 
-  const { draggingTabId, setDraggingTabId, adoptTo, leftDropZones, rightDropZones } =
-    usePaneDrag({ rightIds, split, leftTabCount: leftTabs.length, moveTabToPane });
+  const {
+    draggingTabId,
+    setDraggingTabId,
+    adoptTo,
+    leftDropZones,
+    rightDropZones,
+  } = usePaneDrag({
+    rightIds,
+    split,
+    leftTabCount: leftTabs.length,
+    moveTabToPane,
+  });
 
   const sharedPaneProps = {
     groups,
@@ -191,6 +208,7 @@ export function useHome() {
     split,
     bookmarks,
     groups,
+    groupCount,
     activeGroupName,
     leftPaneProps,
     rightPaneProps,

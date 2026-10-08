@@ -138,8 +138,8 @@
   }
 
   @media (max-width: 640px) {
-    min-height: 52px;
-    padding: 3px 15px 6px 10px;
+    min-height: 56px;
+    padding: 3px 15px 10px 10px;
     font-size: 16px;
 
     .status-command {
@@ -170,9 +170,13 @@
       justify-content: space-between;
     }
 
-    .global-search-command,
-    .group-status-command {
+    .global-search-command {
       flex: 0 0 auto;
+    }
+
+    .group-status-command {
+      flex: 0 1 auto;
+      gap: 7px;
     }
 
     .status-scroll-area {
@@ -190,6 +194,7 @@
     }
 
     .group-status-name {
+      min-width: 24px;
       max-width: min(30vw, 90px);
     }
   }

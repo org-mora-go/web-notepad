@@ -1,14 +1,15 @@
 "use client";
 
+import { Bookmark, Ghost, Keyboard, Layers, Search } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-
-import { Bookmark, Ghost, Keyboard, Search } from "lucide-react";
 
 type Props = {
   closedOpen: boolean;
+  closedCount: number;
   bookmarkCount: number;
   shortcutsOpen: boolean;
   bookmarksOpen: boolean;
+  groupCount: number;
   activeGroupName: string;
   groupsOpen: boolean;
   globalSearchOpen: boolean;
@@ -21,9 +22,11 @@ type Props = {
 
 export function StatusBar({
   closedOpen,
+  closedCount,
   bookmarkCount,
   shortcutsOpen,
   bookmarksOpen,
+  groupCount,
   activeGroupName,
   groupsOpen,
   globalSearchOpen,
@@ -113,6 +116,9 @@ export function StatusBar({
               >
                 <Ghost size={16} strokeWidth={1.8} />
                 <span className="status-label closed-status-label">CLOSED</span>
+                {closedCount > 0 && (
+                  <span className="status-count">({closedCount})</span>
+                )}
                 <span className="status-separator" aria-hidden="true">
                   |
                 </span>
@@ -142,7 +148,9 @@ export function StatusBar({
             aria-expanded={groupsOpen}
             aria-controls="groups-panel"
           >
+            <Layers size={16} strokeWidth={1.8} />
             <span className="group-status-name">{activeGroupName}</span>
+            <span className="status-count">({groupCount})</span>
           </button>
         </div>
       </div>

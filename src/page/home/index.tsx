@@ -31,6 +31,7 @@ export function Home() {
     split,
     bookmarks,
     groups,
+    groupCount,
     activeGroupName,
     leftPaneProps,
     rightPaneProps,
@@ -54,9 +55,11 @@ export function Home() {
 
         <StatusBar
           closedOpen={openPanel === "closed"}
+          closedCount={closedTabs.length}
           bookmarkCount={bookmarks.length}
           shortcutsOpen={openPanel === "shortcuts"}
           bookmarksOpen={openPanel === "bookmarks"}
+          groupCount={groupCount}
           activeGroupName={activeGroupName}
           groupsOpen={openPanel === "groups"}
           globalSearchOpen={openPanel === "global-search"}
@@ -109,10 +112,7 @@ export function Home() {
           toggleSidePanel("closed");
         }}
       />
-      <Shortcut
-        open={openPanel === "shortcuts"}
-        onClose={closeSidePanels}
-      />
+      <Shortcut open={openPanel === "shortcuts"} onClose={closeSidePanels} />
       {pendingCloseTabId && (
         <TabDeletePopup onConfirm={confirmCloseTab} onCancel={cancelCloseTab} />
       )}
