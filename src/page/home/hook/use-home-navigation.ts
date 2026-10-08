@@ -13,6 +13,7 @@ type Options = {
 
 export function useHomeNavigation({ hydrated, addTabToPane }: Options) {
   const [openPanel, setOpenPanel] = useState<ViewPanel | null>(null);
+  const [globalSearchQuery, setGlobalSearchQuery] = useState("");
   const getCurrentView = useCallback((panel: ViewPanel | null = openPanel): ViewSnapshot => {
     const group = getActiveGroup(useNotepadStore.getState());
     return {
@@ -125,6 +126,7 @@ export function useHomeNavigation({ hydrated, addTabToPane }: Options) {
       ) return;
       event.preventDefault();
       if (document.activeElement instanceof HTMLElement) document.activeElement.blur();
+      if (openPanel === "global-search") setGlobalSearchQuery("");
       closeSidePanels();
     };
     window.addEventListener("keydown", handleKeyDown);
@@ -133,6 +135,8 @@ export function useHomeNavigation({ hydrated, addTabToPane }: Options) {
 
   return {
     openPanel,
+    globalSearchQuery,
+    setGlobalSearchQuery,
     closeSidePanels,
     toggleSidePanel,
     selectTabWithHistory,

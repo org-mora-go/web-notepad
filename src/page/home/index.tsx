@@ -12,6 +12,8 @@ export function Home() {
     hydrated,
     closedTabs,
     removeClosedTab,
+    globalSearchQuery,
+    setGlobalSearchQuery,
     closedSearchQuery,
     setClosedSearchQuery,
     pendingCloseTabId,
@@ -98,6 +100,8 @@ export function Home() {
       <GlobalSearch
         groups={groups}
         closedTabs={closedTabs}
+        searchQuery={globalSearchQuery}
+        onSearchQueryChange={setGlobalSearchQuery}
         open={openPanel === "global-search"}
         onClose={closeSidePanels}
         onSelectGroup={selectGroupAndClosePanel}
