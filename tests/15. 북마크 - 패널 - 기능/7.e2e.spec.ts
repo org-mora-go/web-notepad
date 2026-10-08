@@ -14,6 +14,8 @@ test("7. 원본 탭이 없으면 내용과 탭 색상 및 선택한 줄을 복�
   await lines.nth(1).click();
   await lines.nth(2).click();
   await page.locator(".tab-item.is-active .tab-close").click();
+  await page.getByRole("alertdialog", { name: "Delete tab" })
+    .getByRole("button", { name: "Delete", exact: true }).click();
 
   await expect(page.locator("textarea")).toHaveValue("");
   await page.reload();

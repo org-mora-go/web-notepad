@@ -1,0 +1,100 @@
+@use "../../../entity/style/variable" as v;
+
+.tab-delete-popup {
+  position: fixed;
+  inset: 0;
+  width: min(380px, calc(100vw - 32px));
+  height: fit-content;
+  max-height: calc(100dvh - 32px);
+  margin: auto;
+  padding: 0;
+  overflow: auto;
+  border: 1px solid v.$line;
+  border-radius: 6px;
+  background: v.$raised;
+  color: v.$ink;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5);
+
+  &::backdrop {
+    background: rgba(0, 0, 0, 0.72);
+  }
+
+  .tab-delete-popup-content {
+    padding: 20px;
+  }
+
+  .tab-delete-popup-header,
+  .tab-delete-popup-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .tab-delete-popup-header {
+    justify-content: space-between;
+  }
+
+  .tab-delete-popup-title > svg {
+    color: v.$tab-red;
+    flex: 0 0 auto;
+  }
+
+  h3 {
+    margin: 0;
+    font-family: v.$sans;
+    font-size: 16px;
+    font-weight: 500;
+  }
+
+  p {
+    margin: 18px 0 22px;
+    overflow-wrap: anywhere;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+
+  button {
+    min-height: 34px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 0 12px;
+    border: 1px solid v.$line;
+    border-radius: 4px;
+    background: transparent;
+    color: v.$ink;
+    font-size: 13px;
+    cursor: pointer;
+
+    &:hover {
+      border-color: v.$hover-line;
+    }
+
+    &:focus-visible {
+      outline: 2px solid v.$saved;
+      outline-offset: 2px;
+    }
+  }
+
+  .tab-delete-popup-close {
+    width: 28px;
+    min-height: 28px;
+    padding: 0;
+    border: 0;
+    flex: 0 0 auto;
+    color: v.$muted;
+  }
+
+  .tab-delete-popup-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+
+  .tab-delete-popup-confirm {
+    border-color: v.$tab-red;
+    background: v.$tab-red;
+    color: v.$pit;
+  }
+}

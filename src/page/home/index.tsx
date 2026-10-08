@@ -5,11 +5,14 @@ import "./index.scss";
 import { useHome } from "@/src/page/home/hook";
 import { Bookmark, Group, Shortcut } from "@/src/widget";
 
-import { Loading, PaneView, StatusBar } from "./component";
+import { Loading, PaneView, StatusBar, TabDeletePopup } from "./component";
 
 export function Home() {
   const {
     hydrated,
+    pendingCloseTabId,
+    cancelCloseTab,
+    confirmCloseTab,
     bookmarksOpen,
     setBookmarksOpen,
     groupsOpen,
@@ -99,6 +102,9 @@ export function Home() {
         open={shortcutsOpen}
         onClose={() => setShortcutsOpen(false)}
       />
+      {pendingCloseTabId && (
+        <TabDeletePopup onConfirm={confirmCloseTab} onCancel={cancelCloseTab} />
+      )}
     </main>
   );
 }

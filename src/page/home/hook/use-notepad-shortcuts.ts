@@ -10,12 +10,14 @@ type Options = {
   editorRef: RefObject<HTMLTextAreaElement | null>;
   rightEditorRef: RefObject<HTMLTextAreaElement | null>;
   composingRef: RefObject<boolean>;
+  requestCloseTab: (tabId: string) => void;
 };
 
 export function useNotepadShortcuts({
   editorRef,
   rightEditorRef,
   composingRef,
+  requestCloseTab,
 }: Options) {
   useSelectAllShortcut({ editorRef, rightEditorRef });
 
@@ -55,7 +57,7 @@ export function useNotepadShortcuts({
 
       if (shouldCloseTab) {
         event.preventDefault();
-        state.closeTab(paneActiveId);
+        if (!event.repeat) requestCloseTab(paneActiveId);
         return;
       }
 
@@ -165,5 +167,5 @@ export function useNotepadShortcuts({
 
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [composingRef, editorRef, rightEditorRef]);
+  }, [composingRef, editorRef, rightEditorRef, requestCloseTab]);
 }

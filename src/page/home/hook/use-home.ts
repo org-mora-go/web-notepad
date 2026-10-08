@@ -17,6 +17,7 @@ export function useHome() {
   const [groupsOpen, setGroupsOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
   const [draggingTabId, setDraggingTabId] = useState<string | null>(null);
+  const [pendingCloseTabId, setPendingCloseTabId] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
   const composingRef = useRef(false);
@@ -79,7 +80,27 @@ export function useHome() {
       ? (activeRightTab ?? leftActiveTab)
       : (leftActiveTab ?? activeRightTab)) ?? rightTabs[0];
 
-  useNotepadShortcuts({ editorRef, rightEditorRef, composingRef });
+  const requestCloseTab = useCallback((tabId: string) => {
+    const state = useNotepadStore.getState();
+    const group = state.groups.find((item) => item.id === state.activeGroupId);
+    const tab = group?.tabs.find((item) => item.id === tabId);
+    if (!group || !tab || tab.pinned) return;
+
+    const editor = tabId === group.activeTabId
+      ? editorRef.current
+      : tabId === group.activeRightTabId
+        ? rightEditorRef.current
+        : null;
+    const content = editor?.value ?? tab.content;
+    if (content !== tab.content) state.updateTab(tabId, content);
+    if (content.length > 0) {
+      setPendingCloseTabId(tabId);
+    } else {
+      state.closeTab(tabId);
+    }
+  }, []);
+
+  useNotepadShortcuts({ editorRef, rightEditorRef, composingRef, requestCloseTab });
   useEditorFocus(
     editorRef,
     activeGroupId,
@@ -178,7 +199,7 @@ export function useHome() {
         widthRatio: split ? splitRatio : undefined,
         onActivate: () => setActivePane("left"),
         onSelect: selectTab,
-        onClose: closeTab,
+        onClose: requestCloseTab,
         onMove: moveTab,
         onAdopt: adoptTo("left"),
         onDragStateChange: setDraggingTabId,
@@ -204,7 +225,7 @@ export function useHome() {
           onResize: setSplitRatio,
           onActivate: () => setActivePane("right"),
           onSelect: selectTab,
-          onClose: closeTab,
+          onClose: requestCloseTab,
           onMove: moveTab,
           onAdopt: adoptTo("right"),
           onDragStateChange: setDraggingTabId,
@@ -218,6 +239,12 @@ export function useHome() {
 
   return {
     hydrated,
+    pendingCloseTabId,
+    cancelCloseTab: () => setPendingCloseTabId(null),
+    confirmCloseTab: () => {
+      if (pendingCloseTabId) closeTab(pendingCloseTabId);
+      setPendingCloseTabId(null);
+    },
     bookmarksOpen,
     setBookmarksOpen,
     groupsOpen,
