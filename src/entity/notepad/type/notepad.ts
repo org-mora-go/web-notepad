@@ -47,6 +47,7 @@ export type NotepadState = {
   setTabSelectedLines: (tabId: string, selectedLines: number[]) => void;
   moveTab: (fromTabId: string, toTabId: string) => void;
   moveTabToPane: (tabId: string, pane: PaneId) => void;
+  moveTabToGroup: (tabId: string, groupId: string) => void;
   setActivePane: (pane: PaneId) => void;
   setSplitRatio: (ratio: number) => void;
   cycleTabColor: (tabId: string) => void;

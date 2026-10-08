@@ -2,10 +2,12 @@ import type { RefObject } from "react";
 
 import type { PaneDropZone } from "@/src/entity";
 import type { TabStripState } from "@/src/entity/hook";
-import type { NoteTab } from "@/src/entity/notepad";
+import type { GroupEntry, NoteTab } from "@/src/entity/notepad";
 
 export type PaneViewProps = {
   tabs: NoteTab[];
+  groups: GroupEntry[];
+  activeGroupId: string;
   activeTab: NoteTab;
   tabStrip: TabStripState;
   editorRef: RefObject<HTMLTextAreaElement | null>;
@@ -20,6 +22,7 @@ export type PaneViewProps = {
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onMove: (fromTabId: string, toTabId: string) => void;
+  onMoveToGroup: (tabId: string, groupId: string) => void;
   onAdopt: (tabId: string) => void;
   onDragStateChange: (tabId: string | null) => void;
   onCycleTabColor: (tabId: string) => void;

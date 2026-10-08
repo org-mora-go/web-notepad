@@ -7,7 +7,7 @@ import { getAllTabs, getReservedTabIds } from "./workspace";
 
 type GroupActions = Pick<
   NotepadState,
-  "createGroup" | "renameGroup" | "removeGroup" | "selectGroup"
+  "createGroup" | "renameGroup" | "removeGroup" | "selectGroup" | "moveTabToGroup"
 >;
 
 export const createGroupActions: StateCreator<
@@ -16,6 +16,59 @@ export const createGroupActions: StateCreator<
   [],
   GroupActions
 > = (set, get) => ({
+  moveTabToGroup: (tabId, groupId) =>
+    set((state) => {
+      const source = state.groups.find((group) => group.tabs.some((tab) => tab.id === tabId));
+      const target = state.groups.find((group) => group.id === groupId);
+      const tab = source?.tabs.find((item) => item.id === tabId);
+      if (!source || !target || !tab || source.id === target.id) return state;
+
+      let remainingTabs = source.tabs.filter((item) => item.id !== tabId);
+      let nextTabNumber = state.nextTabNumber;
+      if (remainingTabs.length === 0) {
+        const number = getNextTabNumber(getAllTabs(state), getReservedTabIds(state), nextTabNumber);
+        remainingTabs = [createNoteTab(number)];
+        nextTabNumber = number + 1;
+      }
+
+      let rightTabIds = source.rightTabIds.filter((id) => id !== tabId);
+      let leftTabs = remainingTabs.filter((item) => !rightTabIds.includes(item.id));
+      if (leftTabs.length === 0) {
+        rightTabIds = [];
+        leftTabs = remainingTabs;
+      }
+      const rightTabs = remainingTabs.filter((item) => rightTabIds.includes(item.id));
+      const linkedBookmarks = source.bookmarks.filter((bookmark) => bookmark.sourceTabId === tabId);
+
+      return {
+        nextTabNumber,
+        groups: state.groups.map((group) => {
+          if (group.id === source.id) {
+            return {
+              ...group,
+              tabs: remainingTabs,
+              bookmarks: group.bookmarks.filter((bookmark) => bookmark.sourceTabId !== tabId),
+              rightTabIds,
+              activeTabId: leftTabs.some((item) => item.id === group.activeTabId)
+                ? group.activeTabId : leftTabs[0].id,
+              activeRightTabId: rightTabs.some((item) => item.id === group.activeRightTabId)
+                ? group.activeRightTabId : (rightTabs[0]?.id ?? null),
+              activePane: rightTabs.length === 0 ? "left" : group.activePane,
+            };
+          }
+          if (group.id === target.id) {
+            return {
+              ...group,
+              tabs: [...group.tabs, tab],
+              bookmarks: [...group.bookmarks, ...linkedBookmarks],
+              activeTabId: tabId,
+              activePane: "left",
+            };
+          }
+          return group;
+        }),
+      };
+    }),
   createGroup: (name) => {
     const trimmedName = name.trim();
     if (!trimmedName) return;

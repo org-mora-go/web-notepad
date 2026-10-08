@@ -85,6 +85,9 @@
     position: fixed;
     z-index: 50;
     width: 188px;
+    max-width: calc(100vw - 16px);
+    max-height: calc(100dvh - 16px);
+    overflow-y: auto;
     padding: 4px;
     border: 1px solid v.$line;
     background: v.$raised;
@@ -100,15 +103,41 @@
       border: 0;
       background: transparent;
       color: v.$ink;
-      font-size: 12px;
+      font-size: 14px;
       text-align: left;
       cursor: pointer;
 
-      &:hover,
+      > svg {
+        flex: 0 0 auto;
+      }
+
+      > span {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      &:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+
+      &:hover:not(:disabled),
       &:focus-visible {
         outline: none;
         background: v.$line;
       }
+    }
+
+    .move-group-arrow {
+      margin-left: auto;
+    }
+
+    .move-group-options {
+      border-top: 1px solid v.$line;
+      margin-top: 4px;
+      padding-top: 4px;
     }
   }
 }

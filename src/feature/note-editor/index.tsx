@@ -9,7 +9,6 @@ import { useNoteEditor } from "./hook";
 
 type Props = {
   tab: NoteTab;
-  lineCount: number;
   editorRef: RefObject<HTMLTextAreaElement | null>;
   composingRef: RefObject<boolean>;
   autoFocus?: boolean;
@@ -18,7 +17,6 @@ type Props = {
 
 export function NoteEditor({
   tab,
-  lineCount,
   editorRef,
   composingRef,
   autoFocus = false,
@@ -38,7 +36,6 @@ export function NoteEditor({
   return (
     <Editor
       tab={tab}
-      lineCount={lineCount}
       editorRef={editorRef}
       lineRailRef={lineRailRef}
       selectedLines={selectedLines}
