@@ -32,6 +32,17 @@ export function StatusBar({
   return (
     <footer className="status-bar">
       <div className="status-meta">
+        <button
+          className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
+          type="button"
+          onClick={onToggleShortcuts}
+          aria-expanded={shortcutsOpen}
+          aria-controls="shortcuts-panel"
+          aria-label="단축키 안내"
+        >
+          <Keyboard size={16} strokeWidth={1.8} />
+          <span>SHORTCUT</span>
+        </button>
         <div className="status-actions">
           <button
             className={`status-command closed-command ${closedOpen ? "is-active" : ""}`}
@@ -43,20 +54,6 @@ export function StatusBar({
           >
             <Ghost size={16} strokeWidth={1.8} />
             <span className="status-label closed-status-label">CLOSED</span>
-            <span className="status-separator" aria-hidden="true">
-              |
-            </span>
-          </button>
-          <button
-            className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
-            type="button"
-            onClick={onToggleShortcuts}
-            aria-expanded={shortcutsOpen}
-            aria-controls="shortcuts-panel"
-            aria-label="단축키 안내"
-          >
-            <Keyboard size={16} strokeWidth={1.8} />
-            <span>SHORTCUT</span>
             <span className="status-separator" aria-hidden="true">
               |
             </span>

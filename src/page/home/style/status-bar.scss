@@ -2,9 +2,10 @@
 
 .status-bar {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: space-between;
-  padding: 3px 21px 6px 16px;
+  padding: 3px 21px 6px 21px;
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
@@ -61,6 +62,9 @@
   }
 
   .shortcut-command {
+    position: absolute;
+    left: 21px;
+
     @media (max-width: 640px) {
       display: none;
     }

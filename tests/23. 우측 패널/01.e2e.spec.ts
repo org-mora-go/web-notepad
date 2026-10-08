@@ -16,7 +16,7 @@ test("1. 상태 표시줄의 그룹, BOOKMARK, SHORTCUT, CLOSED 명령을 선택
   await expect(page.locator("#bookmarks-panel")).toHaveAttribute("aria-hidden", "true");
 
   const shortcutButton = page.getByRole("button", { name: "단축키 안내" });
-  await expect(page.locator(".status-actions > .shortcut-command")).toHaveCount(1);
+  await expect(page.locator(".status-meta > .shortcut-command")).toHaveCount(1);
   await expect(shortcutButton).toBeVisible();
   await shortcutButton.click();
   await expect(page.locator("#shortcuts-panel")).toHaveAttribute("aria-hidden", "false");

@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { MOBILE_VIEWPORT } from "../__constant__";
 import { bookmarksCommand } from "../__util__";
 
-test("4. 저장 상태 아이콘 없이 CLOSED·SHORTCUT·BOOKMARK·그룹 순으로 외곽선 없이 우측 정렬한다", async ({
+test("4. SHORTCUT은 왼쪽에, CLOSED·BOOKMARK·그룹은 오른쪽에 정렬한다", async ({
   page,
 }) => {
   await page.goto("/");
@@ -13,6 +13,25 @@ test("4. 저장 상태 아이콘 없이 CLOSED·SHORTCUT·BOOKMARK·그룹 순�
   const bookmark = bookmarksCommand(page);
   const group = page.locator(".group-status-command");
   const separators = page.locator(".status-meta .status-separator");
+  const expectShortcutLeftAligned = async () => {
+    const alignment = await shortcut.evaluate((command) => {
+      const statusBar = command.closest(".status-bar");
+      if (!statusBar) return null;
+
+      const barBounds = statusBar.getBoundingClientRect();
+      const commandBounds = command.getBoundingClientRect();
+      const paddingRight = parseFloat(getComputedStyle(statusBar).paddingRight);
+      return {
+        commandLeft: commandBounds.left,
+        contentLeft: barBounds.left + paddingRight,
+      };
+    });
+
+    expect(alignment).not.toBeNull();
+    expect(
+      Math.abs(alignment!.commandLeft - alignment!.contentLeft),
+    ).toBeLessThan(1);
+  };
   const expectMetaRightAligned = async () => {
     const alignment = await page.locator(".status-meta").evaluate((meta) => {
       const statusBar = meta.closest(".status-bar");
@@ -39,12 +58,11 @@ test("4. 저장 상태 아이콘 없이 CLOSED·SHORTCUT·BOOKMARK·그룹 순�
     (commands) => commands.map((command) => command.textContent?.trim()),
   );
   expect(actionOrder[0]).toContain("CLOSED");
-  expect(actionOrder[1]).toContain("SHORTCUT");
-  expect(actionOrder[2]).toContain("BOOKMARK");
-  expect(actionOrder[3]).toContain("Ungrouped");
-  await expect(separators).toHaveCount(3);
+  expect(actionOrder[1]).toContain("BOOKMARK");
+  expect(actionOrder[2]).toContain("Ungrouped");
+  await expect(separators).toHaveCount(2);
   await expect(closed.locator(".status-separator")).toHaveText("|");
-  await expect(shortcut.locator(".status-separator")).toHaveText("|");
+  await expect(shortcut.locator(".status-separator")).toHaveCount(0);
   await expect(bookmark.locator(".status-separator")).toHaveText("|");
   await expect(group.locator(".status-separator")).toHaveCount(0);
   await expect(bookmark).toHaveCSS("border-top-width", "0px");
@@ -52,6 +70,7 @@ test("4. 저장 상태 아이콘 없이 CLOSED·SHORTCUT·BOOKMARK·그룹 순�
   await expect(shortcut).toHaveCSS("border-top-width", "0px");
   await expect(closed).toHaveCSS("border-top-width", "0px");
   await expect(page.getByRole("button", { name: "BOOKMARK" })).toBeVisible();
+  await expectShortcutLeftAligned();
   await expectMetaRightAligned();
 
   await page.setViewportSize(MOBILE_VIEWPORT);
