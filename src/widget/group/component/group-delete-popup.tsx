@@ -1,5 +1,6 @@
 import { AlertTriangle, Trash2, X } from "lucide-react";
-import { useEffect, useId, useRef } from "react";
+
+import { useConfirmDialog } from "@/src/entity";
 
 type Props = {
   groupName: string;
@@ -8,55 +9,10 @@ type Props = {
 };
 
 export function GroupDeletePopup({ groupName, onConfirm, onCancel }: Props) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const cancelButtonRef = useRef<HTMLButtonElement>(null);
-  const popupId = useId();
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    dialog.showModal();
-    cancelButtonRef.current?.focus();
-    return () => {
-      if (dialog.open) dialog.close();
-    };
-  }, []);
-
-  const closePopup = (action: () => void) => {
-    dialogRef.current?.close();
-    action();
-  };
+  const { dialogProps, cancelButtonRef, popupId, close } = useConfirmDialog({ onCancel });
 
   return (
-    <dialog
-      ref={dialogRef}
-      className="group-delete-popup"
-      role="alertdialog"
-      aria-modal="true"
-      aria-labelledby={`${popupId}-title`}
-      aria-describedby={`${popupId}-message`}
-      onKeyDown={(event) => {
-        event.stopPropagation();
-        if (event.key !== "Tab") return;
-        const buttons = event.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)");
-        const firstButton = buttons[0];
-        const lastButton = buttons[buttons.length - 1];
-        if (event.shiftKey && document.activeElement === firstButton) {
-          event.preventDefault();
-          lastButton.focus();
-        } else if (!event.shiftKey && document.activeElement === lastButton) {
-          event.preventDefault();
-          firstButton.focus();
-        }
-      }}
-      onCancel={(event) => {
-        event.preventDefault();
-        closePopup(onCancel);
-      }}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) closePopup(onCancel);
-      }}
-    >
+    <dialog className="group-delete-popup" {...dialogProps}>
       <div className="group-delete-popup-content">
         <div className="group-delete-popup-header">
           <div className="group-delete-popup-title">
@@ -68,18 +24,18 @@ export function GroupDeletePopup({ groupName, onConfirm, onCancel }: Props) {
             type="button"
             aria-label="삭제 확인 닫기"
             title="닫기"
-            onClick={() => closePopup(onCancel)}
+            onClick={() => close(onCancel)}
           >
             <X size={16} />
           </button>
         </div>
         <p id={`${popupId}-message`}>Do you want to delete {groupName}?</p>
         <div className="group-delete-popup-actions">
-          <button ref={cancelButtonRef} type="button" onClick={() => closePopup(onCancel)}>
+          <button ref={cancelButtonRef} type="button" onClick={() => close(onCancel)}>
             <X size={14} aria-hidden="true" />
             Cancel
           </button>
-          <button className="group-delete-popup-confirm" type="button" onClick={() => closePopup(onConfirm)}>
+          <button className="group-delete-popup-confirm" type="button" onClick={() => close(onConfirm)}>
             <Trash2 size={14} aria-hidden="true" />
             Delete
           </button>

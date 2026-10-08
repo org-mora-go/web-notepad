@@ -4,3 +4,4 @@ export {
   UNGROUPED_GROUP_ID,
   useNotepadStore,
 } from "./notepad-store";
+export { getActiveGroup } from "./workspace";

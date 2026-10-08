@@ -1,4 +1,5 @@
 @use "../../entity/style/variable" as v;
+@use "./style/editor";
 
 .note-editor {
   --editor-line-height: 33px;

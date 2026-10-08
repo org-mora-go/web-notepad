@@ -23,6 +23,16 @@ export const getNextTabNumber = (
   return number;
 };
 
+// Keeps unique, in-range line indexes in ascending order.
+export const sanitizeSelectedLines = (value: unknown, content: string): number[] => {
+  if (!Array.isArray(value)) return [];
+  const lineCount = content.split("\n").length;
+  return [...new Set(value.filter(
+    (line: unknown): line is number =>
+      typeof line === "number" && Number.isInteger(line) && line >= 0 && line < lineCount,
+  ))].sort((first, second) => first - second);
+};
+
 export const getTitleFromContent = (content: unknown, fallback: string) => {
   const text = typeof content === "string" ? content : "";
   if (!text.trim()) return "-";

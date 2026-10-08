@@ -7,6 +7,17 @@ type Options = {
   rightEditorRef: RefObject<HTMLTextAreaElement | null>;
 };
 
+// Browsers may reset the selection after keydown, so select again on the next frame and shortly after.
+const selectAllPersistently = (target: HTMLInputElement | HTMLTextAreaElement) => {
+  const selectAll = () => {
+    if (document.activeElement !== target) return;
+    target.setSelectionRange(0, target.value.length);
+  };
+  selectAll();
+  window.requestAnimationFrame(selectAll);
+  window.setTimeout(selectAll, 50);
+};
+
 export function useSelectAllShortcut({ editorRef, rightEditorRef }: Options) {
   useEffect(() => {
     const handleSelectAll = (event: KeyboardEvent) => {
@@ -35,13 +46,7 @@ export function useSelectAllShortcut({ editorRef, rightEditorRef }: Options) {
             ))
         ) {
           event.preventDefault();
-          const selectInputAll = () => {
-            if (document.activeElement !== active) return;
-            active.setSelectionRange(0, active.value.length);
-          };
-          selectInputAll();
-          window.requestAnimationFrame(selectInputAll);
-          window.setTimeout(selectInputAll, 50);
+          selectAllPersistently(active);
         }
         return;
       }
@@ -52,14 +57,8 @@ export function useSelectAllShortcut({ editorRef, rightEditorRef }: Options) {
       if (!target) return;
 
       event.preventDefault();
-      const selectAll = () => {
-        if (document.activeElement !== target) return;
-        target.setSelectionRange(0, target.value.length);
-      };
       target.focus();
-      selectAll();
-      window.requestAnimationFrame(selectAll);
-      window.setTimeout(selectAll, 50);
+      selectAllPersistently(target);
     };
 
     window.addEventListener("keydown", handleSelectAll);

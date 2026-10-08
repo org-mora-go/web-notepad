@@ -13,12 +13,9 @@ export function Home() {
     pendingCloseTabId,
     cancelCloseTab,
     confirmCloseTab,
-    bookmarksOpen,
-    setBookmarksOpen,
-    groupsOpen,
-    setGroupsOpen,
-    shortcutsOpen,
-    setShortcutsOpen,
+    openPanel,
+    toggleSidePanel,
+    closeSidePanels,
     activeGroupId,
     selectGroup,
     activeTab,
@@ -50,57 +47,43 @@ export function Home() {
 
         <StatusBar
           bookmarkCount={bookmarks.length}
-          shortcutsOpen={shortcutsOpen}
-          bookmarksOpen={bookmarksOpen}
+          shortcutsOpen={openPanel === "shortcuts"}
+          bookmarksOpen={openPanel === "bookmarks"}
           groupCount={groupCount}
           activeGroupName={activeGroupName}
-          groupsOpen={groupsOpen}
-          onToggleShortcuts={() => {
-            setShortcutsOpen((open) => !open);
-            setBookmarksOpen(false);
-            setGroupsOpen(false);
-          }}
-          onToggleBookmarks={() => {
-            setBookmarksOpen((open) => !open);
-            setGroupsOpen(false);
-            setShortcutsOpen(false);
-          }}
-          onToggleGroups={() => {
-            setGroupsOpen((open) => !open);
-            setBookmarksOpen(false);
-            setShortcutsOpen(false);
-          }}
+          groupsOpen={openPanel === "groups"}
+          onToggleShortcuts={() => toggleSidePanel("shortcuts")}
+          onToggleBookmarks={() => toggleSidePanel("bookmarks")}
+          onToggleGroups={() => toggleSidePanel("groups")}
         />
       </section>
 
       <Bookmark
         bookmarks={bookmarks}
-        open={bookmarksOpen}
-        onClose={() => setBookmarksOpen(false)}
+        open={openPanel === "bookmarks"}
+        onClose={closeSidePanels}
         onOpen={(bookmarkId) => {
           openBookmark(bookmarkId);
-          setBookmarksOpen(false);
+          closeSidePanels();
         }}
         onRemove={removeBookmark}
       />
       <Group
         groups={groups}
         activeGroupId={activeGroupId}
-        open={groupsOpen}
-        onClose={() => setGroupsOpen(false)}
-        onCreate={(name) => {
-          createGroup(name);
-        }}
+        open={openPanel === "groups"}
+        onClose={closeSidePanels}
+        onCreate={createGroup}
         onSelect={(groupId) => {
           selectGroup(groupId);
-          setGroupsOpen(false);
+          closeSidePanels();
         }}
         onRemove={removeGroup}
         onRename={renameGroup}
       />
       <Shortcut
-        open={shortcutsOpen}
-        onClose={() => setShortcutsOpen(false)}
+        open={openPanel === "shortcuts"}
+        onClose={closeSidePanels}
       />
       {pendingCloseTabId && (
         <TabDeletePopup onConfirm={confirmCloseTab} onCancel={cancelCloseTab} />

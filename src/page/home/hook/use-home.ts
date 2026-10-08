@@ -1,9 +1,9 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 import { useTabStrip } from "@/src/entity/hook";
-import { useNotepadStore } from "@/src/entity/notepad";
+import { getActiveGroup, useNotepadStore } from "@/src/entity/notepad";
 
 import { useEditorFocus } from "./use-editor-focus";
 import { useHomeTabActions } from "./use-home-tab-actions";
@@ -12,15 +12,16 @@ import { usePaneDrag } from "./use-pane-drag";
 import { usePanelHistory } from "./use-panel-history";
 import { useStoreHydrated } from "./use-store-hydrated";
 
+export type SidePanel = "bookmarks" | "groups" | "shortcuts";
+
 export function useHome() {
   const hydrated = useStoreHydrated();
-  const [bookmarksOpen, setBookmarksOpen] = useState(false);
-  const [groupsOpen, setGroupsOpen] = useState(false);
-  const [shortcutsOpen, setShortcutsOpen] = useState(false);
+  const [openPanel, setOpenPanel] = useState<SidePanel | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
   const composingRef = useRef(false);
   const rightComposingRef = useRef(false);
+  const store = useNotepadStore();
   const {
     groups,
     activeGroupId,
@@ -39,10 +40,9 @@ export function useHome() {
     createGroup,
     renameGroup,
     removeGroup,
-  } = useNotepadStore();
+  } = store;
 
-  const activeGroup =
-    groups.find((group) => group.id === activeGroupId) ?? groups[0];
+  const activeGroup = getActiveGroup(store);
   const tabs = activeGroup?.tabs ?? [];
   const activeTabId = activeGroup?.activeTabId ?? "";
   const activeRightTabId = activeGroup?.activeRightTabId ?? null;
@@ -51,21 +51,13 @@ export function useHome() {
   const bookmarks = activeGroup?.bookmarks ?? [];
   const groupCount = groups.length;
   const activeGroupName = activeGroup?.name ?? "Ungrouped";
-  const closeSidePanels = useCallback(() => {
-    setBookmarksOpen(false);
-    setGroupsOpen(false);
-    setShortcutsOpen(false);
-  }, []);
+  const closeSidePanels = useCallback(() => setOpenPanel(null), []);
+  const toggleSidePanel = (panel: SidePanel) =>
+    setOpenPanel((current) => (current === panel ? null : panel));
 
-  usePanelHistory(
-    bookmarksOpen || groupsOpen || shortcutsOpen,
-    closeSidePanels,
-  );
+  usePanelHistory(openPanel !== null, closeSidePanels);
 
-  const rightIds = useMemo(
-    () => new Set(activeGroup?.rightTabIds ?? []),
-    [activeGroup?.rightTabIds],
-  );
+  const rightIds = new Set(activeGroup?.rightTabIds ?? []);
   const leftTabs = tabs.filter((tab) => !rightIds.has(tab.id));
   const rightTabs = tabs.filter((tab) => rightIds.has(tab.id));
   const split = rightTabs.length > 0;
@@ -124,30 +116,34 @@ export function useHome() {
   const { draggingTabId, setDraggingTabId, adoptTo, leftDropZones, rightDropZones } =
     usePaneDrag({ rightIds, split, leftTabCount: leftTabs.length, moveTabToPane });
 
+  const sharedPaneProps = {
+    groups,
+    activeGroupId,
+    draggingTabId,
+    onSelect: selectTab,
+    onClose: requestCloseTab,
+    onMove: moveTab,
+    onMoveToGroup: moveToGroup,
+    onDragStateChange: setDraggingTabId,
+    onCycleTabColor: cycleTabColor,
+    onTogglePin: togglePin,
+    onToggleBookmark: toggleBookmark,
+  };
+
   const leftPaneProps = leftActiveTab
     ? {
+        ...sharedPaneProps,
         tabs: leftTabs,
-        groups,
-        activeGroupId,
         activeTab: leftActiveTab,
         tabStrip: leftStrip,
         editorRef,
         composingRef,
         autoFocus: true,
         isFocused: !split || activePane === "left",
-        draggingTabId,
         dropZones: leftDropZones,
         widthRatio: split ? splitRatio : undefined,
         onActivate: () => setActivePane("left"),
-        onSelect: selectTab,
-        onClose: requestCloseTab,
-        onMove: moveTab,
-        onMoveToGroup: moveToGroup,
         onAdopt: adoptTo("left"),
-        onDragStateChange: setDraggingTabId,
-        onCycleTabColor: cycleTabColor,
-        onTogglePin: togglePin,
-        onToggleBookmark: toggleBookmark,
         onAdd: () => addTabToPane("left"),
         onChange: (content: string) => updateTab(leftActiveTab.id, content),
       }
@@ -156,27 +152,17 @@ export function useHome() {
   const rightPaneProps =
     split && activeRightTab
       ? {
+          ...sharedPaneProps,
           tabs: rightTabs,
-          groups,
-          activeGroupId,
           activeTab: activeRightTab,
           tabStrip: rightStrip,
           editorRef: rightEditorRef,
           composingRef: rightComposingRef,
           isFocused: activePane === "right",
-          draggingTabId,
           dropZones: rightDropZones,
           onResize: setSplitRatio,
           onActivate: () => setActivePane("right"),
-          onSelect: selectTab,
-          onClose: requestCloseTab,
-          onMove: moveTab,
-          onMoveToGroup: moveToGroup,
           onAdopt: adoptTo("right"),
-          onDragStateChange: setDraggingTabId,
-          onCycleTabColor: cycleTabColor,
-          onTogglePin: togglePin,
-          onToggleBookmark: toggleBookmark,
           onAdd: () => addTabToPane("right"),
           onChange: (content: string) => updateTab(activeRightTab.id, content),
         }
@@ -187,12 +173,9 @@ export function useHome() {
     pendingCloseTabId,
     cancelCloseTab,
     confirmCloseTab,
-    bookmarksOpen,
-    setBookmarksOpen,
-    groupsOpen,
-    setGroupsOpen,
-    shortcutsOpen,
-    setShortcutsOpen,
+    openPanel,
+    toggleSidePanel,
+    closeSidePanels,
     activeGroupId,
     selectGroup,
     activeTab,

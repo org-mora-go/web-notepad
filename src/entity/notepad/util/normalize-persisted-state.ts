@@ -1,6 +1,6 @@
 import { UNGROUPED_GROUP_ID } from "../constant";
 import type { BookmarkEntry, GroupEntry, NotepadState, NoteTab, TabColor } from "../type";
-import { createNoteTab } from "./note-tab";
+import { createNoteTab, sanitizeSelectedLines } from "./note-tab";
 
 const normalizeTabColor = (value: unknown, urgent?: unknown): TabColor =>
   value === "gray" || value === "red" || value === "green"
@@ -11,14 +11,8 @@ const normalizeTabColor = (value: unknown, urgent?: unknown): TabColor =>
         ? "gray"
         : "green";
 
-const normalizeSelectedLines = (value: unknown, content: string): number[] => {
-  if (!Array.isArray(value)) return [];
-  const lineCount = content.split("\n").length;
-  return [...new Set(value.filter(
-    (line: unknown): line is number =>
-      typeof line === "number" && Number.isInteger(line) && line >= 0 && line < lineCount,
-  ))].sort((first, second) => first - second);
-};
+const finiteNumberOr = (value: unknown, fallback: number) =>
+  typeof value === "number" && Number.isFinite(value) ? value : fallback;
 
 const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
   (Array.isArray(value) ? value : fallback)
@@ -26,7 +20,7 @@ const normalizeTabs = (value: unknown, fallback: NoteTab[]): NoteTab[] =>
     .map((tab) => {
       const { urgent, ...tabData } = tab;
       const content = typeof tab.content === "string" ? tab.content : "";
-      const selectedLines = normalizeSelectedLines(tab.selectedLines, content);
+      const selectedLines = sanitizeSelectedLines(tab.selectedLines, content);
       const tabColor = normalizeTabColor(tab.tabColor, urgent);
 
       return {
@@ -54,12 +48,8 @@ const normalizeBookmarks = (value: unknown, fallback: BookmarkEntry[]) =>
         title: typeof bookmark.title === "string" ? bookmark.title : "Untitled",
         content,
         tabColor: normalizeTabColor(bookmark.tabColor),
-        selectedLines: normalizeSelectedLines(bookmark.selectedLines, content),
-        createdAt:
-          typeof bookmark.createdAt === "number" &&
-          Number.isFinite(bookmark.createdAt)
-            ? bookmark.createdAt
-            : Date.now(),
+        selectedLines: sanitizeSelectedLines(bookmark.selectedLines, content),
+        createdAt: finiteNumberOr(bookmark.createdAt, Date.now()),
       };
     });
 
@@ -91,11 +81,10 @@ export function normalizePersistedState(
   const sourceGroups = Array.isArray(persisted.groups)
     ? persisted.groups
     : currentState.groups;
-  let nextTabNumber =
-    typeof persisted.nextTabNumber === "number" &&
-    Number.isFinite(persisted.nextTabNumber)
-      ? persisted.nextTabNumber
-      : currentState.nextTabNumber;
+  let nextTabNumber = finiteNumberOr(
+    persisted.nextTabNumber,
+    currentState.nextTabNumber,
+  );
   const reservedTabIds = new Set([
     ...legacyTabs.map((tab) => tab.id),
     ...legacyBookmarks.map((bookmark) => bookmark.sourceTabId),
@@ -114,6 +103,16 @@ export function normalizePersistedState(
     .map((group) => {
       const id = group.id;
       const hasWorkspace = Array.isArray(group.tabs);
+      // Groups saved before workspaces existed take their pane state from the legacy top-level fields.
+      const fromSource = (
+        key: "rightTabIds" | "activeTabId" | "activeRightTabId" | "activePane",
+        fallback: unknown,
+      ): unknown =>
+        hasWorkspace
+          ? group[key]
+          : id === UNGROUPED_GROUP_ID
+            ? persisted[key]
+            : fallback;
       let tabs = hasWorkspace
         ? normalizeTabs(group.tabs, [])
         : id === UNGROUPED_GROUP_ID
@@ -126,44 +125,24 @@ export function normalizePersistedState(
           ? legacyBookmarks
           : [];
       const tabIds = new Set(tabs.map((tab) => tab.id));
-      const sourceRightTabIds = hasWorkspace
-        ? group.rightTabIds
-        : id === UNGROUPED_GROUP_ID
-          ? persisted.rightTabIds
-          : [];
+      const sourceRightTabIds = fromSource("rightTabIds", []);
       const rightTabIds = Array.isArray(sourceRightTabIds)
         ? sourceRightTabIds.filter(
             (tabId): tabId is string =>
               typeof tabId === "string" && tabIds.has(tabId),
           )
         : [];
-      const sourceActiveTabId = hasWorkspace
-        ? group.activeTabId
-        : id === UNGROUPED_GROUP_ID
-          ? persisted.activeTabId
-          : null;
+      const sourceActiveTabId = fromSource("activeTabId", null);
       const activeTabId =
         typeof sourceActiveTabId === "string" && tabIds.has(sourceActiveTabId)
           ? sourceActiveTabId
           : (tabs[0]?.id ?? "");
-      const sourceActiveRightTabId = hasWorkspace
-        ? group.activeRightTabId
-        : id === UNGROUPED_GROUP_ID
-          ? persisted.activeRightTabId
-          : null;
-      const sourceActivePane = hasWorkspace
-        ? group.activePane
-        : id === UNGROUPED_GROUP_ID
-          ? persisted.activePane
-          : "left";
+      const sourceActiveRightTabId = fromSource("activeRightTabId", null);
+      const sourceActivePane = fromSource("activePane", "left");
       return {
         id,
         name: typeof group.name === "string" ? group.name : "Untitled Group",
-        createdAt:
-          typeof group.createdAt === "number" &&
-          Number.isFinite(group.createdAt)
-            ? group.createdAt
-            : Date.now(),
+        createdAt: finiteNumberOr(group.createdAt, Date.now()),
         tabs,
         bookmarks,
         activeTabId,

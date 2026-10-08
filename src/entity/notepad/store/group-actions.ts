@@ -2,8 +2,7 @@ import type { StateCreator } from "zustand";
 
 import { UNGROUPED_GROUP_ID } from "../constant";
 import type { NotepadState } from "../type";
-import { createNoteTab, getNextTabNumber } from "../util";
-import { getAllTabs, getReservedTabIds } from "./workspace";
+import { allocateTab, createGroupEntry } from "./workspace";
 
 type GroupActions = Pick<
   NotepadState,
@@ -26,9 +25,9 @@ export const createGroupActions: StateCreator<
       let remainingTabs = source.tabs.filter((item) => item.id !== tabId);
       let nextTabNumber = state.nextTabNumber;
       if (remainingTabs.length === 0) {
-        const number = getNextTabNumber(getAllTabs(state), getReservedTabIds(state), nextTabNumber);
-        remainingTabs = [createNoteTab(number)];
-        nextTabNumber = number + 1;
+        const allocated = allocateTab(state);
+        remainingTabs = [allocated.tab];
+        nextTabNumber = allocated.nextTabNumber;
       }
 
       let rightTabIds = source.rightTabIds.filter((id) => id !== tabId);
@@ -74,31 +73,12 @@ export const createGroupActions: StateCreator<
     if (!trimmedName) return;
 
     const state = get();
-    const number = getNextTabNumber(
-      getAllTabs(state),
-      getReservedTabIds(state),
-      state.nextTabNumber,
-    );
-    const tab = createNoteTab(number);
+    const { tab, nextTabNumber } = allocateTab(state);
     const id = `group-${crypto.randomUUID()}`;
     set({
-      groups: [
-        ...state.groups,
-        {
-          id,
-          name: trimmedName,
-          createdAt: Date.now(),
-          tabs: [tab],
-          bookmarks: [],
-          activeTabId: tab.id,
-          rightTabIds: [],
-          activeRightTabId: null,
-          activePane: "left",
-          splitRatio: 0.5,
-        },
-      ],
+      groups: [...state.groups, createGroupEntry(id, trimmedName, Date.now(), tab)],
       activeGroupId: id,
-      nextTabNumber: number + 1,
+      nextTabNumber,
     });
   },
   renameGroup: (groupId, name) =>

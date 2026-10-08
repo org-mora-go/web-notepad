@@ -13,8 +13,8 @@ type Options = {
   onChange: (content: string) => void;
   commitContent: (content: string) => void;
   insertTab: (textarea: HTMLTextAreaElement) => void;
-  hasPendingTabInsertion?: () => boolean;
-  queueTabInsertion?: (textarea: HTMLTextAreaElement) => void;
+  hasPendingTabInsertion: () => boolean;
+  queueTabInsertion: (textarea: HTMLTextAreaElement) => void;
 };
 
 export function handleEditorKeyDown(
@@ -43,31 +43,20 @@ export function handleEditorKeyDown(
     ((event.shiftKey && event.key.toLowerCase() === "z") ||
       (!event.shiftKey && event.key.toLowerCase() === "y"));
 
-  if (isUndo) {
-    const history = undoHistoryRef.current.get(tabId) ?? [];
-    const previousContent = history.at(-1);
-    if (previousContent === undefined) return;
+  if (isUndo || isRedo) {
+    // Undo pops from the undo stack into the redo stack; redo does the reverse.
+    const [from, to] = isUndo
+      ? [undoHistoryRef.current, redoHistoryRef.current]
+      : [redoHistoryRef.current, undoHistoryRef.current];
+    const history = from.get(tabId) ?? [];
+    const restoredContent = history.at(-1);
+    if (restoredContent === undefined) return;
 
     event.preventDefault();
-    undoHistoryRef.current.set(tabId, history.slice(0, -1));
-    const redoHistory = redoHistoryRef.current.get(tabId) ?? [];
-    redoHistoryRef.current.set(tabId, [...redoHistory, contentRef.current]);
-    contentRef.current = previousContent;
-    onChange(previousContent);
-    return;
-  }
-
-  if (isRedo) {
-    const redoHistory = redoHistoryRef.current.get(tabId) ?? [];
-    const nextContent = redoHistory.at(-1);
-    if (nextContent === undefined) return;
-
-    event.preventDefault();
-    redoHistoryRef.current.set(tabId, redoHistory.slice(0, -1));
-    const history = undoHistoryRef.current.get(tabId) ?? [];
-    undoHistoryRef.current.set(tabId, [...history, contentRef.current]);
-    contentRef.current = nextContent;
-    onChange(nextContent);
+    from.set(tabId, history.slice(0, -1));
+    to.set(tabId, [...(to.get(tabId) ?? []), contentRef.current]);
+    contentRef.current = restoredContent;
+    onChange(restoredContent);
     return;
   }
 
@@ -98,13 +87,9 @@ export function handleEditorKeyDown(
 
   event.preventDefault();
   const textarea = event.currentTarget;
-  if (hasPendingTabInsertion?.()) return;
+  if (hasPendingTabInsertion()) return;
   if (isImeComposing(event.nativeEvent, composingRef.current)) {
-    if (queueTabInsertion) {
-      queueTabInsertion(textarea);
-    } else {
-      insertTab(textarea);
-    }
+    queueTabInsertion(textarea);
     return;
   }
   insertTab(textarea);

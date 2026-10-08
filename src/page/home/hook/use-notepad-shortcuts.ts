@@ -2,7 +2,8 @@
 
 import { type RefObject, useEffect } from "react";
 
-import { useNotepadStore } from "@/src/entity/notepad";
+import { isAltBackspace } from "@/src/entity";
+import { getActiveGroup, useNotepadStore } from "@/src/entity/notepad";
 
 import { useSelectAllShortcut } from "./use-select-all-shortcut";
 
@@ -12,6 +13,9 @@ type Options = {
   composingRef: RefObject<boolean>;
   requestCloseTab: (tabId: string) => void;
 };
+
+const matchesKey = (event: KeyboardEvent, ...names: string[]) =>
+  names.includes(event.key) || names.includes(event.code);
 
 export function useNotepadShortcuts({
   editorRef,
@@ -24,17 +28,22 @@ export function useNotepadShortcuts({
   useEffect(() => {
     const handleShortcut = (event: KeyboardEvent) => {
       const state = useNotepadStore.getState();
-      const activeGroup = state.groups.find(
-        (group) => group.id === state.activeGroupId,
-      );
+      const activeGroup = getActiveGroup(state);
       if (!activeGroup) return;
       const { tabs, rightTabIds } = activeGroup;
       const pane = rightTabIds.length === 0 ? "left" : activeGroup.activePane;
-      const paneRightTabs = tabs.filter((tab) => rightTabIds.includes(tab.id));
       const paneActiveId =
         pane === "right"
           ? (activeGroup.activeRightTabId ?? "")
           : activeGroup.activeTabId;
+      const editorOf = (target: "left" | "right") =>
+        target === "right" ? rightEditorRef.current : editorRef.current;
+      const flushActiveEditor = () => {
+        const activeEditor = editorOf(pane);
+        if (activeEditor && paneActiveId) {
+          state.updateTab(paneActiveId, activeEditor.value);
+        }
+      };
       const editor = editorRef.current;
 
       // The Korean IME swallows the first shortcut key while composing, so commit as soon as a modifier is held.
@@ -49,119 +58,47 @@ export function useNotepadShortcuts({
         editor.focus();
       }
 
-      const shouldCloseTab =
-        event.altKey &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        (event.key === "Backspace" || event.code === "Backspace");
-
-      if (shouldCloseTab) {
+      if (isAltBackspace(event)) {
         event.preventDefault();
         if (!event.repeat) requestCloseTab(paneActiveId);
         return;
       }
 
-      if (
-        event.altKey &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        event.key === "Tab"
-      ) {
+      if (!event.altKey || event.ctrlKey || event.metaKey) return;
+
+      if (event.key === "Tab") {
         event.preventDefault();
-        const activeEditor =
-          pane === "right" ? rightEditorRef.current : editorRef.current;
-        if (activeEditor && paneActiveId) {
-          state.updateTab(paneActiveId, activeEditor.value);
-        }
+        flushActiveEditor();
         state.addTab(pane);
         return;
       }
 
-      const isF11 = event.key === "F11" || event.code === "F11";
-      const isF12 = event.key === "F12" || event.code === "F12";
+      if (event.shiftKey) return;
 
-      if (
-        event.altKey &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !event.shiftKey &&
-        (isF11 || isF12)
-      ) {
+      const isF12 = matchesKey(event, "F12");
+      if (isF12 || matchesKey(event, "F11")) {
         event.preventDefault();
         const targetPane = isF12 ? "right" : "left";
         if (pane === targetPane || !paneActiveId) return;
 
-        const activeEditor =
-          pane === "right" ? rightEditorRef.current : editorRef.current;
-        if (activeEditor) {
-          state.updateTab(paneActiveId, activeEditor.value);
-        }
+        flushActiveEditor();
         state.moveTabToPane(paneActiveId, targetPane);
-
-        const targetEditor =
-          targetPane === "right" ? rightEditorRef.current : editorRef.current;
+        const targetEditor = editorOf(targetPane);
         window.requestAnimationFrame(() => targetEditor?.focus());
         return;
       }
 
-      const isArrowUp =
-        event.key === "ArrowUp" ||
-        event.key === "Up" ||
-        event.code === "ArrowUp";
-      const isArrowDown =
-        event.key === "ArrowDown" ||
-        event.key === "Down" ||
-        event.code === "ArrowDown";
-
-      if (
-        event.altKey &&
-        !event.ctrlKey &&
-        !event.metaKey &&
-        !event.shiftKey &&
-        (isArrowUp || isArrowDown)
-      ) {
+      const isArrowUp = matchesKey(event, "ArrowUp", "Up");
+      if (isArrowUp || matchesKey(event, "ArrowDown", "Down")) {
         event.preventDefault();
-        const offset = isArrowUp ? -1 : 1;
-
-        if (rightTabIds.length === 0) {
-          const currentIndex = tabs.findIndex((tab) => tab.id === paneActiveId);
-          const nextIndex = currentIndex + offset;
-          if (currentIndex < 0 || nextIndex < 0 || nextIndex >= tabs.length)
-            return;
-          state.selectTab(tabs[nextIndex].id);
-          return;
-        }
-
-        const leftTabs = tabs.filter((tab) => !rightTabIds.includes(tab.id));
-        const rightTabs = paneRightTabs;
-        if (pane === "left") {
-          const currentIndex = leftTabs.findIndex(
-            (tab) => tab.id === paneActiveId,
-          );
-          if (currentIndex < 0) return;
-
-          if (isArrowUp && currentIndex > 0) {
-            state.selectTab(leftTabs[currentIndex - 1].id);
-          } else if (isArrowDown && currentIndex < leftTabs.length - 1) {
-            state.selectTab(leftTabs[currentIndex + 1].id);
-          } else if (isArrowDown && currentIndex === leftTabs.length - 1) {
-            state.selectTab(rightTabs[0].id);
-          }
-          return;
-        }
-
-        const currentIndex = rightTabs.findIndex(
-          (tab) => tab.id === paneActiveId,
-        );
-        if (currentIndex < 0) return;
-
-        if (isArrowUp && currentIndex > 0) {
-          state.selectTab(rightTabs[currentIndex - 1].id);
-        } else if (isArrowUp && currentIndex === 0) {
-          state.selectTab(leftTabs[leftTabs.length - 1].id);
-        } else if (isArrowDown && currentIndex < rightTabs.length - 1) {
-          state.selectTab(rightTabs[currentIndex + 1].id);
-        }
+        // Navigation runs through the left pane and then continues into the right pane.
+        const orderedTabs = [
+          ...tabs.filter((tab) => !rightTabIds.includes(tab.id)),
+          ...tabs.filter((tab) => rightTabIds.includes(tab.id)),
+        ];
+        const currentIndex = orderedTabs.findIndex((tab) => tab.id === paneActiveId);
+        const nextTab = orderedTabs[currentIndex + (isArrowUp ? -1 : 1)];
+        if (currentIndex >= 0 && nextTab) state.selectTab(nextTab.id);
       }
     };
 

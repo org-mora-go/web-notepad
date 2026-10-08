@@ -1,11 +1,12 @@
 import type { StateCreator } from "zustand";
 
 import type { NotepadState, TabColor } from "../type";
-import { createNoteTab, getNextTabNumber, getTitleFromContent } from "../util";
+import { getTitleFromContent, sanitizeSelectedLines } from "../util";
 import {
+  activateTab,
+  allocateTab,
   getActiveGroup,
-  getAllTabs,
-  getReservedTabIds,
+  patchTabAndBookmark,
   updateGroup,
 } from "./workspace";
 
@@ -33,12 +34,7 @@ export const createTabActions: StateCreator<
     const state = get();
     const group = getActiveGroup(state);
     if (!group) return;
-    const number = getNextTabNumber(
-      getAllTabs(state),
-      getReservedTabIds(state),
-      state.nextTabNumber,
-    );
-    const tab = createNoteTab(number);
+    const { tab, nextTabNumber } = allocateTab(state);
     const toRight = pane === "right" && group.rightTabIds.length > 0;
 
     set({
@@ -53,18 +49,14 @@ export const createTabActions: StateCreator<
         activeTabId: toRight ? current.activeTabId : tab.id,
         activePane: toRight ? "right" : "left",
       })),
-      nextTabNumber: number + 1,
+      nextTabNumber,
     });
   },
   selectTab: (tabId) =>
     set((state) => {
       const group = getActiveGroup(state);
       if (!group || !group.tabs.some((tab) => tab.id === tabId)) return state;
-      return updateGroup(state, group.id, (current) =>
-        current.rightTabIds.includes(tabId)
-          ? { ...current, activeRightTabId: tabId, activePane: "right" }
-          : { ...current, activeTabId: tabId, activePane: "left" },
-      );
+      return updateGroup(state, group.id, (current) => activateTab(current, tabId));
     }),
   updateTab: (tabId, content) =>
     set((state) => {
@@ -74,47 +66,31 @@ export const createTabActions: StateCreator<
 
       const nextContent = typeof content === "string" ? content : "";
       const nextTitle = getTitleFromContent(nextContent, tab.title);
-      return updateGroup(state, group.id, (current) => ({
-        ...current,
-        tabs: current.tabs.map((item) =>
-          item.id === tabId
-            ? {
-                ...item,
-                title: nextTitle,
-                content: nextContent,
-                updatedAt: Date.now(),
-              }
-            : item,
+      return updateGroup(state, group.id, (current) =>
+        patchTabAndBookmark(
+          current,
+          tabId,
+          { title: nextTitle, content: nextContent, updatedAt: Date.now() },
+          { title: nextTitle, content: nextContent },
         ),
-        bookmarks: current.bookmarks.map((bookmark) =>
-          bookmark.sourceTabId === tabId
-            ? { ...bookmark, title: nextTitle, content: nextContent }
-            : bookmark,
-        ),
-      }));
+      );
     }),
   setTabSelectedLines: (tabId, selectedLines) =>
     set((state) => {
       const group = getActiveGroup(state);
       const tab = group?.tabs.find((item) => item.id === tabId);
       if (!group || !tab) return state;
-      const lineCount = tab.content.split("\n").length;
-      const nextLines = [...new Set(selectedLines.filter(
-        (line) => Number.isInteger(line) && line >= 0 && line < lineCount,
-      ))].sort((first, second) => first - second);
+      const nextLines = sanitizeSelectedLines(selectedLines, tab.content);
       if (nextLines.length === tab.selectedLines.length &&
           nextLines.every((line, index) => line === tab.selectedLines[index])) return state;
-      return updateGroup(state, group.id, (current) => ({
-        ...current,
-        tabs: current.tabs.map((item) =>
-          item.id === tabId ? { ...item, selectedLines: nextLines } : item,
+      return updateGroup(state, group.id, (current) =>
+        patchTabAndBookmark(
+          current,
+          tabId,
+          { selectedLines: nextLines },
+          { selectedLines: [...nextLines] },
         ),
-        bookmarks: current.bookmarks.map((bookmark) =>
-          bookmark.sourceTabId === tabId
-            ? { ...bookmark, selectedLines: [...nextLines] }
-            : bookmark,
-        ),
-      }));
+      );
     }),
   moveTab: (fromTabId, toTabId) =>
     set((state) => {
@@ -139,28 +115,19 @@ export const createTabActions: StateCreator<
       if (!group || !tab) return state;
       const colorIndex = TAB_COLORS.indexOf(tab.tabColor);
       const nextColor = TAB_COLORS[(colorIndex + 1) % TAB_COLORS.length];
-      return updateGroup(state, group.id, (current) => ({
-        ...current,
-        tabs: current.tabs.map((tab) =>
-          tab.id === tabId ? { ...tab, tabColor: nextColor } : tab,
-        ),
-        bookmarks: current.bookmarks.map((bookmark) =>
-          bookmark.sourceTabId === tabId
-            ? { ...bookmark, tabColor: nextColor }
-            : bookmark,
-        ),
-      }));
+      return updateGroup(state, group.id, (current) =>
+        patchTabAndBookmark(current, tabId, { tabColor: nextColor }, { tabColor: nextColor }),
+      );
     }),
   togglePin: (tabId) =>
     set((state) => {
       const group = getActiveGroup(state);
       if (!group) return state;
-      return updateGroup(state, group.id, (current) => ({
-        ...current,
-        tabs: current.tabs.map((tab) =>
-          tab.id === tabId ? { ...tab, pinned: !tab.pinned } : tab,
-        ),
-      }));
+      const tab = group.tabs.find((item) => item.id === tabId);
+      if (!tab) return state;
+      return updateGroup(state, group.id, (current) =>
+        patchTabAndBookmark(current, tabId, { pinned: !tab.pinned }),
+      );
     }),
   closeTab: (tabId) => {
     const state = get();
@@ -170,12 +137,7 @@ export const createTabActions: StateCreator<
 
     const remainingTabs = group.tabs.filter((item) => item.id !== tabId);
     if (remainingTabs.length === 0) {
-      const number = getNextTabNumber(
-        getAllTabs(state),
-        getReservedTabIds(state),
-        state.nextTabNumber,
-      );
-      const replacement = createNoteTab(number);
+      const { tab: replacement, nextTabNumber } = allocateTab(state);
       set({
         ...updateGroup(state, group.id, (current) => ({
           ...current,
@@ -185,7 +147,7 @@ export const createTabActions: StateCreator<
           activeRightTabId: null,
           activePane: "left",
         })),
-        nextTabNumber: number + 1,
+        nextTabNumber,
       });
       return;
     }

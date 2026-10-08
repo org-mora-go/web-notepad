@@ -2,7 +2,7 @@
 
 import { type RefObject, useCallback, useState } from "react";
 
-import { type NoteTab, useNotepadStore } from "@/src/entity/notepad";
+import { getActiveGroup, type NoteTab, useNotepadStore } from "@/src/entity/notepad";
 
 type Options = {
   editorRef: RefObject<HTMLTextAreaElement | null>;
@@ -23,7 +23,7 @@ export function useHomeTabActions({
 
   const requestCloseTab = useCallback((tabId: string) => {
     const state = useNotepadStore.getState();
-    const group = state.groups.find((item) => item.id === state.activeGroupId);
+    const group = getActiveGroup(state);
     const tab = group?.tabs.find((item) => item.id === tabId);
     if (!group || !tab || tab.pinned) return;
 
@@ -43,7 +43,7 @@ export function useHomeTabActions({
 
   const addTabToPane = (pane: "left" | "right") => {
     const state = useNotepadStore.getState();
-    const group = state.groups.find((item) => item.id === state.activeGroupId);
+    const group = getActiveGroup(state);
     if (!group) return;
     const tabId = pane === "right" ? group.activeRightTabId : group.activeTabId;
     const editor = pane === "right" ? rightEditorRef.current : editorRef.current;

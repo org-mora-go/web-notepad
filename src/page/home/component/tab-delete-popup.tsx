@@ -1,5 +1,6 @@
 import { AlertTriangle, Trash2, X } from "lucide-react";
-import { useEffect, useId, useRef } from "react";
+
+import { isAltBackspace, useConfirmDialog } from "@/src/entity";
 
 type Props = {
   onConfirm: () => void;
@@ -7,63 +8,18 @@ type Props = {
 };
 
 export function TabDeletePopup({ onConfirm, onCancel }: Props) {
-  const dialogRef = useRef<HTMLDialogElement>(null);
-  const cancelButtonRef = useRef<HTMLButtonElement>(null);
-  const popupId = useId();
-
-  useEffect(() => {
-    const dialog = dialogRef.current;
-    if (!dialog) return;
-    dialog.showModal();
-    cancelButtonRef.current?.focus();
-    return () => {
-      if (dialog.open) dialog.close();
-    };
-  }, []);
-
-  const closePopup = (action: () => void) => {
-    dialogRef.current?.close();
-    action();
-  };
+  const { dialogProps, cancelButtonRef, popupId, close } = useConfirmDialog({
+    onCancel,
+    onKeyDown: (event, closeWith) => {
+      if (!isAltBackspace(event)) return false;
+      event.preventDefault();
+      if (!event.repeat) closeWith(onConfirm);
+      return true;
+    },
+  });
 
   return (
-    <dialog
-      ref={dialogRef}
-      className="tab-delete-popup"
-      role="alertdialog"
-      aria-modal="true"
-      aria-labelledby={`${popupId}-title`}
-      aria-describedby={`${popupId}-message`}
-      onKeyDown={(event) => {
-        event.stopPropagation();
-        if (
-          event.altKey && !event.ctrlKey && !event.metaKey &&
-          (event.key === "Backspace" || event.code === "Backspace")
-        ) {
-          event.preventDefault();
-          if (!event.repeat) closePopup(onConfirm);
-          return;
-        }
-        if (event.key !== "Tab") return;
-        const buttons = event.currentTarget.querySelectorAll<HTMLButtonElement>("button:not(:disabled)");
-        const firstButton = buttons[0];
-        const lastButton = buttons[buttons.length - 1];
-        if (event.shiftKey && document.activeElement === firstButton) {
-          event.preventDefault();
-          lastButton.focus();
-        } else if (!event.shiftKey && document.activeElement === lastButton) {
-          event.preventDefault();
-          firstButton.focus();
-        }
-      }}
-      onCancel={(event) => {
-        event.preventDefault();
-        closePopup(onCancel);
-      }}
-      onClick={(event) => {
-        if (event.target === event.currentTarget) closePopup(onCancel);
-      }}
-    >
+    <dialog className="tab-delete-popup" {...dialogProps}>
       <div className="tab-delete-popup-content">
         <div className="tab-delete-popup-header">
           <div className="tab-delete-popup-title">
@@ -75,18 +31,18 @@ export function TabDeletePopup({ onConfirm, onCancel }: Props) {
             type="button"
             aria-label="Close deletion confirmation"
             title="Close"
-            onClick={() => closePopup(onCancel)}
+            onClick={() => close(onCancel)}
           >
             <X size={16} />
           </button>
         </div>
         <p id={`${popupId}-message`}>Do you want to delete this tab?</p>
         <div className="tab-delete-popup-actions">
-          <button ref={cancelButtonRef} type="button" onClick={() => closePopup(onCancel)}>
+          <button ref={cancelButtonRef} type="button" onClick={() => close(onCancel)}>
             <X size={14} aria-hidden="true" />
             Cancel
           </button>
-          <button className="tab-delete-popup-confirm" type="button" onClick={() => closePopup(onConfirm)}>
+          <button className="tab-delete-popup-confirm" type="button" onClick={() => close(onConfirm)}>
             <Trash2 size={14} aria-hidden="true" />
             Delete
           </button>

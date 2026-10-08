@@ -8,6 +8,7 @@ import { createBookmarkActions } from "./bookmark-actions";
 import { createGroupActions } from "./group-actions";
 import { createPaneActions } from "./pane-actions";
 import { createTabActions } from "./tab-actions";
+import { createGroupEntry } from "./workspace";
 
 export {
   MAX_SPLIT_RATIO,
@@ -24,20 +25,7 @@ export const useNotepadStore = create<NotepadState>()(
       ...createGroupActions(set, get, store),
       nextTabNumber: 2,
       activeGroupId: UNGROUPED_GROUP_ID,
-      groups: [
-        {
-          id: UNGROUPED_GROUP_ID,
-          name: "Ungrouped",
-          createdAt: 0,
-          tabs: [createNoteTab(1)],
-          bookmarks: [],
-          activeTabId: "tab-1",
-          rightTabIds: [],
-          activeRightTabId: null,
-          activePane: "left",
-          splitRatio: 0.5,
-        },
-      ],
+      groups: [createGroupEntry(UNGROUPED_GROUP_ID, "Ungrouped", 0, createNoteTab(1))],
     }),
     {
       name: "web-notepad-storage",

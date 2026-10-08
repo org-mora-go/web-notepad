@@ -1,11 +1,11 @@
 import type { StateCreator } from "zustand";
 
 import type { NotepadState } from "../type";
-import { createNoteTab, getNextTabNumber, getTitleFromContent } from "../util";
+import { getTitleFromContent } from "../util";
 import {
+  activateTab,
+  allocateTab,
   getActiveGroup,
-  getAllTabs,
-  getReservedTabIds,
   updateGroup,
 } from "./workspace";
 
@@ -69,31 +69,14 @@ export const createBookmarkActions: StateCreator<
 
     const sourceTab = group.tabs.find((tab) => tab.id === bookmark.sourceTabId);
     if (sourceTab) {
-      const inRightPane = group.rightTabIds.includes(sourceTab.id);
-      set(
-        inRightPane
-          ? updateGroup(state, group.id, (current) => ({
-              ...current,
-              activeRightTabId: sourceTab.id,
-              activePane: "right",
-            }))
-          : updateGroup(state, group.id, (current) => ({
-              ...current,
-              activeTabId: sourceTab.id,
-              activePane: "left",
-            })),
-      );
+      set(updateGroup(state, group.id, (current) => activateTab(current, sourceTab.id)));
       return;
     }
 
-    const number = getNextTabNumber(
-      getAllTabs(state),
-      getReservedTabIds(state),
-      state.nextTabNumber,
-    );
-    const sourceTabId = bookmark.sourceTabId || `tab-${number}`;
+    const { tab: blankTab, number } = allocateTab(state);
+    const sourceTabId = bookmark.sourceTabId || blankTab.id;
     const tab = {
-      ...createNoteTab(number),
+      ...blankTab,
       id: sourceTabId,
       title: bookmark.title,
       content: bookmark.content,
