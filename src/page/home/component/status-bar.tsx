@@ -1,6 +1,6 @@
 "use client";
 
-import { Bookmark, Ghost, Keyboard, Layers } from "lucide-react";
+import { Bookmark, Ghost, Keyboard, Layers, Search } from "lucide-react";
 
 type Props = {
   closedOpen: boolean;
@@ -10,10 +10,12 @@ type Props = {
   groupCount: number;
   activeGroupName: string;
   groupsOpen: boolean;
+  globalSearchOpen: boolean;
   onToggleClosed: () => void;
   onToggleBookmarks: () => void;
   onToggleShortcuts: () => void;
   onToggleGroups: () => void;
+  onToggleGlobalSearch: () => void;
 };
 
 export function StatusBar({
@@ -24,15 +26,42 @@ export function StatusBar({
   groupCount,
   activeGroupName,
   groupsOpen,
+  globalSearchOpen,
   onToggleClosed,
   onToggleBookmarks,
   onToggleShortcuts,
   onToggleGroups,
+  onToggleGlobalSearch,
 }: Props) {
   return (
     <footer className="status-bar">
       <div className="status-meta">
+        <button
+          className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
+          type="button"
+          onClick={onToggleShortcuts}
+          aria-expanded={shortcutsOpen}
+          aria-controls="shortcuts-panel"
+          aria-label="단축키 안내"
+        >
+          <Keyboard size={16} strokeWidth={1.8} />
+          <span>SHORTCUT</span>
+        </button>
         <div className="status-actions">
+          <button
+            className={`status-command global-search-command ${globalSearchOpen ? "is-active" : ""}`}
+            type="button"
+            onClick={onToggleGlobalSearch}
+            aria-expanded={globalSearchOpen}
+            aria-controls="global-search-panel"
+            aria-label="전체 검색"
+          >
+            <Search size={16} strokeWidth={1.8} />
+            <span className="global-search-label">SEARCH</span>
+            <span className="status-separator" aria-hidden="true">
+              |
+            </span>
+          </button>
           <button
             className={`status-command closed-command ${closedOpen ? "is-active" : ""}`}
             type="button"
@@ -43,20 +72,6 @@ export function StatusBar({
           >
             <Ghost size={16} strokeWidth={1.8} />
             <span className="status-label closed-status-label">CLOSED</span>
-            <span className="status-separator" aria-hidden="true">
-              |
-            </span>
-          </button>
-          <button
-            className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
-            type="button"
-            onClick={onToggleShortcuts}
-            aria-expanded={shortcutsOpen}
-            aria-controls="shortcuts-panel"
-            aria-label="단축키 안내"
-          >
-            <Keyboard size={16} strokeWidth={1.8} />
-            <span>SHORTCUT</span>
             <span className="status-separator" aria-hidden="true">
               |
             </span>

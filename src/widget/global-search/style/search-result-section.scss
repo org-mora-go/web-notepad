@@ -1,0 +1,15 @@
+@use "../../../entity/style/variable" as v;
+
+.global-search-section {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 20px;
+
+  h3 {
+    margin: 0 0 2px;
+    color: v.$muted;
+    font-size: 12px;
+    font-weight: 500;
+    text-transform: uppercase;
+  }
+}

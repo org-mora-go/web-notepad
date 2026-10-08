@@ -1,9 +1,10 @@
 "use client";
 
+import type { ReactNode } from "react";
 import { useEffect, useRef, useState } from "react";
 
 type Props = {
-  content: string;
+  content: ReactNode;
 };
 
 // Clamped note content with a "더보기/간소화" toggle shown only when it overflows.

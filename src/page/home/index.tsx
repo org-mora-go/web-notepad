@@ -3,7 +3,7 @@
 import "./index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { Bookmark, Closed, Group, Shortcut } from "@/src/widget";
+import { Bookmark, Closed, GlobalSearch, Group, Shortcut } from "@/src/widget";
 
 import { Loading, PaneView, StatusBar, TabDeletePopup } from "./component";
 
@@ -11,8 +11,9 @@ export function Home() {
   const {
     hydrated,
     closedTabs,
-    restoreClosedTab,
     removeClosedTab,
+    closedSearchQuery,
+    setClosedSearchQuery,
     pendingCloseTabId,
     cancelCloseTab,
     confirmCloseTab,
@@ -20,7 +21,10 @@ export function Home() {
     toggleSidePanel,
     closeSidePanels,
     activeGroupId,
-    selectGroup,
+    selectGroupAndClosePanel,
+    openBookmarkAndClosePanel,
+    openBookmarkInCurrentGroupAndClosePanel,
+    restoreClosedTabAndClosePanel,
     activeTab,
     split,
     bookmarks,
@@ -29,7 +33,6 @@ export function Home() {
     activeGroupName,
     leftPaneProps,
     rightPaneProps,
-    openBookmark,
     removeBookmark,
     createGroup,
     renameGroup,
@@ -56,10 +59,12 @@ export function Home() {
           groupCount={groupCount}
           activeGroupName={activeGroupName}
           groupsOpen={openPanel === "groups"}
+          globalSearchOpen={openPanel === "global-search"}
           onToggleClosed={() => toggleSidePanel("closed")}
           onToggleShortcuts={() => toggleSidePanel("shortcuts")}
           onToggleBookmarks={() => toggleSidePanel("bookmarks")}
           onToggleGroups={() => toggleSidePanel("groups")}
+          onToggleGlobalSearch={() => toggleSidePanel("global-search")}
         />
       </section>
 
@@ -67,10 +72,7 @@ export function Home() {
         bookmarks={bookmarks}
         open={openPanel === "bookmarks"}
         onClose={closeSidePanels}
-        onOpen={(bookmarkId) => {
-          openBookmark(bookmarkId);
-          closeSidePanels();
-        }}
+        onOpen={openBookmarkInCurrentGroupAndClosePanel}
         onRemove={removeBookmark}
       />
       <Group
@@ -79,23 +81,31 @@ export function Home() {
         open={openPanel === "groups"}
         onClose={closeSidePanels}
         onCreate={createGroup}
-        onSelect={(groupId) => {
-          selectGroup(groupId);
-          closeSidePanels();
-        }}
+        onSelect={selectGroupAndClosePanel}
         onRemove={removeGroup}
         onRename={renameGroup}
       />
       <Closed
         closedTabs={closedTabs}
         groups={groups}
+        searchQuery={closedSearchQuery}
         open={openPanel === "closed"}
         onClose={closeSidePanels}
-        onRestore={(entryId) => {
-          restoreClosedTab(entryId);
-          closeSidePanels();
-        }}
+        onSearchQueryChange={setClosedSearchQuery}
+        onRestore={restoreClosedTabAndClosePanel}
         onRemove={removeClosedTab}
+      />
+      <GlobalSearch
+        groups={groups}
+        closedTabs={closedTabs}
+        open={openPanel === "global-search"}
+        onClose={closeSidePanels}
+        onSelectGroup={selectGroupAndClosePanel}
+        onOpenBookmark={openBookmarkAndClosePanel}
+        onOpenClosedSearch={(query) => {
+          setClosedSearchQuery(query);
+          toggleSidePanel("closed");
+        }}
       />
       <Shortcut
         open={openPanel === "shortcuts"}

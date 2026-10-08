@@ -12,6 +12,9 @@ type Options = {
   rightEditorRef: RefObject<HTMLTextAreaElement | null>;
   composingRef: RefObject<boolean>;
   requestCloseTab: (tabId: string) => void;
+  onSelectTab: (tabId: string) => void;
+  onAddTab: (pane: "left" | "right") => void;
+  onMoveTabToPane: (tabId: string, pane: "left" | "right") => void;
 };
 
 const matchesKey = (event: KeyboardEvent, ...names: string[]) =>
@@ -22,6 +25,9 @@ export function useNotepadShortcuts({
   rightEditorRef,
   composingRef,
   requestCloseTab,
+  onSelectTab,
+  onAddTab,
+  onMoveTabToPane,
 }: Options) {
   useSelectAllShortcut({ editorRef, rightEditorRef });
 
@@ -69,7 +75,7 @@ export function useNotepadShortcuts({
       if (event.key === "Tab") {
         event.preventDefault();
         flushActiveEditor();
-        state.addTab(pane);
+        onAddTab(pane);
         return;
       }
 
@@ -82,7 +88,7 @@ export function useNotepadShortcuts({
         if (pane === targetPane || !paneActiveId) return;
 
         flushActiveEditor();
-        state.moveTabToPane(paneActiveId, targetPane);
+        onMoveTabToPane(paneActiveId, targetPane);
         const targetEditor = editorOf(targetPane);
         window.requestAnimationFrame(() => targetEditor?.focus());
         return;
@@ -98,11 +104,19 @@ export function useNotepadShortcuts({
         ];
         const currentIndex = orderedTabs.findIndex((tab) => tab.id === paneActiveId);
         const nextTab = orderedTabs[currentIndex + (isArrowUp ? -1 : 1)];
-        if (currentIndex >= 0 && nextTab) state.selectTab(nextTab.id);
+        if (currentIndex >= 0 && nextTab) onSelectTab(nextTab.id);
       }
     };
 
     window.addEventListener("keydown", handleShortcut);
     return () => window.removeEventListener("keydown", handleShortcut);
-  }, [composingRef, editorRef, rightEditorRef, requestCloseTab]);
+  }, [
+    composingRef,
+    editorRef,
+    onAddTab,
+    onMoveTabToPane,
+    onSelectTab,
+    requestCloseTab,
+    rightEditorRef,
+  ]);
 }

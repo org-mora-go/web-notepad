@@ -2,9 +2,11 @@
 
 .status-bar {
   display: flex;
+  position: relative;
   align-items: center;
   justify-content: space-between;
-  padding: 3px 21px 6px 16px;
+  min-width: 0;
+  padding: 3px 21px 6px 21px;
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
@@ -26,6 +28,7 @@
     flex: 0 1 auto;
     justify-content: flex-end;
     min-width: 0;
+    max-width: 100%;
   }
 
   .status-separator {
@@ -61,13 +64,15 @@
   }
 
   .shortcut-command {
+    position: absolute;
+    left: 21px;
+
     @media (max-width: 640px) {
       display: none;
     }
   }
 
-  // The narrow mobile bar keeps only the CLOSED icon.
-  .closed-status-label {
+  .global-search-label {
     @media (max-width: 640px) {
       display: none;
     }
@@ -94,10 +99,22 @@
   }
 
   @media (max-width: 640px) {
+    min-height: 52px;
     padding: 3px 15px 6px 10px;
+    font-size: 16px;
 
     .status-command {
       gap: 5px;
+
+      > span:not(.status-separator) {
+        font-size: 16px;
+      }
+
+      svg {
+        width: 20px;
+        height: 20px;
+        flex: 0 0 20px;
+      }
     }
 
     .status-command .status-separator {

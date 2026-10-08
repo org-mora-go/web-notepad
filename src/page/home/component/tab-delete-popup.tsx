@@ -9,7 +9,7 @@ export function TabDeletePopup({ onConfirm, onCancel }: Props) {
   return (
     <ConfirmPopup
       title="Delete tab"
-      message="Do you want to delete this tab?"
+      message="Do you want to close this tab?"
       closeLabel="Close deletion confirmation"
       closeTitle="Close"
       onConfirm={onConfirm}

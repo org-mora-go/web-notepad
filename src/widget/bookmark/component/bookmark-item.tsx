@@ -5,23 +5,34 @@ import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 import type { BookmarkEntry } from "@/src/entity/notepad";
 import { ExpandableContent } from "@/src/entity/ui";
 import { formatDate } from "@/src/entity/util";
+import { SearchHighlight } from "@/src/feature/search-field/component";
 
 type Props = {
   bookmark: BookmarkEntry;
+  searchQuery: string;
   onOpen: (bookmarkId: string) => void;
   onRemove: (bookmarkId: string) => void;
 };
 
-export function BookmarkItem({ bookmark, onOpen, onRemove }: Props) {
+export function BookmarkItem({ bookmark, searchQuery, onOpen, onRemove }: Props) {
   return (
     <article className="bookmark-item">
       <div className="bookmark-item-heading">
-        <strong>{bookmark.title}</strong>
+        <strong>
+          <SearchHighlight text={bookmark.title} query={searchQuery} />
+        </strong>
         <time dateTime={new Date(bookmark.createdAt).toISOString()}>
           {formatDate(bookmark.createdAt)}
         </time>
       </div>
-      <ExpandableContent content={bookmark.content || "Empty note"} />
+      <ExpandableContent
+        content={
+          <SearchHighlight
+            text={bookmark.content || "Empty note"}
+            query={searchQuery}
+          />
+        }
+      />
       <div className="bookmark-actions">
         <button type="button" onClick={() => onOpen(bookmark.id)}>
           <BookmarkIcon size={14} />
