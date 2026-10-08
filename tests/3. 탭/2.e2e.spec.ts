@@ -1,16 +1,20 @@
 import { expect, test } from "@playwright/test";
 
+import { addTabButton } from "../__util__";
+
 test("2. 새 탭을 추가하고 기존 탭을 선택할 수 있다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
-  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await page.goto("/");
   const tabs = page.locator('[role="tab"]');
+  const titles = page.locator(".tab-item .tab-title");
+  const editor = page.locator("textarea");
+  await addTabButton(page).click();
   await expect(tabs).toHaveCount(2);
-  await expect(page.locator(".tab-item .tab-title").nth(1)).toHaveText("-");
-  await page.locator("textarea").fill("second note");
-  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await expect(titles.nth(1)).toHaveText("-");
+  await editor.fill("second note");
+  await addTabButton(page).click();
   await expect(tabs).toHaveCount(3);
-  await expect(page.locator(".tab-item .tab-title").nth(2)).toHaveText("-");
+  await expect(titles.nth(2)).toHaveText("-");
   await tabs.nth(1).click();
   await expect(tabs.nth(1)).toHaveAttribute("aria-selected", "true");
-  await expect(page.locator("textarea")).toHaveValue("second note");
+  await expect(editor).toHaveValue("second note");
 });

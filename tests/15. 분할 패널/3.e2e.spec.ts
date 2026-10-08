@@ -4,7 +4,6 @@ import { seedSplitState } from "./__util__";
 
 test("3. 각 패널은 자체 탭 목록과 활성 탭을 가진다", async ({ page }) => {
   await seedSplitState(page);
-  await page.goto("http://localhost:3000");
   const leftPane = page.locator(".pane-slot").nth(0);
   const rightPane = page.locator(".pane-slot").nth(1);
   await expect(leftPane.locator(".tab-title")).toHaveText([/^left$/i]);

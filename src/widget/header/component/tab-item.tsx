@@ -1,6 +1,11 @@
 import { Bookmark, Pin, X } from "lucide-react";
+import type { DragEvent } from "react";
 
 import type { NoteTab } from "@/src/entity/notepad";
+
+// Mobile opens the tab menu with a double tap instead of a right click.
+const isTouchLayout = () =>
+  window.matchMedia("(max-width: 640px), (pointer: coarse)").matches;
 
 type Props = {
   tab: NoteTab;
@@ -34,6 +39,11 @@ export function TabItem({
   onDragEnd,
 }: Props) {
   const dirty = tab.content.trim() !== "" && tab.content !== tab.savedContent;
+  const markDropTarget = (event: DragEvent<HTMLDivElement>) => {
+    if (!dragActive || draggingTabId === tab.id) return;
+    event.preventDefault();
+    onDropTargetChange(tab.id);
+  };
 
   return (
     <div
@@ -46,7 +56,7 @@ export function TabItem({
       draggable
       onContextMenu={(event) => {
         event.preventDefault();
-        if (window.matchMedia("(max-width: 640px), (pointer: coarse)").matches) return;
+        if (isTouchLayout()) return;
         onContextMenu(tab.id, event.clientX, event.clientY);
       }}
       onAuxClick={(event) => {
@@ -58,16 +68,8 @@ export function TabItem({
         event.dataTransfer.setData("text/plain", tab.id);
         onDragStateChange(tab.id);
       }}
-      onDragOver={(event) => {
-        if (!dragActive || draggingTabId === tab.id) return;
-        event.preventDefault();
-        onDropTargetChange(tab.id);
-      }}
-      onDragEnter={(event) => {
-        if (!dragActive || draggingTabId === tab.id) return;
-        event.preventDefault();
-        onDropTargetChange(tab.id);
-      }}
+      onDragOver={markDropTarget}
+      onDragEnter={markDropTarget}
       onDragLeave={() => onDropTargetChange(null)}
       onDrop={(event) => {
         event.preventDefault();
@@ -92,7 +94,7 @@ export function TabItem({
         aria-selected={active}
         onClick={() => onSelect(tab.id)}
         onDoubleClick={(event) => {
-          if (!window.matchMedia("(max-width: 640px), (pointer: coarse)").matches) return;
+          if (!isTouchLayout()) return;
           event.preventDefault();
           onContextMenu(tab.id, event.clientX, event.clientY);
         }}

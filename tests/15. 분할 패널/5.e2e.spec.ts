@@ -1,10 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { confirmTabDelete } from "../__util__";
 import { seedSplitState } from "./__util__";
 
 test("5. 오른쪽 패널의 탭을 모두 옮기거나 닫으면 분할 화면이 해제된다", async ({ page }) => {
   await seedSplitState(page);
-  await page.goto("http://localhost:3000");
   const leftPane = page.locator(".pane-slot").nth(0);
   const rightPane = page.locator(".pane-slot").nth(1);
   await expect(page.locator(".body")).toHaveCount(2);
@@ -20,7 +20,6 @@ test("5. 오른쪽 패널의 탭을 모두 옮기거나 닫으면 분할 화면�
   await rightPane.locator(".tab-item").nth(1).locator(".tab-close").click();
   await expect(rightPane.locator(".tab-item")).toHaveCount(1);
   await rightPane.locator(".tab-close").click();
-  await page.getByRole("alertdialog", { name: "Delete tab" })
-    .getByRole("button", { name: "Delete", exact: true }).click();
+  await confirmTabDelete(page);
   await expect(page.locator(".body")).toHaveCount(1);
 });

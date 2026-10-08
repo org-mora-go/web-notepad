@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test";
 
+import { addTabButton } from "../__util__";
+
 test("2. 왼쪽 탭을 오른쪽 분할 영역에 드롭하면 분할 화면을 만든다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
   await editor.fill("first");
-  await page.getByRole("button", { name: "새 탭 추가" }).click();
+  await addTabButton(page).click();
   await editor.fill("second");
   await expect(page.locator(".body")).toHaveCount(1);
 

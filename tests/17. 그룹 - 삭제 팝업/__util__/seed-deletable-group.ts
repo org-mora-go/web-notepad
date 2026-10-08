@@ -1,14 +1,15 @@
 import type { Page } from "@playwright/test";
 
+import { bookmarkActiveTab, createGroups, groupsCommand } from "../../__util__";
+
+// Creates an "Archive" group with a bookmarked note and returns the delete-flow locators.
 export async function seedDeletableGroup(page: Page) {
-  await page.goto("http://localhost:3000");
-  const toggle = page.locator('button[aria-controls="groups-panel"]');
-  await toggle.click();
-  await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Archive");
-  await page.getByRole("button", { name: "그룹 생성" }).click();
-  await page.getByRole("button", { name: "그룹 닫기" }).click();
-  await page.locator("textarea").fill("archived note");
-  await page.locator('.tab-item.is-active [role="tab"]').click({ button: "right" });
-  await page.getByRole("menuitem", { name: "Bookmark", exact: true }).click();
-  return { toggle };
+  await page.goto("/");
+  await createGroups(page, "Archive");
+  await bookmarkActiveTab(page, "archived note");
+  return {
+    toggle: groupsCommand(page),
+    deleteButton: page.getByRole("button", { name: "Archive 그룹 삭제" }),
+    popup: page.getByRole("alertdialog", { name: "Delete group" }),
+  };
 }

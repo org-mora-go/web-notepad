@@ -1,16 +1,17 @@
 import { expect, test } from "@playwright/test";
 
 import { tabColors } from "../__constant__";
+import { lineButtons } from "../__util__";
 
 test("3. 클릭과 키보드로 선택한 줄 번호를 활성 탭 색상으로 강조한다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
   await editor.fill("first\nsecond\nthird");
   const tab = page.locator(".tab-item.is-active");
   const colorButton = tab.locator(".dirty-dot");
-  const lines = page.locator('.line-rail [role="button"]');
+  const lines = lineButtons(page);
 
   await expect(lines.first()).toHaveCSS("background-color", "rgba(0, 0, 0, 0)");
   await lines.first().click();

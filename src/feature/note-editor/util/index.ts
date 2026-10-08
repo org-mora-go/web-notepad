@@ -1,2 +1,2 @@
-export { insertAtSelection, isImeComposing } from "./editor-content";
+export { insertAtSelection } from "./editor-content";
 export { handleEditorKeyDown } from "./editor-keyboard";

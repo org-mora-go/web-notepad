@@ -1,17 +1,18 @@
 import { expect, test } from "@playwright/test";
 
+import { BOTH_VIEWPORTS } from "../__constant__";
+import { overflowTabs, scrollTabs } from "./__util__";
+
 test("2. 오버플로우 감지 전후 가로 스크롤바를 숨기고 스크롤과 페이드를 유지한다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const strip = page.locator(".header");
   const scroller = strip.locator(".tabs-scroll");
   await expect(scroller).not.toHaveClass(/is-overflowing/);
   await expect(scroller).toHaveCSS("scrollbar-width", "none");
-  for (let index = 0; index < 11; index += 1) {
-    await page.getByRole("button", { name: "새 탭 추가" }).click();
-  }
+  await overflowTabs(page);
 
-  for (const width of [1280, 390]) {
-    await page.setViewportSize({ width, height: 844 });
+  for (const viewport of BOTH_VIEWPORTS) {
+    await page.setViewportSize(viewport);
     await expect(scroller).toHaveClass(/is-overflowing/);
     await expect(scroller).toHaveCSS("scrollbar-width", "none");
     const beforeDetection = await scroller.evaluate((element) => {
@@ -30,15 +31,9 @@ test("2. 오버플로우 감지 전후 가로 스크롤바를 숨기고 스크�
       scrollbarDisplay: "none",
       verticalSpace: 0,
     });
-    await scroller.evaluate((element) => {
-      element.scrollLeft = 0;
-      element.dispatchEvent(new Event("scroll"));
-    });
+    await scrollTabs(scroller, "start");
     await expect(strip).toHaveClass(/has-right-overflow/);
-    await scroller.evaluate((element) => {
-      element.scrollLeft = (element.scrollWidth - element.clientWidth) / 2;
-      element.dispatchEvent(new Event("scroll"));
-    });
+    await scrollTabs(scroller, "middle");
     await expect.poll(() => scroller.evaluate((element) => element.scrollLeft)).toBeGreaterThan(0);
     await expect(strip).toHaveClass(/has-left-overflow/);
     await expect(strip).toHaveClass(/has-right-overflow/);

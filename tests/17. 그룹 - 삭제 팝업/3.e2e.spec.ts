@@ -3,21 +3,18 @@ import { expect, test } from "@playwright/test";
 import { seedDeletableGroup } from "./__util__";
 
 test("3. 그룹 삭제 팝업은 취소 버튼에 초기 포커스를 두고 키보드 포커스를 가둔다", async ({ page }) => {
-  const { toggle } = await seedDeletableGroup(page);
+  const { toggle, deleteButton, popup } = await seedDeletableGroup(page);
   await toggle.click();
-  const deleteButton = page.getByRole("button", { name: "Archive 그룹 삭제" });
-  const popup = page.getByRole("alertdialog", { name: "Delete group" });
+  const cancelButton = popup.getByRole("button", { name: "Cancel", exact: true });
   await deleteButton.click();
-  await expect(popup.getByRole("button", { name: "Cancel", exact: true })).toBeFocused();
+  await expect(cancelButton).toBeFocused();
 
-  for (let index = 0; index < 3; index += 1) {
-    await page.keyboard.press("Tab");
-    expect(await popup.evaluate((element) => element.contains(document.activeElement))).toBe(true);
+  for (const key of ["Tab", "Shift+Tab"]) {
+    for (let index = 0; index < 3; index += 1) {
+      await page.keyboard.press(key);
+      expect(await popup.evaluate((element) => element.contains(document.activeElement))).toBe(true);
+    }
   }
-  for (let index = 0; index < 3; index += 1) {
-    await page.keyboard.press("Shift+Tab");
-    expect(await popup.evaluate((element) => element.contains(document.activeElement))).toBe(true);
-  }
-  await popup.getByRole("button", { name: "Cancel", exact: true }).click();
+  await cancelButton.click();
   await expect(deleteButton).toBeFocused();
 });

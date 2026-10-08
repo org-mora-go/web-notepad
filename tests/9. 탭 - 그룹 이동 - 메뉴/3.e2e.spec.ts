@@ -1,34 +1,31 @@
 import { expect, test } from "@playwright/test";
 
-import { readMoveGroupState, seedMoveGroupState } from "../__util__";
+import { BOTH_VIEWPORTS } from "../__constant__";
+import { moveGroupSourceTab, openTabMenu, readStoredState, seedMoveGroupState } from "../__util__";
 
 test("3. 뒤로 가기, Escape, 바깥 클릭으로 이동 없이 그룹 목록을 닫는다", async ({ page }) => {
-  for (const width of [1280, 390]) {
-    await page.setViewportSize({ width, height: 844 });
-    const openMenu = async () => {
-      const tab = page.getByRole("tab", { name: "Move me", exact: true });
-      if (width === 1280) await tab.click({ button: "right" });
-      else await tab.dblclick();
-    };
+  const moveGroup = page.getByRole("menuitem", { name: "Move Group", exact: true });
+  const menu = page.getByRole("menu", { name: "Move Group", exact: true });
+  for (const viewport of BOTH_VIEWPORTS) {
+    await page.setViewportSize(viewport);
     await seedMoveGroupState(page);
-    const original = await readMoveGroupState(page);
-    await openMenu();
-    await page.getByRole("menuitem", { name: "Move Group", exact: true }).click();
-    const menu = page.getByRole("menu", { name: "Move Group", exact: true });
+    const original = await readStoredState(page);
+    await openTabMenu(moveGroupSourceTab(page), viewport);
+    await moveGroup.click();
     await menu.getByRole("menuitem", { name: "Back to tab actions" }).click();
     await expect(page.getByRole("menu", { name: "Tab actions", exact: true })).toBeVisible();
     await expect(page.getByRole("menuitem", { name: "Unpin", exact: true })).toBeVisible();
 
-    await page.getByRole("menuitem", { name: "Move Group", exact: true }).click();
+    await moveGroup.click();
     await expect(menu).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(page.getByRole("menu")).toHaveCount(0);
 
-    await openMenu();
-    await page.getByRole("menuitem", { name: "Move Group", exact: true }).click();
+    await openTabMenu(moveGroupSourceTab(page), viewport);
+    await moveGroup.click();
     await expect(menu).toBeVisible();
     await page.mouse.click(2, 200);
     await expect(page.getByRole("menu")).toHaveCount(0);
-    expect(await readMoveGroupState(page)).toEqual(original);
+    expect(await readStoredState(page)).toEqual(original);
   }
 });

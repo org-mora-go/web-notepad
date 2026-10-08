@@ -1,12 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+import { addTabButton } from "../__util__";
+
 test("3. 드래그로 탭 순서를 바꿀 수 있다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
   await editor.fill("first");
-  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await addTabButton(page).click();
   await editor.fill("second");
-  await page.locator('button[aria-label="새 탭 추가"]').click();
+  await addTabButton(page).click();
   await editor.fill("third");
 
   const tabs = page.locator(".tab-item");

@@ -1,15 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+import { RIGHT_PANEL_VIEWPORTS } from "./__constant__";
+
 test("7. Escape로 우측 패널을 닫으면 하단 패널 버튼의 포커스를 해제하고 Tab 포커스 표시는 유지한다", async ({ page }) => {
   await page.goto("/");
 
-  for (const width of [1280, 390]) {
-    await page.setViewportSize({ width, height: 844 });
-    const panelIds = width === 1280
-      ? ["shortcuts-panel", "bookmarks-panel", "groups-panel"]
-      : ["bookmarks-panel", "groups-panel"];
+  for (const { viewport, panelIds } of RIGHT_PANEL_VIEWPORTS) {
+    await page.setViewportSize(viewport);
 
-    for (const panelId of panelIds) {
+    for (const panelId of [...panelIds].reverse()) {
       const toggle = page.locator(`button[aria-controls="${panelId}"]`);
       const panel = page.locator(`#${panelId}`);
       await toggle.click();

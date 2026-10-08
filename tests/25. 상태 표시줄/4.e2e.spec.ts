@@ -1,12 +1,15 @@
 import { expect, test } from "@playwright/test";
 
+import { MOBILE_VIEWPORT } from "../__constant__";
+import { bookmarksCommand } from "../__util__";
+
 test("4. 저장 상태 아이콘 없이 SHORTCUT·BOOKMARK·그룹 순으로 외곽선 없이 우측 정렬한다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
 
   const shortcut = page.locator(".shortcut-command");
-  const bookmark = page.locator('.status-command[aria-controls="bookmarks-panel"]');
+  const bookmark = bookmarksCommand(page);
   const group = page.locator(".group-status-command");
   const separators = page.locator(".status-meta .status-separator");
   const expectMetaRightAligned = async () => {
@@ -47,6 +50,6 @@ test("4. 저장 상태 아이콘 없이 SHORTCUT·BOOKMARK·그룹 순으로 외
   await expect(page.getByRole("button", { name: "BOOKMARK" })).toBeVisible();
   await expectMetaRightAligned();
 
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize(MOBILE_VIEWPORT);
   await expectMetaRightAligned();
 });

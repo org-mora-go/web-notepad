@@ -1,12 +1,15 @@
 import { expect, test } from "@playwright/test";
 
+import { BOTH_VIEWPORTS } from "../__constant__";
+import { lineButtons } from "../__util__";
+
 test("4. 첫 줄 선택 배경을 상단 여백까지 잇고 스크롤 시 잔상을 남기지 않는다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
   const rail = page.locator(".line-rail");
-  const lines = page.locator('.line-rail [role="button"]');
+  const lines = lineButtons(page);
   await editor.fill("first\nsecond\nthird");
   await lines.first().click();
   await expect(lines.first()).toHaveAttribute("aria-pressed", "true");
@@ -17,8 +20,8 @@ test("4. 첫 줄 선택 배경을 상단 여백까지 잇고 스크롤 시 잔�
   await lines.first().click();
 
   await editor.fill(Array.from({ length: 80 }, (_, index) => `line ${index + 1}`).join("\n"));
-  for (const width of [1280, 390]) {
-    await page.setViewportSize({ width, height: 844 });
+  for (const viewport of BOTH_VIEWPORTS) {
+    await page.setViewportSize(viewport);
     await editor.evaluate((element) => {
       element.scrollTop = 0;
       element.dispatchEvent(new Event("scroll"));

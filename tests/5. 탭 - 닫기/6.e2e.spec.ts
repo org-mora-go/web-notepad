@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test";
 
+import { deleteTabPopup } from "../__util__";
+
 test("6. 탭 삭제를 취소하면 탭과 내용을 유지하고 포커스를 복원한다", async ({ page }) => {
   await page.goto("/");
   const editor = page.locator("textarea");
   const tabs = page.getByRole("tab");
-  const popup = page.getByRole("alertdialog", { name: "Delete tab" });
+  const popup = deleteTabPopup(page);
   await editor.fill("Do not delete this note");
 
   for (const action of ["escape", "cancel", "close", "backdrop"]) {

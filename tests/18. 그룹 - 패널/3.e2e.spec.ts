@@ -1,8 +1,10 @@
 import { expect, test } from "@playwright/test";
 
+import { groupsCommand } from "../__util__";
+
 test("3. 그룹을 생성해도 그룹 패널을 열린 상태로 유지한다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
-  await page.locator('button[aria-controls="groups-panel"]').click();
+  await page.goto("/");
+  await groupsCommand(page).click();
 
   const panel = page.locator("#groups-panel");
   await panel.getByRole("textbox", { name: "새 그룹 이름" }).fill("New group");

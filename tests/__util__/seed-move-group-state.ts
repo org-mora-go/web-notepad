@@ -1,8 +1,9 @@
 import type { Page } from "@playwright/test";
 
-import type { GroupEntry, NotepadState, NoteTab } from "@/src/entity/notepad";
+import type { GroupEntry, NoteTab } from "@/src/entity/notepad";
 
-type StoredState = Pick<NotepadState, "groups" | "activeGroupId" | "nextTabNumber">;
+import { type StoredState, writeStoredState } from "./stored-state";
+
 type Options = { withTarget?: boolean; splitSource?: boolean; sourceRight?: boolean; splitTarget?: boolean };
 
 export async function seedMoveGroupState(page: Page, {
@@ -42,14 +43,11 @@ export async function seedMoveGroupState(page: Page, {
   const state: StoredState = {
     groups: withTarget ? [source, target] : [source], activeGroupId: source.id, nextTabNumber: 5,
   };
-  await page.goto("/");
-  await page.evaluate((value) => {
-    localStorage.setItem("web-notepad-storage", JSON.stringify({ state: value, version: 0 }));
-  }, state);
-  await page.reload();
+  await writeStoredState(page, state);
   return state;
 }
 
-export const readMoveGroupState = (page: Page): Promise<StoredState> => page.evaluate(() =>
-  JSON.parse(localStorage.getItem("web-notepad-storage")!).state,
-);
+
+// The seeded "Move me" tab that the move-group tests act on.
+export const moveGroupSourceTab = (page: Page) =>
+  page.getByRole("tab", { name: "Move me", exact: true });

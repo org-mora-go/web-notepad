@@ -1,12 +1,13 @@
 import { expect, test } from "@playwright/test";
 
+import { chooseTabMenuItem } from "../__util__";
+
 test("2. 고정 탭은 닫기 버튼과 가운데 클릭으로 닫히지 않는다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const tab = page.locator(".tab-item").first();
-  await tab.locator('[role="tab"]').click({ button: "right" });
-  await page.getByRole("menuitem", { name: "Pin" }).click();
+  await chooseTabMenuItem(page, "Pin");
   await expect(tab).toHaveClass(/is-pinned/);
   await expect(tab.locator(".tab-close")).toHaveCount(0);
   await tab.locator('[role="tab"]').click({ button: "middle" });

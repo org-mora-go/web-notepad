@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test";
 
+import { shortcutsCommand } from "../__util__";
+
 test("1. SHORTCUT 패널에 실제 키보드 단축키와 Shift+클릭 줄 범위 선택·해제 안내를 표시한다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
-  await page.getByRole("button", { name: "단축키 안내" }).click();
+  await page.goto("/");
+  await shortcutsCommand(page).click();
 
   const shortcutsPanel = page.locator("#shortcuts-panel");
   await expect(shortcutsPanel).toHaveAttribute("aria-hidden", "false");

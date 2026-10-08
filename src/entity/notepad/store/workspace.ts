@@ -19,10 +19,10 @@ export const updateGroup = (
   ),
 });
 
-export const getAllTabs = (state: NotepadState) =>
+const getAllTabs = (state: NotepadState) =>
   state.groups.flatMap((group) => group.tabs);
 
-export const getReservedTabIds = (state: NotepadState) =>
+const getReservedTabIds = (state: NotepadState) =>
   state.groups.flatMap((group) =>
     group.bookmarks.map((bookmark) => bookmark.sourceTabId),
   );

@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test";
 
+import { shortcutsCommand } from "../__util__";
+
 test("2. macOS Shortcut 안내에서 Alt를 Option으로 표시한다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
-  await page.getByRole("button", { name: "단축키 안내" }).click();
+  await page.goto("/");
+  await shortcutsCommand(page).click();
 
   const panel = page.locator("#shortcuts-panel");
   await expect(panel).toContainText("Option + Tab");

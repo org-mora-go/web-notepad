@@ -1,10 +1,12 @@
 import { expect, test } from "@playwright/test";
 
+import { groupsCommand } from "../__util__";
+
 test("7. 그룹 생성 영역은 기존 톤을 유지하고 추가 버튼만 밝게 표시한다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
-  await page.locator('button[aria-controls="groups-panel"]').click();
+  await page.goto("/");
+  await groupsCommand(page).click();
 
   await expect(page.locator(".group-create-form")).toHaveCSS(
     "background-color",

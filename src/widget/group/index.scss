@@ -1,57 +1,9 @@
 @use "../../entity/style/variable" as v;
+@use "../../entity/style/mixin";
 @use "./style/group-delete-popup";
 
 .group {
-  .group-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.58);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 180ms ease;
-
-    &.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  }
-
-  .group-drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 20;
-    width: min(462px, 100vw);
-    height: 100vh;
-    display: grid;
-    grid-template-rows: auto auto auto minmax(0, 1fr);
-    border-left: 1px solid #3a3a35;
-    background: #10100f;
-    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
-    transform: translateX(102%);
-    transition: transform 220ms ease;
-
-    &.is-open {
-      transform: translateX(0);
-    }
-  }
-
-  .group-header {
-    min-height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 22px;
-    border-bottom: 1px solid v.$line;
-
-    h2 {
-      margin: 0;
-      font-family: v.$sans;
-      font-size: 22px;
-      font-weight: 500;
-    }
-  }
+  @include mixin.side-panel("group", auto auto auto minmax(0, 1fr));
 
   .group-close,
   .group-create-form button,
@@ -204,21 +156,6 @@
     button:disabled {
       opacity: 0.45;
       cursor: default;
-    }
-  }
-
-  .group-empty {
-    min-height: 220px;
-    display: grid;
-    place-content: center;
-    justify-items: center;
-    gap: 12px;
-    color: v.$dim;
-
-    p {
-      margin: 0;
-      font-family: v.$sans;
-      font-size: 15px;
     }
   }
 }

@@ -1,14 +1,17 @@
 import { expect, test } from "@playwright/test";
 
+import { BOTH_VIEWPORTS } from "../__constant__";
+import { addTabButton } from "../__util__";
+
 test("1. PC와 모바일의 모든 텍스트 입력 커서는 탭 색상과 무관하게 그레이다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
   await expect(editor).toBeVisible();
   const activeTab = page.locator(".tab-item.is-active");
   const gray = "rgb(184, 184, 176)";
 
-  for (const width of [1280, 390]) {
-    await page.setViewportSize({ width, height: 844 });
+  for (const viewport of BOTH_VIEWPORTS) {
+    await page.setViewportSize(viewport);
     for (const color of ["green", "gray", "red"]) {
       await expect(activeTab).toHaveAttribute("data-tab-color", color);
       await editor.focus();
@@ -16,7 +19,7 @@ test("1. PC와 모바일의 모든 텍스트 입력 커서는 탭 색상과 무�
       await activeTab.locator(".dirty-dot").click();
     }
 
-    await page.getByRole("button", { name: "새 탭 추가" }).click();
+    await addTabButton(page).click();
     await expect(editor).toHaveCSS("caret-color", gray);
     await page.locator('.tab-item [role="tab"]').first().click();
     await expect(editor).toHaveCSS("caret-color", gray);

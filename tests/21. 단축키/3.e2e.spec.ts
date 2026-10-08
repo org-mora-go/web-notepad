@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 test("3. 편집기에 포커스가 있을 때 Cmd+A 또는 Alt+A로 편집기 내용 전체를 선택한다", async ({ page }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
 
   const editor = page.locator("textarea");
   const readSelection = () =>

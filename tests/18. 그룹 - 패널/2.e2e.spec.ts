@@ -1,17 +1,16 @@
 import { expect, test } from "@playwright/test";
 
+import { MOBILE_VIEWPORT } from "../__constant__";
+import { createGroup, groupsCommand } from "../__util__";
 import { seedSortableGroups } from "./__util__";
 
 test("2. 그룹 생성·이름 수정 직후와 새로고침 시에도 같은 정렬을 적용한다", async ({ page }) => {
   await seedSortableGroups(page);
-
-  await page.goto("http://localhost:3000");
-  const toggle = page.locator('button[aria-controls="groups-panel"]');
+  const toggle = groupsCommand(page);
   const names = page.locator(".group-item .group-select strong");
   await toggle.click();
 
-  await page.getByRole("textbox", { name: "새 그룹 이름" }).fill("Beta");
-  await page.getByRole("button", { name: "그룹 생성" }).click();
+  await createGroup(page, "Beta");
   await expect(names).toHaveText([
     "Ungrouped",
     "가방",
@@ -39,6 +38,6 @@ test("2. 그룹 생성·이름 수정 직후와 새로고침 시에도 같은 �
   await page.reload();
   await toggle.click();
   await expect(names).toHaveText(finalOrder);
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize(MOBILE_VIEWPORT);
   await expect(names).toHaveText(finalOrder);
 });

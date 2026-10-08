@@ -1,20 +1,16 @@
 import { expect, test } from "@playwright/test";
 
+import { readStoredState } from "../__util__";
 import { seedDeletableGroup } from "./__util__";
 
 test("2. 그룹 삭제 팝업을 취소하면 모든 경로에서 그룹과 노트·북마크를 유지한다", async ({ page }) => {
-  const { toggle } = await seedDeletableGroup(page);
+  const { toggle, deleteButton, popup } = await seedDeletableGroup(page);
   await toggle.click();
-  const deleteButton = page.getByRole("button", { name: "Archive 그룹 삭제" });
-  const popup = page.getByRole("alertdialog", { name: "Delete group" });
 
   const assertPreserved = async () => {
-    const preserved = await page.evaluate(() => {
-      const state = JSON.parse(localStorage.getItem("web-notepad-storage")!).state;
-      const group = state.groups.find((item: { name: string }) => item.name === "Archive");
-      return { content: group.tabs[0].content, bookmark: group.bookmarks[0].content };
-    });
-    expect(preserved).toEqual({ content: "archived note", bookmark: "archived note" });
+    const group = (await readStoredState(page)).groups.find((item) => item.name === "Archive")!;
+    expect({ content: group.tabs[0].content, bookmark: group.bookmarks[0].content })
+      .toEqual({ content: "archived note", bookmark: "archived note" });
   };
 
   await deleteButton.click();

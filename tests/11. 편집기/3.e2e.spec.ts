@@ -4,7 +4,7 @@ test("3. 커서가 편집기 높이를 넘어가면 편집기와 줄 번호 영�
   page,
 }) => {
   await page.setViewportSize({ width: 1280, height: 360 });
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
   const longNote = Array.from({ length: 40 }, (_, index) => `line ${index + 1}`).join("\n");
   await editor.fill(longNote);

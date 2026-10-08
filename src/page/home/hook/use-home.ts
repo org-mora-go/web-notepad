@@ -12,7 +12,7 @@ import { usePaneDrag } from "./use-pane-drag";
 import { usePanelHistory } from "./use-panel-history";
 import { useStoreHydrated } from "./use-store-hydrated";
 
-export type SidePanel = "bookmarks" | "groups" | "shortcuts";
+type SidePanel = "bookmarks" | "groups" | "shortcuts";
 
 export function useHome() {
   const hydrated = useStoreHydrated();

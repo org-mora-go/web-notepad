@@ -1,11 +1,14 @@
 import { expect, test } from "@playwright/test";
 
+import { MOBILE_VIEWPORT } from "../__constant__";
+import { lineButtons } from "../__util__";
+
 test("8. PC와 모바일의 편집기 글자 크기와 줄 높이 및 내부 레이아웃을 유지한다", async ({
   page,
 }) => {
-  await page.goto("http://localhost:3000");
+  await page.goto("/");
   const editor = page.locator("textarea");
-  const lines = page.locator('.line-rail [role="button"]');
+  const lines = lineButtons(page);
   const getEditorFormat = () =>
     page.locator(".note-editor").evaluate((element) => {
       const lineRail = element.querySelector(".line-rail")!;
@@ -33,7 +36,7 @@ test("8. PC와 모바일의 편집기 글자 크기와 줄 높이 및 내부 레
   await lines.first().click();
   await expect(editor).toHaveCSS("background-size", "100% 43px");
 
-  await page.setViewportSize({ width: 390, height: 844 });
+  await page.setViewportSize(MOBILE_VIEWPORT);
   await expect(editor).toHaveCSS("font-size", "19px");
   await expect(editor).toHaveCSS("line-height", "33px");
   await expect(lines.first()).toHaveCSS("height", "33px");

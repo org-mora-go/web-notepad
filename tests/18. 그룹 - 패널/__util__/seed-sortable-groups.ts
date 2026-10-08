@@ -1,7 +1,10 @@
 import type { Page } from "@playwright/test";
 
+import { STORAGE_KEY } from "../../__constant__";
+
+// Seeds unsorted groups once per session (reloads keep the app state), then opens the app.
 export async function seedSortableGroups(page: Page) {
-  await page.addInitScript(() => {
+  await page.addInitScript((storageKey) => {
     if (sessionStorage.getItem("group-sort-seed")) return;
 
     const groups = [
@@ -35,9 +38,10 @@ export async function seedSortableGroups(page: Page) {
     }));
 
     localStorage.setItem(
-      "web-notepad-storage",
+      storageKey,
       JSON.stringify({ state: { activeGroupId: "ungrouped", groups }, version: 0 }),
     );
     sessionStorage.setItem("group-sort-seed", "true");
-  });
+  }, STORAGE_KEY);
+  await page.goto("/");
 }

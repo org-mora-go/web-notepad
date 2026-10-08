@@ -4,7 +4,6 @@ import { seedSplitState } from "./__util__";
 
 test("1. 탭을 좌우 패널 사이로 드래그해 이동한다", async ({ page }) => {
   await seedSplitState(page);
-  await page.goto("http://localhost:3000");
   const leftPane = page.locator(".pane-slot").nth(0);
   const rightPane = page.locator(".pane-slot").nth(1);
   const paneTab = (pane: typeof leftPane, title: RegExp) =>
