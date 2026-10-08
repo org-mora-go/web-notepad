@@ -21,14 +21,49 @@
     min-width: 0;
   }
 
+  .status-controls {
+    display: flex;
+    align-items: center;
+    flex: 0 1 auto;
+    justify-content: flex-end;
+    min-width: 0;
+  }
+
   .status-actions {
     display: flex;
     align-items: center;
     gap: 0;
-    flex: 0 1 auto;
-    justify-content: flex-end;
+    width: max-content;
+    flex: 0 0 auto;
+  }
+
+  .status-scroll-area {
     min-width: 0;
-    max-width: 100%;
+    flex: 0 1 auto;
+    overflow-x: auto;
+    overflow-y: hidden;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+      width: 0;
+      height: 0;
+    }
+
+    &.has-left-fog {
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 100%);
+      mask-image: linear-gradient(to right, transparent, #000 16px, #000 100%);
+    }
+
+    &.has-right-fog {
+      -webkit-mask-image: linear-gradient(to left, transparent, #000 16px, #000 100%);
+      mask-image: linear-gradient(to left, transparent, #000 16px, #000 100%);
+    }
+
+    &.has-left-fog.has-right-fog {
+      -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+      mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
+    }
   }
 
   .status-separator {
@@ -78,8 +113,12 @@
     }
   }
 
+  .bookmark-command {
+    flex: 0 0 auto;
+  }
+
   .group-status-command {
-    flex: 0 1 auto;
+    flex: 0 0 auto;
     min-width: 0;
   }
 
@@ -119,6 +158,35 @@
 
     .status-command .status-separator {
       margin: 0 6px;
+    }
+
+    .status-meta {
+      justify-content: flex-start;
+    }
+
+    .status-controls {
+      width: 100%;
+      flex: 1 1 auto;
+      justify-content: space-between;
+    }
+
+    .global-search-command,
+    .group-status-command {
+      flex: 0 0 auto;
+    }
+
+    .status-scroll-area {
+      flex: 1 1 auto;
+      align-self: stretch;
+    }
+
+    .status-label,
+    .global-search-label {
+      display: none;
+    }
+
+    .bookmark-command .status-separator {
+      display: none;
     }
 
     .group-status-name {

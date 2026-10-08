@@ -18,9 +18,8 @@ test("2. SHORTCUT 오른쪽에 개수 없이 CLOSED 명령을 PC와 모바일에
   await expect(command.locator(".status-count")).toHaveCount(0);
 
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await expect(label).toHaveText("CLOSED");
-  await expect(label).toBeInViewport();
+  await expect(label).toBeHidden();
   await expect(command.locator("svg")).toBeInViewport();
   await expect(command.locator(".status-count")).toHaveCount(0);
-  await expect(page.locator(".group-status-command .status-count")).toBeInViewport();
+  await expect(page.locator(".group-status-command .group-status-name")).toBeInViewport();
 });

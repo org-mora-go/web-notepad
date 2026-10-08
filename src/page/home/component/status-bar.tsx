@@ -1,13 +1,14 @@
 "use client";
 
-import { Bookmark, Ghost, Keyboard, Layers, Search } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+
+import { Bookmark, Ghost, Keyboard, Search } from "lucide-react";
 
 type Props = {
   closedOpen: boolean;
   bookmarkCount: number;
   shortcutsOpen: boolean;
   bookmarksOpen: boolean;
-  groupCount: number;
   activeGroupName: string;
   groupsOpen: boolean;
   globalSearchOpen: boolean;
@@ -23,7 +24,6 @@ export function StatusBar({
   bookmarkCount,
   shortcutsOpen,
   bookmarksOpen,
-  groupCount,
   activeGroupName,
   groupsOpen,
   globalSearchOpen,
@@ -33,6 +33,42 @@ export function StatusBar({
   onToggleGroups,
   onToggleGlobalSearch,
 }: Props) {
+  const scrollAreaRef = useRef<HTMLDivElement>(null);
+  const [scrollFades, setScrollFades] = useState({ left: false, right: false });
+
+  useEffect(() => {
+    const scrollArea = scrollAreaRef.current;
+    if (!scrollArea) return;
+
+    const updateScrollFades = () => {
+      const hasOverflow = scrollArea.scrollWidth > scrollArea.clientWidth + 1;
+      const nextFades = {
+        left: hasOverflow && scrollArea.scrollLeft > 1,
+        right:
+          hasOverflow &&
+          scrollArea.scrollLeft + scrollArea.clientWidth < scrollArea.scrollWidth - 1,
+      };
+      setScrollFades((current) =>
+        current.left === nextFades.left && current.right === nextFades.right
+          ? current
+          : nextFades,
+      );
+    };
+
+    updateScrollFades();
+    const observer = new ResizeObserver(updateScrollFades);
+    observer.observe(scrollArea);
+    if (scrollArea.firstElementChild instanceof HTMLElement) {
+      observer.observe(scrollArea.firstElementChild);
+    }
+    scrollArea.addEventListener("scroll", updateScrollFades, { passive: true });
+
+    return () => {
+      observer.disconnect();
+      scrollArea.removeEventListener("scroll", updateScrollFades);
+    };
+  }, []);
+
   return (
     <footer className="status-bar">
       <div className="status-meta">
@@ -47,7 +83,7 @@ export function StatusBar({
           <Keyboard size={16} strokeWidth={1.8} />
           <span>SHORTCUT</span>
         </button>
-        <div className="status-actions">
+        <div className="status-controls">
           <button
             className={`status-command global-search-command ${globalSearchOpen ? "is-active" : ""}`}
             type="button"
@@ -62,36 +98,43 @@ export function StatusBar({
               |
             </span>
           </button>
-          <button
-            className={`status-command closed-command ${closedOpen ? "is-active" : ""}`}
-            type="button"
-            onClick={onToggleClosed}
-            aria-expanded={closedOpen}
-            aria-controls="closed-panel"
-            aria-label="닫은 탭"
+          <div
+            ref={scrollAreaRef}
+            className={`status-scroll-area ${scrollFades.left ? "has-left-fog" : ""} ${scrollFades.right ? "has-right-fog" : ""}`}
           >
-            <Ghost size={16} strokeWidth={1.8} />
-            <span className="status-label closed-status-label">CLOSED</span>
-            <span className="status-separator" aria-hidden="true">
-              |
-            </span>
-          </button>
-          <button
-            className={`status-command ${bookmarksOpen ? "is-active" : ""}`}
-            type="button"
-            onClick={onToggleBookmarks}
-            aria-expanded={bookmarksOpen}
-            aria-controls="bookmarks-panel"
-          >
-            <Bookmark size={16} strokeWidth={1.8} />
-            <span className="status-label">BOOKMARK</span>
-            {bookmarkCount > 0 && (
-              <span className="status-count">({bookmarkCount})</span>
-            )}
-            <span className="status-separator" aria-hidden="true">
-              |
-            </span>
-          </button>
+            <div className="status-actions">
+              <button
+                className={`status-command closed-command ${closedOpen ? "is-active" : ""}`}
+                type="button"
+                onClick={onToggleClosed}
+                aria-expanded={closedOpen}
+                aria-controls="closed-panel"
+                aria-label="닫은 탭"
+              >
+                <Ghost size={16} strokeWidth={1.8} />
+                <span className="status-label closed-status-label">CLOSED</span>
+                <span className="status-separator" aria-hidden="true">
+                  |
+                </span>
+              </button>
+              <button
+                className={`status-command bookmark-command ${bookmarksOpen ? "is-active" : ""}`}
+                type="button"
+                onClick={onToggleBookmarks}
+                aria-expanded={bookmarksOpen}
+                aria-controls="bookmarks-panel"
+              >
+                <Bookmark size={16} strokeWidth={1.8} />
+                <span className="status-label">BOOKMARK</span>
+                {bookmarkCount > 0 && (
+                  <span className="status-count">({bookmarkCount})</span>
+                )}
+                <span className="status-separator" aria-hidden="true">
+                  |
+                </span>
+              </button>
+            </div>
+          </div>
           <button
             className={`status-command group-status-command ${groupsOpen ? "is-active" : ""}`}
             type="button"
@@ -99,9 +142,7 @@ export function StatusBar({
             aria-expanded={groupsOpen}
             aria-controls="groups-panel"
           >
-            <Layers size={16} strokeWidth={1.8} />
             <span className="group-status-name">{activeGroupName}</span>
-            <span className="status-count">({groupCount})</span>
           </button>
         </div>
       </div>

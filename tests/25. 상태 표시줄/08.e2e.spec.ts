@@ -28,8 +28,10 @@ test("8. PC와 모바일에서 명령 사이에만 구분자를 표시하고 양
       await expect(visibleSeparators).toHaveCount(3);
     } else {
       await expect(shortcut).toBeHidden();
+      await expect(searchSeparator).toBeVisible();
       await expect(closedSeparator).toBeVisible();
-      await expect(visibleSeparators).toHaveCount(3);
+      await expect(bookmarkSeparator).toBeHidden();
+      await expect(visibleSeparators).toHaveCount(2);
     }
   }
 });

@@ -45,7 +45,6 @@ export function useHome() {
   const activePane = activeGroup?.activePane ?? "left";
   const splitRatio = activeGroup?.splitRatio ?? 0.5;
   const bookmarks = activeGroup?.bookmarks ?? [];
-  const groupCount = groups.length;
   const activeGroupName = activeGroup?.name ?? "Ungrouped";
 
   const rightIds = new Set(activeGroup?.rightTabIds ?? []);
@@ -192,7 +191,6 @@ export function useHome() {
     split,
     bookmarks,
     groups,
-    groupCount,
     activeGroupName,
     leftPaneProps,
     rightPaneProps,

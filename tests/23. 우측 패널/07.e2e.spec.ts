@@ -20,7 +20,7 @@ test("7. Escape로 우측 패널을 닫으면 하단 패널 버튼의 포커스�
       await expect(toggle).toHaveCSS("outline-style", "none");
       await expect(toggle).toHaveCSS("border-width", "0px");
 
-      const visibleIds = await page.locator(".status-actions .status-command:visible").evaluateAll(
+      const visibleIds = await page.locator(".status-meta .status-command:visible").evaluateAll(
         (commands) => commands.map((command) => command.getAttribute("aria-controls")),
       );
       const index = visibleIds.indexOf(panelId);
