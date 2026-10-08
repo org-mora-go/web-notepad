@@ -1,7 +1,5 @@
 "use client";
 
-import { useState } from "react";
-
 import type { ClosedTabEntry, GroupEntry } from "@/src/entity/notepad";
 import { SidePanel } from "@/src/entity/ui";
 import { SearchField } from "@/src/feature";
@@ -12,6 +10,8 @@ import { SearchResult, SearchResultSection } from "./component";
 type Props = {
   groups: GroupEntry[];
   closedTabs: ClosedTabEntry[];
+  searchQuery: string;
+  onSearchQueryChange: (query: string) => void;
   open: boolean;
   onClose: () => void;
   onSelectGroup: (groupId: string) => void;
@@ -22,13 +22,14 @@ type Props = {
 export function GlobalSearch({
   groups,
   closedTabs,
+  searchQuery,
+  onSearchQueryChange,
   open,
   onClose,
   onSelectGroup,
   onOpenBookmark,
   onOpenClosedSearch,
 }: Props) {
-  const [searchQuery, setSearchQuery] = useState("");
   const query = searchQuery.trim();
   const groupResults = query
     ? groups.filter((group) => matchesSearchQuery(query, group.name))
@@ -69,7 +70,7 @@ export function GlobalSearch({
         value={searchQuery}
         ariaLabel="전체 검색"
         placeholder="Search everything"
-        onChange={setSearchQuery}
+        onChange={onSearchQueryChange}
       />
       <div className="global-search-list">
         {!query ? (

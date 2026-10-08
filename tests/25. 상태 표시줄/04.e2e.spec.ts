@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { MOBILE_VIEWPORT } from "../__constant__";
 import { bookmarksCommand } from "../__util__";
 
-test("4. SHORTCUT은 왼쪽에, SEARCH·CLOSED·BOOKMARK·그룹은 오른쪽에 정렬한다", async ({
+test("4. 모바일에서는 SEARCH와 그룹을 양끝에 고정하고 나머지 명령은 가운데 둔다", async ({
   page,
 }) => {
   await page.goto("/");
@@ -53,9 +53,23 @@ test("4. SHORTCUT은 왼쪽에, SEARCH·CLOSED·BOOKMARK·그룹은 오른쪽에
       Math.abs(alignment!.groupRight - alignment!.contentRight),
     ).toBeLessThan(1);
   };
+  const expectSearchLeftAligned = async () => {
+    const alignment = await search.evaluate((command) => {
+      const statusBar = command.closest(".status-bar");
+      if (!statusBar) return null;
+
+      const barBounds = statusBar.getBoundingClientRect();
+      const commandBounds = command.getBoundingClientRect();
+      const paddingLeft = parseFloat(getComputedStyle(statusBar).paddingLeft);
+      return { commandLeft: commandBounds.left, contentLeft: barBounds.left + paddingLeft };
+    });
+
+    expect(alignment).not.toBeNull();
+    expect(Math.abs(alignment!.commandLeft - alignment!.contentLeft)).toBeLessThan(1);
+  };
 
   await expect(page.locator(".status-light, .save-state")).toHaveCount(0);
-  const actionOrder = await page.locator(".status-actions .status-command").evaluateAll(
+  const actionOrder = await page.locator(".status-controls .status-command").evaluateAll(
     (commands) => commands.map((command) => command.textContent?.trim()),
   );
   expect(actionOrder[0]).toContain("SEARCH");
@@ -78,5 +92,11 @@ test("4. SHORTCUT은 왼쪽에, SEARCH·CLOSED·BOOKMARK·그룹은 오른쪽에
   await expectMetaRightAligned();
 
   await page.setViewportSize(MOBILE_VIEWPORT);
+  await expect(search.locator(".global-search-label")).toBeHidden();
+  await expect(group.locator("svg")).toHaveCount(1);
+  await expect(group.locator(".status-count")).toHaveText("(1)");
+  await expect(group.locator(".status-count")).toBeInViewport();
+  await expect(group.locator(".status-count")).toBeInViewport();
+  await expectSearchLeftAligned();
   await expectMetaRightAligned();
 });

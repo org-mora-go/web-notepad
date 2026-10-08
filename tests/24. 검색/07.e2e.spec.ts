@@ -48,6 +48,13 @@ test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 �
   await expect(page.locator(".global-search-bookmarks .global-search-result")).toHaveCount(1);
   await expect(page.locator(".global-search-closed .global-search-result")).toHaveCount(1);
 
+  await page.keyboard.press("Escape");
+  await expect(page.locator("#global-search-panel")).toHaveAttribute("aria-hidden", "true");
+  await command.press("Enter");
+  await expect(search).toHaveValue("");
+  await expect(page.locator(".global-search-empty-state")).toHaveText("Enter a search term");
+  await search.fill("Work");
+
   await page.getByRole("button", { name: "그룹 Work 선택" }).click();
   await expect(groupStatusName(page)).toHaveText("Work");
   await command.press("Enter");

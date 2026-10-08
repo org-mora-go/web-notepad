@@ -12,6 +12,8 @@ export function Home() {
     hydrated,
     closedTabs,
     removeClosedTab,
+    globalSearchQuery,
+    setGlobalSearchQuery,
     closedSearchQuery,
     setClosedSearchQuery,
     pendingCloseTabId,
@@ -53,6 +55,7 @@ export function Home() {
 
         <StatusBar
           closedOpen={openPanel === "closed"}
+          closedCount={closedTabs.length}
           bookmarkCount={bookmarks.length}
           shortcutsOpen={openPanel === "shortcuts"}
           bookmarksOpen={openPanel === "bookmarks"}
@@ -98,6 +101,8 @@ export function Home() {
       <GlobalSearch
         groups={groups}
         closedTabs={closedTabs}
+        searchQuery={globalSearchQuery}
+        onSearchQueryChange={setGlobalSearchQuery}
         open={openPanel === "global-search"}
         onClose={closeSidePanels}
         onSelectGroup={selectGroupAndClosePanel}
@@ -107,10 +112,7 @@ export function Home() {
           toggleSidePanel("closed");
         }}
       />
-      <Shortcut
-        open={openPanel === "shortcuts"}
-        onClose={closeSidePanels}
-      />
+      <Shortcut open={openPanel === "shortcuts"} onClose={closeSidePanels} />
       {pendingCloseTabId && (
         <TabDeletePopup onConfirm={confirmCloseTab} onCancel={cancelCloseTab} />
       )}

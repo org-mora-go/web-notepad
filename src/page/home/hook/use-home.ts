@@ -68,7 +68,13 @@ export function useHome() {
     moveToGroup,
     cancelCloseTab,
     confirmCloseTab,
-  } = useHomeTabActions({ editorRef, rightEditorRef, activeTabId, activeRightTabId, tabs });
+  } = useHomeTabActions({
+    editorRef,
+    rightEditorRef,
+    activeTabId,
+    activeRightTabId,
+    tabs,
+  });
 
   const navigation = useHomeNavigation({ hydrated, addTabToPane });
   const {
@@ -121,8 +127,18 @@ export function useHome() {
     hydrated,
   );
 
-  const { draggingTabId, setDraggingTabId, adoptTo, leftDropZones, rightDropZones } =
-    usePaneDrag({ rightIds, split, leftTabCount: leftTabs.length, moveTabToPane });
+  const {
+    draggingTabId,
+    setDraggingTabId,
+    adoptTo,
+    leftDropZones,
+    rightDropZones,
+  } = usePaneDrag({
+    rightIds,
+    split,
+    leftTabCount: leftTabs.length,
+    moveTabToPane,
+  });
 
   const sharedPaneProps = {
     groups,

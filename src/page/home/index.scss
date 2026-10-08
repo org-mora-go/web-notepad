@@ -39,7 +39,7 @@
     background: v.$panel;
 
     @media (max-width: 640px) {
-      grid-template-rows: minmax(0, 1fr) 52px;
+      grid-template-rows: minmax(0, 1fr) 56px;
     }
   }
 
