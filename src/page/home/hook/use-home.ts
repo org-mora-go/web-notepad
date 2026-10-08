@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
-import type { PaneDropZone } from "@/src/entity";
 import { useTabStrip } from "@/src/entity/hook";
 import { useNotepadStore } from "@/src/entity/notepad";
 
 import { useEditorFocus } from "./use-editor-focus";
+import { useHomeTabActions } from "./use-home-tab-actions";
 import { useNotepadShortcuts } from "./use-notepad-shortcuts";
+import { usePaneDrag } from "./use-pane-drag";
 import { usePanelHistory } from "./use-panel-history";
 import { useStoreHydrated } from "./use-store-hydrated";
 
@@ -16,8 +17,6 @@ export function useHome() {
   const [bookmarksOpen, setBookmarksOpen] = useState(false);
   const [groupsOpen, setGroupsOpen] = useState(false);
   const [shortcutsOpen, setShortcutsOpen] = useState(false);
-  const [draggingTabId, setDraggingTabId] = useState<string | null>(null);
-  const [pendingCloseTabId, setPendingCloseTabId] = useState<string | null>(null);
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
   const composingRef = useRef(false);
@@ -30,13 +29,11 @@ export function useHome() {
     updateTab,
     moveTab,
     moveTabToPane,
-    moveTabToGroup,
     setActivePane,
     setSplitRatio,
     cycleTabColor,
     togglePin,
     toggleBookmark,
-    closeTab,
     openBookmark,
     removeBookmark,
     createGroup,
@@ -81,25 +78,14 @@ export function useHome() {
       ? (activeRightTab ?? leftActiveTab)
       : (leftActiveTab ?? activeRightTab)) ?? rightTabs[0];
 
-  const requestCloseTab = useCallback((tabId: string) => {
-    const state = useNotepadStore.getState();
-    const group = state.groups.find((item) => item.id === state.activeGroupId);
-    const tab = group?.tabs.find((item) => item.id === tabId);
-    if (!group || !tab || tab.pinned) return;
-
-    const editor = tabId === group.activeTabId
-      ? editorRef.current
-      : tabId === group.activeRightTabId
-        ? rightEditorRef.current
-        : null;
-    const content = editor?.value ?? tab.content;
-    if (content !== tab.content) state.updateTab(tabId, content);
-    if (content.length > 0) {
-      setPendingCloseTabId(tabId);
-    } else {
-      state.closeTab(tabId);
-    }
-  }, []);
+  const {
+    pendingCloseTabId,
+    requestCloseTab,
+    addTabToPane,
+    moveToGroup,
+    cancelCloseTab,
+    confirmCloseTab,
+  } = useHomeTabActions({ editorRef, rightEditorRef, activeTabId, activeRightTabId, tabs });
 
   useNotepadShortcuts({ editorRef, rightEditorRef, composingRef, requestCloseTab });
   useEditorFocus(
@@ -135,66 +121,8 @@ export function useHome() {
     hydrated,
   );
 
-  const addTabToPane = (pane: "left" | "right") => {
-    const state = useNotepadStore.getState();
-    const group = state.groups.find((item) => item.id === state.activeGroupId);
-    if (!group) return;
-    const tabId = pane === "right" ? group.activeRightTabId : group.activeTabId;
-    const editor =
-      pane === "right" ? rightEditorRef.current : editorRef.current;
-
-    // Commit the textarea's latest value before changing the active tab.
-    if (tabId && editor) state.updateTab(tabId, editor.value);
-    state.addTab(pane);
-  };
-
-  const moveToGroup = (tabId: string, groupId: string) => {
-    const editor = tabId === activeTabId
-      ? editorRef.current
-      : tabId === activeRightTabId ? rightEditorRef.current : null;
-    if (editor && editor.value !== tabs.find((tab) => tab.id === tabId)?.content) {
-      updateTab(tabId, editor.value);
-    }
-    moveTabToGroup(tabId, groupId);
-  };
-
-  const draggingPane = draggingTabId
-    ? rightIds.has(draggingTabId)
-      ? "right"
-      : "left"
-    : null;
-
-  const dropTo = (pane: "left" | "right") => () => {
-    if (draggingTabId) moveTabToPane(draggingTabId, pane);
-    setDraggingTabId(null);
-  };
-
-  // The source pane can unmount on drop, so its dragend never fires.
-  const adoptTo = (pane: "left" | "right") => (tabId: string) => {
-    moveTabToPane(tabId, pane);
-    setDraggingTabId(null);
-  };
-
-  const leftDropZones: PaneDropZone[] = [];
-  if (draggingPane === "right") {
-    leftDropZones.push({
-      key: "adopt",
-      label: "Move here",
-      onDrop: dropTo("left"),
-    });
-  } else if (draggingPane === "left" && !split && leftTabs.length > 1) {
-    leftDropZones.push({
-      key: "split",
-      label: "Split right",
-      half: true,
-      onDrop: dropTo("right"),
-    });
-  }
-
-  const rightDropZones: PaneDropZone[] =
-    draggingPane === "left"
-      ? [{ key: "adopt", label: "Move here", onDrop: dropTo("right") }]
-      : [];
+  const { draggingTabId, setDraggingTabId, adoptTo, leftDropZones, rightDropZones } =
+    usePaneDrag({ rightIds, split, leftTabCount: leftTabs.length, moveTabToPane });
 
   const leftPaneProps = leftActiveTab
     ? {
@@ -257,11 +185,8 @@ export function useHome() {
   return {
     hydrated,
     pendingCloseTabId,
-    cancelCloseTab: () => setPendingCloseTabId(null),
-    confirmCloseTab: () => {
-      if (pendingCloseTabId) closeTab(pendingCloseTabId);
-      setPendingCloseTabId(null);
-    },
+    cancelCloseTab,
+    confirmCloseTab,
     bookmarksOpen,
     setBookmarksOpen,
     groupsOpen,
