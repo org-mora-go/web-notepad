@@ -41,7 +41,6 @@ export function Body({
     >
       <NoteEditor
         tab={activeTab}
-        lineCount={activeTab.content.split("\n").length}
         editorRef={editorRef}
         composingRef={composingRef}
         autoFocus={autoFocus}

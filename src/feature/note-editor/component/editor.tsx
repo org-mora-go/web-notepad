@@ -8,9 +8,10 @@ import type {
 
 import type { NoteTab } from "@/src/entity/notepad";
 
+import { useVisualLines } from "../hook/use-visual-lines";
+
 type Props = {
   tab: NoteTab;
-  lineCount: number;
   editorRef: RefObject<HTMLTextAreaElement | null>;
   lineRailRef: RefObject<HTMLDivElement | null>;
   selectedLines: number[];
@@ -25,7 +26,6 @@ type Props = {
 
 export function Editor({
   tab,
-  lineCount,
   editorRef,
   lineRailRef,
   selectedLines,
@@ -37,8 +37,10 @@ export function Editor({
   onCompositionEnd,
   onScroll,
 }: Props) {
+  const visualLines = useVisualLines(tab.content, editorRef, lineRailRef);
   const selectedLineRanges: { start: number; end: number }[] = [];
-  for (const line of [...selectedLines].sort((a, b) => a - b)) {
+  for (const [line, logicalLine] of visualLines.entries()) {
+    if (!selectedLines.includes(logicalLine)) continue;
     const lastRange = selectedLineRanges.at(-1);
     if (lastRange && line === lastRange.end + 1) {
       lastRange.end = line;
@@ -57,19 +59,19 @@ export function Editor({
         ref={lineRailRef}
         aria-label="라인 번호"
       >
-        {Array.from({ length: lineCount }, (_, index) => (
+        {visualLines.map((logicalLine, index) => (
           <span
             key={index}
-            className={selectedLines.includes(index) ? "is-selected" : ""}
+            className={selectedLines.includes(logicalLine) ? "is-selected" : ""}
             role="button"
             tabIndex={0}
-            aria-pressed={selectedLines.includes(index)}
+            aria-pressed={selectedLines.includes(logicalLine)}
             onMouseDown={(event) => event.preventDefault()}
-            onClick={(event) => onToggleLineSelection(index, event.shiftKey)}
+            onClick={(event) => onToggleLineSelection(logicalLine, event.shiftKey)}
             onKeyDown={(event) => {
               if (event.key === "Enter" || event.key === " ") {
                 event.preventDefault();
-                onToggleLineSelection(index);
+                onToggleLineSelection(logicalLine);
               }
             }}
           >
