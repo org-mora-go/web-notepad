@@ -1,6 +1,6 @@
 "use client";
 
-import { ArrowLeft, ArrowRight, Bookmark, FolderInput, Layers, Pin } from "lucide-react";
+import { ArrowLeft, ArrowRight, Bookmark, FolderInput, Pin } from "lucide-react";
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
 
 import type { GroupEntry } from "@/src/entity/notepad";
@@ -80,7 +80,6 @@ export function TabContextMenu({
           <div className="move-group-options">
             {targetGroups.map((group) => (
               <button className="move-group-option" key={group.id} type="button" role="menuitem" title={group.name} onClick={() => onMoveToGroup(group.id)}>
-                <Layers size={14} />
                 <span>{group.name}</span>
               </button>
             ))}

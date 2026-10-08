@@ -18,8 +18,12 @@ test("17. PC와 모바일 탭 메뉴에서 Move Group 대상을 선택하거나 
     await seedMoveGroupState(page);
     const original = await readMoveGroupState(page);
     await openMenu();
+    await expect(page.getByRole("menu", { name: "Tab actions", exact: true })).toHaveCSS("width", "188px");
     await page.getByRole("menuitem", { name: "Move Group", exact: true }).click();
     const menu = page.getByRole("menu", { name: "Move Group", exact: true });
+    await expect(menu).toHaveCSS("width", "188px");
+    await expect(menu.locator(".move-group-option svg")).toHaveCount(0);
+    await expect(menu.getByRole("menuitem", { name: "Back to tab actions" }).locator("svg")).toHaveCount(1);
     await expect(menu.getByRole("menuitem", { name: "Ungrouped", exact: true })).toHaveCount(0);
     await expect(menu.getByRole("menuitem", { name: "Target", exact: true })).toBeFocused();
     const bounds = await menu.boundingBox();
@@ -28,6 +32,7 @@ test("17. PC와 모바일 탭 메뉴에서 Move Group 대상을 선택하거나 
     expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width - 8);
     expect(bounds!.y + bounds!.height).toBeLessThanOrEqual(836);
     await menu.getByRole("menuitem", { name: "Back to tab actions" }).click();
+    await expect(page.getByRole("menu", { name: "Tab actions", exact: true })).toHaveCSS("width", "188px");
     await expect(page.getByRole("menuitem", { name: "Unpin", exact: true })).toBeVisible();
     await page.getByRole("menuitem", { name: "Move Group", exact: true }).click();
     await page.keyboard.press("Escape");
