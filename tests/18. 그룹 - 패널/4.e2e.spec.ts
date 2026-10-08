@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import { DESKTOP_VIEWPORT, MOBILE_VIEWPORT } from "../__constant__";
-import { createGroup, groupsCommand } from "../__util__";
+import { createGroup, groupsCommand, groupStatusName } from "../__util__";
 
 test("4. 그룹 이름을 PC와 모바일 최대 너비에 맞춰 한 줄 말줄임한다", async ({ page }) => {
   await page.goto("/");
   await groupsCommand(page).click();
   await createGroup(page, "Very long group name for ellipsis verification");
-  const groupName = page.locator(".group-status-name");
+  const groupName = groupStatusName(page);
 
   for (const { viewport, maxWidth } of [
     { viewport: DESKTOP_VIEWPORT, maxWidth: "180px" },

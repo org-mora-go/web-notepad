@@ -1,9 +1,10 @@
 "use client";
 
-import { Bookmark as BookmarkIcon, X } from "lucide-react";
+import { Bookmark as BookmarkIcon } from "lucide-react";
 import { useState } from "react";
 
 import type { BookmarkEntry } from "@/src/entity/notepad";
+import { SidePanel } from "@/src/entity/ui";
 import { SearchField } from "@/src/feature";
 import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
@@ -30,58 +31,41 @@ export function Bookmark({
   );
 
   return (
-    <div className="bookmark">
-      <div
-        className={`bookmark-backdrop ${open ? "is-visible" : ""}`}
-        onClick={onClose}
-        aria-hidden="true"
+    <SidePanel
+      className="bookmark"
+      id="bookmarks-panel"
+      title="Bookmarks"
+      open={open}
+      closeLabel="북마크 닫기"
+      onClose={onClose}
+    >
+      <SearchField
+        value={searchQuery}
+        ariaLabel="북마크 검색"
+        placeholder="Search bookmarks"
+        onChange={setSearchQuery}
       />
-      <aside
-        id="bookmarks-panel"
-        className={`bookmark-drawer ${open ? "is-open" : ""}`}
-        aria-hidden={!open}
-      >
-        <div className="bookmark-header">
-          <div className="bookmark-header-main">
-            <h2>Bookmarks</h2>
+      <div className="bookmark-list">
+        {bookmarks.length === 0 ? (
+          <div className="bookmark-empty">
+            <BookmarkIcon size={26} strokeWidth={1.4} />
+            <p>Empty Bookmarks</p>
           </div>
-          <button
-            className="panel-close"
-            type="button"
-            onClick={onClose}
-            aria-label="북마크 닫기"
-          >
-            <X size={12} />
-          </button>
-        </div>
-        <SearchField
-          value={searchQuery}
-          ariaLabel="북마크 검색"
-          placeholder="Search bookmarks"
-          onChange={setSearchQuery}
-        />
-        <div className="bookmark-list">
-          {bookmarks.length === 0 ? (
-            <div className="bookmark-empty">
-              <BookmarkIcon size={26} strokeWidth={1.4} />
-              <p>Empty Bookmarks</p>
-            </div>
-          ) : filteredBookmarks.length === 0 ? (
-            <div className="search-empty-state">
-              <p>검색 결과가 없습니다</p>
-            </div>
-          ) : (
-            filteredBookmarks.map((bookmark) => (
-              <BookmarkItem
-                key={bookmark.id}
-                bookmark={bookmark}
-                onOpen={onOpen}
-                onRemove={onRemove}
-              />
-            ))
-          )}
-        </div>
-      </aside>
-    </div>
+        ) : filteredBookmarks.length === 0 ? (
+          <div className="search-empty-state">
+            <p>검색 결과가 없습니다</p>
+          </div>
+        ) : (
+          filteredBookmarks.map((bookmark) => (
+            <BookmarkItem
+              key={bookmark.id}
+              bookmark={bookmark}
+              onOpen={onOpen}
+              onRemove={onRemove}
+            />
+          ))
+        )}
+      </div>
+    </SidePanel>
   );
 }

@@ -2,8 +2,8 @@
 
 import { Bookmark as BookmarkIcon, Trash2 } from "lucide-react";
 
-import { useExpandableContent } from "@/src/entity/hook";
 import type { BookmarkEntry } from "@/src/entity/notepad";
+import { ExpandableContent } from "@/src/entity/ui";
 import { formatDate } from "@/src/entity/util";
 
 type Props = {
@@ -13,9 +13,6 @@ type Props = {
 };
 
 export function BookmarkItem({ bookmark, onOpen, onRemove }: Props) {
-  const { contentRef, expanded, canExpand, toggleExpanded } =
-    useExpandableContent(bookmark.content);
-
   return (
     <article className="bookmark-item">
       <div className="bookmark-item-heading">
@@ -24,22 +21,7 @@ export function BookmarkItem({ bookmark, onOpen, onRemove }: Props) {
           {formatDate(bookmark.createdAt)}
         </time>
       </div>
-      <p
-        ref={contentRef}
-        className={`bookmark-content ${expanded ? "is-expanded" : ""}`}
-      >
-        {bookmark.content || "Empty note"}
-      </p>
-      {(canExpand || expanded) && (
-        <button
-          className="bookmark-content-toggle"
-          type="button"
-          aria-expanded={expanded}
-          onClick={toggleExpanded}
-        >
-          {expanded ? "간소화" : "더보기"}
-        </button>
-      )}
+      <ExpandableContent content={bookmark.content || "Empty note"} />
       <div className="bookmark-actions">
         <button type="button" onClick={() => onOpen(bookmark.id)}>
           <BookmarkIcon size={14} />

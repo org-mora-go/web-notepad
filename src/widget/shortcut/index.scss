@@ -1,22 +1,17 @@
 @use "../../entity/style/variable" as v;
-@use "../../entity/style/mixin";
 
 .shortcut {
-  @include mixin.side-panel("shortcut", auto minmax(0, 1fr), $title-size: 20px);
+  .side-panel-drawer {
+    grid-template-rows: auto minmax(0, 1fr);
+  }
 
-  .shortcut-close {
-    width: 28px;
-    height: 28px;
-    display: grid;
-    place-items: center;
-    border: 1px solid v.$line;
-    background: transparent;
-    color: v.$dim;
-    cursor: pointer;
+  .side-panel-header h2 {
+    font-size: 20px;
+  }
 
-    &:hover {
-      color: v.$ink;
-    }
+  .side-panel-close svg {
+    width: 16px;
+    height: 16px;
   }
 
   .shortcut-list {

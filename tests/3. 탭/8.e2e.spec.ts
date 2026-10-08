@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
 import { BOTH_VIEWPORTS } from "../__constant__";
-import { addTabButton, chooseTabMenuItem } from "../__util__";
+import { activeTabItem, addTabButton, chooseTabMenuItem } from "../__util__";
 
 test("8. 일반 탭과 고정 탭 및 추가 버튼의 좌우 테두리 없이 상단 강조선을 유지한다", async ({ page }) => {
   await page.goto("/");
@@ -18,7 +18,7 @@ test("8. 일반 탭과 고정 탭 및 추가 버튼의 좌우 테두리 없이 �
       await expect(item).toHaveCSS("border-right-width", "0px");
     }
     await expect(pinnedTab).toHaveClass(/is-pinned/);
-    await expect(page.locator(".tab-item.is-active")).toHaveCSS("box-shadow", /0px 2px 0px 0px inset/);
+    await expect(activeTabItem(page)).toHaveCSS("box-shadow", /0px 2px 0px 0px inset/);
     await pinnedTab.locator('[role="tab"]').click();
     await expect(pinnedTab).toHaveCSS("box-shadow", /0px 2px 0px 0px inset/);
   }

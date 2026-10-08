@@ -1,10 +1,11 @@
 import { expect, test } from "@playwright/test";
 
 import { tabColors } from "../__constant__";
+import { activeTabItem } from "../__util__";
 
 test("2. 탭 아이콘을 클릭하면 색상을 순환하고 색상별 글로우를 표시한다", async ({ page }) => {
   await page.goto("/");
-  const tab = page.locator(".tab-item.is-active");
+  const tab = activeTabItem(page);
   const colorButton = tab.locator(".dirty-dot");
   const readIconStyle = (property: "backgroundColor" | "boxShadow") =>
     colorButton.evaluate(

@@ -1,11 +1,11 @@
 @use "../../entity/style/variable" as v;
-@use "../../entity/style/mixin";
-@use "./style/group-delete-popup";
 
 .group {
-  @include mixin.side-panel("group", auto auto auto minmax(0, 1fr));
+  .side-panel-drawer {
+    grid-template-rows: auto auto auto minmax(0, 1fr);
+  }
 
-  .group-close,
+  .side-panel-close,
   .group-create-form button,
   .group-edit-form button,
   .group-item > button:not(.group-select) {
@@ -19,16 +19,6 @@
     &:hover:not(:disabled) {
       border-color: v.$hover-line;
       color: v.$ink;
-    }
-  }
-
-  .group-close {
-    width: 28px;
-    height: 28px;
-
-    svg {
-      width: 12px;
-      height: 12px;
     }
   }
 

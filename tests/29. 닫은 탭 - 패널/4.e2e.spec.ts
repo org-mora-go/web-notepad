@@ -1,6 +1,11 @@
 import { expect, test } from "@playwright/test";
 
-import { closeActiveTabWithContent, closedCommand, createGroups } from "../__util__";
+import {
+  closeActiveTabWithContent,
+  closedCommand,
+  closedContents,
+  createGroups,
+} from "../__util__";
 
 test("4. 그룹 이름과 탭 내용을 대소문자 구분 없이 부분 검색한다", async ({ page }) => {
   await page.goto("/");
@@ -11,7 +16,7 @@ test("4. 그룹 이름과 탭 내용을 대소문자 구분 없이 부분 검색
 
   const search = page.getByRole("searchbox", { name: "닫은 탭 검색" });
   await expect(search).toHaveAttribute("placeholder", "Search closed tabs");
-  const contents = page.locator(".closed-item .closed-content");
+  const contents = closedContents(page);
   await search.fill("ALPHA");
   await expect(contents).toHaveText(["Alpha note"]);
   await search.fill("wor");

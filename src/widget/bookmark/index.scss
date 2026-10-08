@@ -2,12 +2,9 @@
 @use "./style/bookmark-item";
 
 .bookmark {
-  @include mixin.side-panel("bookmark", auto auto minmax(0, 1fr), $header-gap: 12px);
   @include mixin.side-panel-list("bookmark");
 
-  .bookmark-header-main {
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
+  .side-panel-drawer {
+    grid-template-rows: auto auto minmax(0, 1fr);
   }
 }

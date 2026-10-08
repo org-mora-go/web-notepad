@@ -10,7 +10,7 @@ test("1. 북마크 내용을 펼치거나 접을 수 있다", async ({ page }) =
   );
   await bookmarksCommand(page).click();
   await page.getByRole("button", { name: "더보기" }).click();
-  const contentToggle = page.locator(".bookmark-content-toggle");
+  const contentToggle = page.locator(".expandable-content-toggle");
   await expect(contentToggle).toHaveAttribute("aria-expanded", "true");
   await contentToggle.click();
   await expect(contentToggle).toHaveAttribute("aria-expanded", "false");

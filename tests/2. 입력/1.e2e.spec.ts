@@ -1,13 +1,13 @@
 import { expect, test } from "@playwright/test";
 
 import { BOTH_VIEWPORTS } from "../__constant__";
-import { addTabButton } from "../__util__";
+import { activeTabItem, addTabButton } from "../__util__";
 
 test("1. PC와 모바일의 모든 텍스트 입력 커서는 탭 색상과 무관하게 그레이다", async ({ page }) => {
   await page.goto("/");
   const editor = page.locator("textarea");
   await expect(editor).toBeVisible();
-  const activeTab = page.locator(".tab-item.is-active");
+  const activeTab = activeTabItem(page);
   const gray = "rgb(184, 184, 176)";
 
   for (const viewport of BOTH_VIEWPORTS) {

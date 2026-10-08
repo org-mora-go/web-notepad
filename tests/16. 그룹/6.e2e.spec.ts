@@ -5,6 +5,7 @@ import {
   bookmarkActiveTab,
   createGroups,
   groupsCommand,
+  groupStatusName,
   readActiveGroup,
   readStoredState,
 } from "../__util__";
@@ -19,7 +20,7 @@ test("6. 그룹 이름 수정은 저장·취소 버튼과 Enter·Escape를 지�
   const nameInput = page.getByRole("textbox", { name: "Work 그룹 이름 수정" });
   await nameInput.fill(" Focus ");
   await nameInput.press("Enter");
-  await expect(page.locator(".group-status-name")).toHaveText("Focus");
+  await expect(groupStatusName(page)).toHaveText("Focus");
   await expect(page.locator("textarea")).toHaveValue("private note");
 
   const editButton = page.getByRole("button", { name: "Focus 그룹 수정" });
@@ -27,14 +28,14 @@ test("6. 그룹 이름 수정은 저장·취소 버튼과 Enter·Escape를 지�
   await editButton.click();
   await focusInput.fill("Cancelled");
   await page.getByRole("button", { name: "그룹 수정 취소" }).click();
-  await expect(page.locator(".group-status-name")).toHaveText("Focus");
+  await expect(groupStatusName(page)).toHaveText("Focus");
   await editButton.click();
   await focusInput.fill("Escaped");
   await focusInput.press("Escape");
   await expect(focusInput).toHaveCount(0);
-  await expect(page.locator(".group-status-name")).toHaveText("Focus");
+  await expect(groupStatusName(page)).toHaveText("Focus");
   await page.reload();
-  await expect(page.locator(".group-status-name")).toHaveText("Focus");
+  await expect(groupStatusName(page)).toHaveText("Focus");
   await expect(page.locator("textarea")).toHaveValue("private note");
   expect((await readStoredState(page)).activeGroupId).toBe(originalId);
   expect((await readActiveGroup(page)).bookmarks[0].content).toBe("private note");
@@ -46,6 +47,6 @@ test("6. 그룹 이름 수정은 저장·취소 버튼과 Enter·Escape를 지�
   const saveButton = page.getByRole("button", { name: "그룹 수정 저장" });
   await expect(saveButton).toBeInViewport();
   await saveButton.click();
-  await expect(page.locator(".group-status-name")).toHaveText("Mobile");
+  await expect(groupStatusName(page)).toHaveText("Mobile");
   await expect(page.locator("textarea")).toHaveValue("private note");
 });

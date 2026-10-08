@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { deleteTabPopup } from "../__util__";
+import { activeTabItem, deleteTabPopup } from "../__util__";
 import { requestInactiveTabDelete } from "./__util__";
 
 test("8. 탭 삭제 팝업이 열린 동안 다른 탭 단축키와 키 자동 반복 입력을 무시한다", async ({ page }) => {
@@ -16,7 +16,7 @@ test("8. 탭 삭제 팝업이 열린 동안 다른 탭 단축키와 키 자동 �
   await popup.dispatchEvent("keydown", { key: "Backspace", code: "Backspace", altKey: true, repeat: true });
   await expect(popup).toBeVisible();
   await expect(tabs).toHaveCount(2);
-  await expect(page.locator(".tab-item.is-active")).toHaveCount(1);
+  await expect(activeTabItem(page)).toHaveCount(1);
   await expect(tabs.last()).toHaveClass(/is-active/);
   await expect(tabs.first().locator(".tab-title")).toHaveText("Target note");
   await expect(tabs.last().locator(".tab-title")).toHaveText("Keep the active note");

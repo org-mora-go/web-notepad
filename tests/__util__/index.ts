@@ -1,5 +1,11 @@
 export { bookmarkActiveTab } from "./bookmark-active-tab";
-export { closeActiveTabWithContent } from "./close-tab";
+export {
+  closeActiveTab,
+  closeActiveTabWithContent,
+  closedContents,
+  closedDeletePopup,
+  restoreFirstClosedTab,
+} from "./closed";
 export { createPinnedAndBookmarkedTabs } from "./create-pinned-and-bookmarked-tabs";
 export { confirmTabDelete, deleteTabPopup } from "./delete-tab-popup";
 export { divider, dividerDistanceFromCenter, dragDividerBy, dragDividerTo } from "./divider";
@@ -10,6 +16,7 @@ export {
   createGroup,
   createGroups,
   groupsCommand,
+  groupStatusName,
   shortcutsCommand,
   switchGroup,
 } from "./panel";
@@ -25,6 +32,7 @@ export {
 } from "./stored-state";
 export {
   activeTab,
+  activeTabItem,
   addTabButton,
   chooseTabMenuItem,
   cycleActiveTabColor,

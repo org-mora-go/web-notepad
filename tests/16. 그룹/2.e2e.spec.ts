@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-import { createGroup, groupsCommand, readStoredState } from "../__util__";
+import { createGroup, groupsCommand, groupStatusName, readStoredState } from "../__util__";
 
 test("2. 새 그룹 이름은 앞뒤 공백을 제거해 최대 60자로 저장하고 placeholder는 Group name이다", async ({
   page,
@@ -12,7 +12,7 @@ test("2. 새 그룹 이름은 앞뒤 공백을 제거해 최대 60자로 저장�
   await expect(nameInput).toHaveAttribute("maxlength", "60");
 
   await createGroup(page, " Work ");
-  await expect(page.locator(".group-status-name")).toHaveText("Work");
+  await expect(groupStatusName(page)).toHaveText("Work");
 
   await nameInput.fill("A".repeat(70));
   await expect(nameInput).toHaveValue("A".repeat(60));

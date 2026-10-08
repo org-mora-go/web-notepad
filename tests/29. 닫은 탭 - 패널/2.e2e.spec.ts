@@ -10,8 +10,8 @@ test("2. 더보기·간소화 버튼으로 닫은 탭 내용을 펼치거나 접
   );
   await closedCommand(page).click();
 
-  const content = page.locator(".closed-content");
-  const toggle = page.locator(".closed-content-toggle");
+  const content = page.locator(".expandable-content-text");
+  const toggle = page.locator(".expandable-content-toggle");
   const collapsedHeight = (await content.boundingBox())!.height;
   await toggle.click();
   await expect(toggle).toHaveText("간소화");

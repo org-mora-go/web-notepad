@@ -1,1 +1,1 @@
-export { moveTabToTarget, openTargetGroup } from "./move-tab-to-target";
+export { moveTabToTarget } from "./move-tab-to-target";

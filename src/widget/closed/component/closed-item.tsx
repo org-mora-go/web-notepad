@@ -2,8 +2,8 @@
 
 import { RotateCcw, Trash2 } from "lucide-react";
 
-import { useExpandableContent } from "@/src/entity/hook";
 import type { ClosedTabEntry } from "@/src/entity/notepad";
+import { ExpandableContent } from "@/src/entity/ui";
 import { formatDate } from "@/src/entity/util";
 
 type Props = {
@@ -14,9 +14,6 @@ type Props = {
 };
 
 export function ClosedItem({ entry, groupName, onRestore, onRemove }: Props) {
-  const { contentRef, expanded, canExpand, toggleExpanded } =
-    useExpandableContent(entry.tab.content);
-
   return (
     <article className="closed-item">
       <div className="closed-item-heading">
@@ -25,22 +22,7 @@ export function ClosedItem({ entry, groupName, onRestore, onRemove }: Props) {
           {formatDate(entry.closedAt)}
         </time>
       </div>
-      <p
-        ref={contentRef}
-        className={`closed-content ${expanded ? "is-expanded" : ""}`}
-      >
-        {entry.tab.content}
-      </p>
-      {(canExpand || expanded) && (
-        <button
-          className="closed-content-toggle"
-          type="button"
-          aria-expanded={expanded}
-          onClick={toggleExpanded}
-        >
-          {expanded ? "간소화" : "더보기"}
-        </button>
-      )}
+      <ExpandableContent content={entry.tab.content} />
       <div className="closed-actions">
         <button type="button" onClick={() => onRestore(entry.id)}>
           <RotateCcw size={14} />

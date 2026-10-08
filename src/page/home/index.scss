@@ -1,4 +1,7 @@
 @use "../../entity/style/variable" as v;
+@use "../../entity/ui/confirm-popup";
+@use "../../entity/ui/expandable-content";
+@use "../../entity/ui/side-panel";
 @use "../../widget/header";
 @use "../../widget/body";
 @use "../../feature/note-editor";

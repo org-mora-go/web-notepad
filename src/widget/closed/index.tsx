@@ -1,13 +1,14 @@
 "use client";
 
-import { Ghost, X } from "lucide-react";
+import { Ghost } from "lucide-react";
 import { useState } from "react";
 
 import type { ClosedTabEntry, GroupEntry } from "@/src/entity/notepad";
+import { ConfirmPopup, SidePanel } from "@/src/entity/ui";
 import { SearchField } from "@/src/feature";
 import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
-import { ClosedDeletePopup, ClosedItem } from "./component";
+import { ClosedItem } from "./component";
 
 type Props = {
   closedTabs: ClosedTabEntry[];
@@ -38,66 +39,55 @@ export function Closed({
   );
 
   return (
-    <div className="closed">
-      <div
-        className={`closed-backdrop ${open ? "is-visible" : ""}`}
-        onClick={onClose}
-        aria-hidden="true"
+    <SidePanel
+      className="closed"
+      id="closed-panel"
+      title="Closed"
+      open={open}
+      closeLabel="닫은 탭 패널 닫기"
+      onClose={onClose}
+    >
+      <SearchField
+        value={searchQuery}
+        ariaLabel="닫은 탭 검색"
+        placeholder="Search closed tabs"
+        onChange={setSearchQuery}
       />
-      <aside
-        id="closed-panel"
-        className={`closed-drawer ${open ? "is-open" : ""}`}
-        aria-hidden={!open}
-      >
-        <div className="closed-header">
-          <h2>Closed</h2>
-          <button
-            className="panel-close"
-            type="button"
-            onClick={onClose}
-            aria-label="닫은 탭 패널 닫기"
-          >
-            <X size={12} />
-          </button>
-        </div>
-        <SearchField
-          value={searchQuery}
-          ariaLabel="닫은 탭 검색"
-          placeholder="Search closed tabs"
-          onChange={setSearchQuery}
-        />
-        <div className="closed-list">
-          {closedTabs.length === 0 ? (
-            <div className="closed-empty">
-              <Ghost size={26} strokeWidth={1.4} />
-              <p>Empty Closed</p>
-            </div>
-          ) : filteredEntries.length === 0 ? (
-            <div className="search-empty-state">
-              <p>검색 결과가 없습니다</p>
-            </div>
-          ) : (
-            filteredEntries.map(({ entry, groupName }) => (
-              <ClosedItem
-                key={entry.id}
-                entry={entry}
-                groupName={groupName}
-                onRestore={onRestore}
-                onRemove={setDeletingEntryId}
-              />
-            ))
-          )}
-        </div>
-      </aside>
-      {deletingEntryId && (
-        <ClosedDeletePopup
-          onCancel={() => setDeletingEntryId(null)}
-          onConfirm={() => {
-            onRemove(deletingEntryId);
-            setDeletingEntryId(null);
-          }}
-        />
-      )}
-    </div>
+      <div className="closed-list">
+        {closedTabs.length === 0 ? (
+          <div className="closed-empty">
+            <Ghost size={26} strokeWidth={1.4} />
+            <p>Empty Closed</p>
+          </div>
+        ) : filteredEntries.length === 0 ? (
+          <div className="search-empty-state">
+            <p>검색 결과가 없습니다</p>
+          </div>
+        ) : (
+          filteredEntries.map(({ entry, groupName }) => (
+            <ClosedItem
+              key={entry.id}
+              entry={entry}
+              groupName={groupName}
+              onRestore={onRestore}
+              onRemove={setDeletingEntryId}
+            />
+          ))
+        )}
+      </div>
+    {deletingEntryId && (
+      <ConfirmPopup
+        title="Delete closed tab"
+        message="This closed tab will be permanently deleted and cannot be restored. Do you want to delete it?"
+        closeLabel="삭제 확인 닫기"
+        closeTitle="닫기"
+        onCancel={() => setDeletingEntryId(null)}
+        onConfirm={() => {
+          onRemove(deletingEntryId);
+          setDeletingEntryId(null);
+        }}
+      />
+    )}
+    </SidePanel>
   );
 }

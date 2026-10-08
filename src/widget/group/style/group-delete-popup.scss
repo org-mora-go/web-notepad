@@ -1,5 +1,0 @@
-@use "../../../entity/style/mixin";
-
-.group {
-  @include mixin.confirm-popup("group-delete-popup");
-}

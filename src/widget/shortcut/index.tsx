@@ -1,6 +1,6 @@
 "use client";
 
-import { X } from "lucide-react";
+import { SidePanel } from "@/src/entity/ui";
 
 type Props = {
   open: boolean;
@@ -23,42 +23,27 @@ const shortcuts = [
 
 export function Shortcut({ open, onClose }: Props) {
   return (
-    <div className="shortcut">
-      <div
-        className={`shortcut-backdrop ${open ? "is-visible" : ""}`}
-        onClick={onClose}
-        aria-hidden="true"
-      />
-      <aside
-        id="shortcuts-panel"
-        className={`shortcut-drawer ${open ? "is-open" : ""}`}
-        aria-hidden={!open}
-        aria-label="키보드 단축키"
-      >
-        <div className="shortcut-header">
-          <h2>Shortcut (mac)</h2>
-          <button
-            className="shortcut-close"
-            type="button"
-            onClick={onClose}
-            aria-label="단축키 닫기"
-          >
-            <X size={16} />
-          </button>
-        </div>
-        <dl className="shortcut-list">
-          {shortcuts.map(({ action, keys }) => (
-            <div className="shortcut-row" key={action}>
-              <dt>{action}</dt>
-              <dd>
-                {keys.map((key) => (
-                  <kbd key={key}>{key}</kbd>
-                ))}
-              </dd>
-            </div>
-          ))}
-        </dl>
-      </aside>
-    </div>
+    <SidePanel
+      className="shortcut"
+      id="shortcuts-panel"
+      title="Shortcut (mac)"
+      open={open}
+      closeLabel="단축키 닫기"
+      ariaLabel="키보드 단축키"
+      onClose={onClose}
+    >
+      <dl className="shortcut-list">
+        {shortcuts.map(({ action, keys }) => (
+          <div className="shortcut-row" key={action}>
+            <dt>{action}</dt>
+            <dd>
+              {keys.map((key) => (
+                <kbd key={key}>{key}</kbd>
+              ))}
+            </dd>
+          </div>
+        ))}
+      </dl>
+    </SidePanel>
   );
 }
