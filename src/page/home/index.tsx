@@ -3,7 +3,7 @@
 import "./index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { Bookmark, Closed, Group, Shortcut } from "@/src/widget";
+import { Bookmark, Closed, GlobalSearch, Group, Shortcut } from "@/src/widget";
 
 import { Loading, PaneView, StatusBar, TabDeletePopup } from "./component";
 
@@ -56,10 +56,12 @@ export function Home() {
           groupCount={groupCount}
           activeGroupName={activeGroupName}
           groupsOpen={openPanel === "groups"}
+          globalSearchOpen={openPanel === "global-search"}
           onToggleClosed={() => toggleSidePanel("closed")}
           onToggleShortcuts={() => toggleSidePanel("shortcuts")}
           onToggleBookmarks={() => toggleSidePanel("bookmarks")}
           onToggleGroups={() => toggleSidePanel("groups")}
+          onToggleGlobalSearch={() => toggleSidePanel("global-search")}
         />
       </section>
 
@@ -96,6 +98,25 @@ export function Home() {
           closeSidePanels();
         }}
         onRemove={removeClosedTab}
+      />
+      <GlobalSearch
+        groups={groups}
+        closedTabs={closedTabs}
+        open={openPanel === "global-search"}
+        onClose={closeSidePanels}
+        onSelectGroup={(groupId) => {
+          selectGroup(groupId);
+          closeSidePanels();
+        }}
+        onOpenBookmark={(groupId, bookmarkId) => {
+          selectGroup(groupId);
+          openBookmark(bookmarkId);
+          closeSidePanels();
+        }}
+        onRestoreClosed={(entryId) => {
+          restoreClosedTab(entryId);
+          closeSidePanels();
+        }}
       />
       <Shortcut
         open={openPanel === "shortcuts"}
