@@ -1,6 +1,6 @@
 "use client";
 
-import { Check, Layers, Pencil, Plus, Trash2, X } from "lucide-react";
+import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
 import { type FormEvent, useState } from "react";
 
 import type { GroupEntry } from "@/src/entity/notepad";
@@ -114,13 +114,8 @@ export function Group({
             <Plus size={16} />
           </button>
         </form>
-      <div className="group-list">
-          {groups.length === 0 ? (
-            <div className="group-empty">
-              <Layers size={24} strokeWidth={1.5} />
-              <p>아직 그룹이 없습니다</p>
-            </div>
-          ) : filteredGroups.length === 0 ? (
+        <div className="group-list">
+          {filteredGroups.length === 0 ? (
             <div className="search-empty-state">
               <p>검색 결과가 없습니다</p>
             </div>

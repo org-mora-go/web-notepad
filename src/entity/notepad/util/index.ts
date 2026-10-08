@@ -3,4 +3,5 @@ export {
   createNoteTab,
   getNextTabNumber,
   getTitleFromContent,
+  sanitizeSelectedLines,
 } from "./note-tab";

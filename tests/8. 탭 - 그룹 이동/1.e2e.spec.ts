@@ -1,0 +1,37 @@
+import { expect, test } from "@playwright/test";
+
+import { BOTH_VIEWPORTS } from "../__constant__";
+import {
+  bookmarksCommand,
+  expectSelectedLines,
+  readStoredState,
+  seedMoveGroupState,
+} from "../__util__";
+import { moveTabToTarget, openTargetGroup } from "./__util__";
+
+test("1. 그룹 이동 시 탭 ID, 내용, 색상, 고정, 줄 선택과 연결 북마크를 유지한다", async ({ page }) => {
+  const editor = page.locator("textarea");
+  const activeTabItem = page.locator(".tab-item.is-active");
+  for (const viewport of BOTH_VIEWPORTS) {
+    await page.setViewportSize(viewport);
+    const original = await seedMoveGroupState(page);
+    await moveTabToTarget(page, viewport);
+
+    const moved = await readStoredState(page);
+    expect(moved.groups[0].bookmarks).toEqual([]);
+    expect(moved.groups[1].tabs.at(-1)).toEqual(original.groups[0].tabs[0]);
+    expect(moved.groups[1].bookmarks).toEqual(original.groups[0].bookmarks);
+
+    await openTargetGroup(page);
+    await expect(editor).toHaveValue("Move me\nselected line");
+    await expect(activeTabItem).toHaveClass(/is-pinned/);
+    await expect(activeTabItem).toHaveClass(/is-bookmarked/);
+    await expect(activeTabItem).toHaveAttribute("data-tab-color", "red");
+    await expectSelectedLines(page, [false, true]);
+    await bookmarksCommand(page).click();
+    await expect(page.locator("#bookmarks-panel strong")).toHaveText("Move me");
+    await page.getByRole("button", { name: "열기", exact: true }).click();
+    await expect(page.getByRole("tab")).toHaveCount(2);
+    await expect(editor).toHaveValue("Move me\nselected line");
+  }
+});

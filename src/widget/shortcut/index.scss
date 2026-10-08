@@ -1,56 +1,8 @@
 @use "../../entity/style/variable" as v;
+@use "../../entity/style/mixin";
 
 .shortcut {
-  .shortcut-backdrop {
-    position: fixed;
-    inset: 0;
-    z-index: 10;
-    background: rgba(0, 0, 0, 0.58);
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 180ms ease;
-
-    &.is-visible {
-      opacity: 1;
-      pointer-events: auto;
-    }
-  }
-
-  .shortcut-drawer {
-    position: fixed;
-    top: 0;
-    right: 0;
-    z-index: 20;
-    width: min(462px, 100vw);
-    height: 100vh;
-    display: grid;
-    grid-template-rows: auto minmax(0, 1fr);
-    border-left: 1px solid #3a3a35;
-    background: #10100f;
-    box-shadow: -20px 0 60px rgba(0, 0, 0, 0.5);
-    transform: translateX(102%);
-    transition: transform 220ms ease;
-
-    &.is-open {
-      transform: translateX(0);
-    }
-  }
-
-  .shortcut-header {
-    min-height: 55px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 9px 22px;
-    border-bottom: 1px solid v.$line;
-
-    h2 {
-      margin: 0;
-      font-family: v.$sans;
-      font-size: 20px;
-      font-weight: 500;
-    }
-  }
+  @include mixin.side-panel("shortcut", auto minmax(0, 1fr), $title-size: 20px);
 
   .shortcut-close {
     width: 28px;
