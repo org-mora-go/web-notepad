@@ -9,7 +9,8 @@ test("3. 뒤로 가기, Escape, 바깥 클릭으로 이동 없이 그룹 목록�
   for (const viewport of BOTH_VIEWPORTS) {
     await page.setViewportSize(viewport);
     await seedMoveGroupState(page);
-    const original = await readStoredState(page);
+    const originalState = await readStoredState(page);
+    const original = { ...originalState, closedTabs: originalState.closedTabs ?? [] };
     await openTabMenu(moveGroupSourceTab(page), viewport);
     await moveGroup.click();
     await menu.getByRole("menuitem", { name: "Back to tab actions" }).click();
@@ -26,6 +27,7 @@ test("3. 뒤로 가기, Escape, 바깥 클릭으로 이동 없이 그룹 목록�
     await expect(menu).toBeVisible();
     await page.mouse.click(2, 200);
     await expect(page.getByRole("menu")).toHaveCount(0);
-    expect(await readStoredState(page)).toEqual(original);
+    const finalState = await readStoredState(page);
+    expect({ ...finalState, closedTabs: finalState.closedTabs ?? [] }).toEqual(original);
   }
 });

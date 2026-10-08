@@ -11,7 +11,6 @@ export function Home() {
   const {
     hydrated,
     closedTabs,
-    restoreClosedTab,
     removeClosedTab,
     closedSearchQuery,
     setClosedSearchQuery,
@@ -22,7 +21,10 @@ export function Home() {
     toggleSidePanel,
     closeSidePanels,
     activeGroupId,
-    selectGroup,
+    selectGroupAndClosePanel,
+    openBookmarkAndClosePanel,
+    openBookmarkInCurrentGroupAndClosePanel,
+    restoreClosedTabAndClosePanel,
     activeTab,
     split,
     bookmarks,
@@ -31,7 +33,6 @@ export function Home() {
     activeGroupName,
     leftPaneProps,
     rightPaneProps,
-    openBookmark,
     removeBookmark,
     createGroup,
     renameGroup,
@@ -71,10 +72,7 @@ export function Home() {
         bookmarks={bookmarks}
         open={openPanel === "bookmarks"}
         onClose={closeSidePanels}
-        onOpen={(bookmarkId) => {
-          openBookmark(bookmarkId);
-          closeSidePanels();
-        }}
+        onOpen={openBookmarkInCurrentGroupAndClosePanel}
         onRemove={removeBookmark}
       />
       <Group
@@ -83,10 +81,7 @@ export function Home() {
         open={openPanel === "groups"}
         onClose={closeSidePanels}
         onCreate={createGroup}
-        onSelect={(groupId) => {
-          selectGroup(groupId);
-          closeSidePanels();
-        }}
+        onSelect={selectGroupAndClosePanel}
         onRemove={removeGroup}
         onRename={renameGroup}
       />
@@ -97,10 +92,7 @@ export function Home() {
         open={openPanel === "closed"}
         onClose={closeSidePanels}
         onSearchQueryChange={setClosedSearchQuery}
-        onRestore={(entryId) => {
-          restoreClosedTab(entryId);
-          closeSidePanels();
-        }}
+        onRestore={restoreClosedTabAndClosePanel}
         onRemove={removeClosedTab}
       />
       <GlobalSearch
@@ -108,15 +100,8 @@ export function Home() {
         closedTabs={closedTabs}
         open={openPanel === "global-search"}
         onClose={closeSidePanels}
-        onSelectGroup={(groupId) => {
-          selectGroup(groupId);
-          closeSidePanels();
-        }}
-        onOpenBookmark={(groupId, bookmarkId) => {
-          selectGroup(groupId);
-          openBookmark(bookmarkId);
-          closeSidePanels();
-        }}
+        onSelectGroup={selectGroupAndClosePanel}
+        onOpenBookmark={openBookmarkAndClosePanel}
         onOpenClosedSearch={(query) => {
           setClosedSearchQuery(query);
           toggleSidePanel("closed");

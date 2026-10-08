@@ -41,7 +41,7 @@ test("6. 그룹 이름 수정은 저장·취소 버튼과 Enter·Escape를 지�
   expect((await readActiveGroup(page)).bookmarks[0].content).toBe("private note");
 
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await groupsCommand(page).click();
+  await expect(groupsCommand(page)).toHaveAttribute("aria-expanded", "true");
   await editButton.click();
   await focusInput.fill("Mobile");
   const saveButton = page.getByRole("button", { name: "그룹 수정 저장" });

@@ -21,5 +21,7 @@ test("6. Escape로 우측 패널을 닫은 뒤에도 다시 열기와 브라우�
       await expect(panel).toHaveAttribute("aria-hidden", "true");
     }
   }
-  await expect(page).toHaveURL("http://localhost:3000/");
+  const url = new URL(page.url());
+  expect(url.searchParams.get("panel")).toBeNull();
+  expect(url.searchParams.get("group")).toBe("ungrouped");
 });

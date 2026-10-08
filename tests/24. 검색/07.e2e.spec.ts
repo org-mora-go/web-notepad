@@ -1,7 +1,7 @@
 import { expect, test } from "@playwright/test";
 
-import { createClosedTabFixture, createGroupFixture, createTabFixture } from "../__fixture__";
 import { MOBILE_VIEWPORT } from "../__constant__";
+import { createClosedTabFixture, createGroupFixture, createTabFixture } from "../__fixture__";
 import { groupStatusName, seedStoredStateOnLoad } from "../__util__";
 
 test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 찾아 이동·열기·복원한다", async ({ page }) => {

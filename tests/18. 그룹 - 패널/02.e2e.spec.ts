@@ -35,7 +35,7 @@ test("2. 그룹 생성·이름 수정 직후와 새로고침 시에도 같은 �
   await expect(names).toHaveText(finalOrder);
 
   await page.reload();
-  await toggle.click();
+  await expect(toggle).toHaveAttribute("aria-expanded", "true");
   await expect(names).toHaveText(finalOrder);
   await page.setViewportSize(MOBILE_VIEWPORT);
   await expect(names).toHaveText(finalOrder);
