@@ -1,0 +1,11 @@
+@use "../../../entity/style/variable" as v;
+
+.search-highlight {
+  border-radius: 2px;
+  padding: 0 1px;
+  background: rgba(v.$signal, 0.22);
+  color: #effff4;
+  font-weight: 700;
+  -webkit-box-decoration-break: clone;
+  box-decoration-break: clone;
+}

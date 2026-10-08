@@ -6,6 +6,7 @@ import { useState } from "react";
 import type { ClosedTabEntry, GroupEntry } from "@/src/entity/notepad";
 import { ConfirmPopup, SidePanel } from "@/src/entity/ui";
 import { SearchField } from "@/src/feature";
+import { SearchHighlight } from "@/src/feature/search-field/component";
 import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
 import { ClosedItem } from "./component";
@@ -69,6 +70,7 @@ export function Closed({
               key={entry.id}
               entry={entry}
               groupName={groupName}
+              searchQuery={searchQuery}
               onRestore={onRestore}
               onRemove={setDeletingEntryId}
             />

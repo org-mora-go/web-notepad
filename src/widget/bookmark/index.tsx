@@ -60,6 +60,7 @@ export function Bookmark({
             <BookmarkItem
               key={bookmark.id}
               bookmark={bookmark}
+              searchQuery={searchQuery}
               onOpen={onOpen}
               onRemove={onRemove}
             />

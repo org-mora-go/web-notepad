@@ -7,6 +7,7 @@ import type { GroupEntry } from "@/src/entity/notepad";
 import { compareGroups, UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
 import { ConfirmPopup, SidePanel } from "@/src/entity/ui";
 import { SearchField } from "@/src/feature";
+import { SearchHighlight } from "@/src/feature/search-field/component";
 import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
 type Props = {
@@ -135,7 +136,7 @@ export function Group({
                         group.id === UNGROUPED_GROUP_ID ? "is-ungrouped" : ""
                       }
                     >
-                      {group.name}
+                      <SearchHighlight text={group.name} query={searchQuery} />
                     </strong>
                   </button>
                   {group.id !== UNGROUPED_GROUP_ID && (
