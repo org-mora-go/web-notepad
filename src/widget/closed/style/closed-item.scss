@@ -1,0 +1,12 @@
+@use "../../../entity/style/mixin";
+
+.closed {
+  @include mixin.note-card("closed");
+
+  .closed-item-heading strong {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}

@@ -3,13 +3,16 @@
 import "./index.scss";
 
 import { useHome } from "@/src/page/home/hook";
-import { Bookmark, Group, Shortcut } from "@/src/widget";
+import { Bookmark, Closed, Group, Shortcut } from "@/src/widget";
 
 import { Loading, PaneView, StatusBar, TabDeletePopup } from "./component";
 
 export function Home() {
   const {
     hydrated,
+    closedTabs,
+    restoreClosedTab,
+    removeClosedTab,
     pendingCloseTabId,
     cancelCloseTab,
     confirmCloseTab,
@@ -46,12 +49,14 @@ export function Home() {
         </div>
 
         <StatusBar
+          closedOpen={openPanel === "closed"}
           bookmarkCount={bookmarks.length}
           shortcutsOpen={openPanel === "shortcuts"}
           bookmarksOpen={openPanel === "bookmarks"}
           groupCount={groupCount}
           activeGroupName={activeGroupName}
           groupsOpen={openPanel === "groups"}
+          onToggleClosed={() => toggleSidePanel("closed")}
           onToggleShortcuts={() => toggleSidePanel("shortcuts")}
           onToggleBookmarks={() => toggleSidePanel("bookmarks")}
           onToggleGroups={() => toggleSidePanel("groups")}
@@ -80,6 +85,17 @@ export function Home() {
         }}
         onRemove={removeGroup}
         onRename={renameGroup}
+      />
+      <Closed
+        closedTabs={closedTabs}
+        groups={groups}
+        open={openPanel === "closed"}
+        onClose={closeSidePanels}
+        onRestore={(entryId) => {
+          restoreClosedTab(entryId);
+          closeSidePanels();
+        }}
+        onRemove={removeClosedTab}
       />
       <Shortcut
         open={openPanel === "shortcuts"}

@@ -1,0 +1,5 @@
+@use "../../../entity/style/mixin";
+
+.closed {
+  @include mixin.confirm-popup("closed-delete-popup");
+}

@@ -66,6 +66,13 @@
     }
   }
 
+  // The narrow mobile bar keeps only the CLOSED icon.
+  .closed-status-label {
+    @media (max-width: 640px) {
+      display: none;
+    }
+  }
+
   .group-status-command {
     flex: 0 1 auto;
     min-width: 0;

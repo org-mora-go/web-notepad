@@ -156,3 +156,137 @@
     }
   }
 }
+
+// Side panel body: `.panel-close`, `.{name}-list` and `.{name}-empty` state.
+@mixin side-panel-list($name) {
+  .panel-close {
+    width: 28px;
+    height: 28px;
+    display: grid;
+    place-items: center;
+    border: 1px solid v.$line;
+    background: transparent;
+    color: v.$dim;
+    cursor: pointer;
+
+    svg {
+      width: 12px;
+      height: 12px;
+    }
+
+    &:hover {
+      color: v.$ink;
+    }
+  }
+
+  .#{$name}-list {
+    min-height: 0;
+    padding: 14px;
+    overflow-y: auto;
+  }
+
+  .#{$name}-empty {
+    min-height: 280px;
+    display: grid;
+    place-content: center;
+    justify-items: center;
+    gap: 14px;
+    color: #555550;
+    text-align: center;
+
+    p {
+      max-width: 220px;
+      margin: 0;
+      font-family: v.$sans;
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  }
+}
+
+// Expandable note card: `.{name}-item` with `-item-heading`, `-content`, `-content-toggle`, `-actions` and `.remove-{name}`.
+@mixin note-card($name) {
+  .#{$name}-item {
+    margin-bottom: 10px;
+    padding: 16px;
+    border: 1px solid v.$line;
+    background: #151514;
+
+    .#{$name}-content {
+      margin: 18px 0;
+      max-height: 126px;
+      overflow: hidden;
+      color: v.$saved;
+      font-family: v.$sans;
+      font-size: 16px;
+      line-height: 1.5;
+      white-space: pre-wrap;
+      overflow-wrap: anywhere;
+    }
+
+    .#{$name}-content.is-expanded {
+      max-height: none;
+    }
+
+    .#{$name}-content-toggle {
+      margin: -10px 0 14px;
+      padding: 0;
+      border: 0;
+      background: transparent;
+      color: v.$dim;
+      font-size: 13px;
+      cursor: pointer;
+
+      &:hover {
+        color: v.$ink;
+      }
+    }
+  }
+
+  .#{$name}-item-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    strong {
+      color: v.$signal;
+      font-size: 15px;
+    }
+
+    time {
+      color: #6f6f69;
+      font-size: 12px;
+    }
+  }
+
+  .#{$name}-actions {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    button {
+      height: 30px;
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      padding: 0 9px;
+      border: 1px solid v.$line;
+      background: transparent;
+      color: #a9a9a2;
+      font-size: 13px;
+      cursor: pointer;
+
+      &:hover {
+        border-color: v.$hover-line;
+        color: v.$ink;
+      }
+    }
+
+    .remove-#{$name} {
+      width: 30px;
+      padding: 0;
+      justify-content: center;
+    }
+  }
+}

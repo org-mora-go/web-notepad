@@ -1,26 +1,30 @@
 "use client";
 
-import { Bookmark, Keyboard, Layers } from "lucide-react";
+import { Bookmark, Ghost, Keyboard, Layers } from "lucide-react";
 
 type Props = {
+  closedOpen: boolean;
   bookmarkCount: number;
   shortcutsOpen: boolean;
   bookmarksOpen: boolean;
   groupCount: number;
   activeGroupName: string;
   groupsOpen: boolean;
+  onToggleClosed: () => void;
   onToggleBookmarks: () => void;
   onToggleShortcuts: () => void;
   onToggleGroups: () => void;
 };
 
 export function StatusBar({
+  closedOpen,
   bookmarkCount,
   shortcutsOpen,
   bookmarksOpen,
   groupCount,
   activeGroupName,
   groupsOpen,
+  onToggleClosed,
   onToggleBookmarks,
   onToggleShortcuts,
   onToggleGroups,
@@ -29,6 +33,20 @@ export function StatusBar({
     <footer className="status-bar">
       <div className="status-meta">
         <div className="status-actions">
+          <button
+            className={`status-command closed-command ${closedOpen ? "is-active" : ""}`}
+            type="button"
+            onClick={onToggleClosed}
+            aria-expanded={closedOpen}
+            aria-controls="closed-panel"
+            aria-label="닫은 탭"
+          >
+            <Ghost size={16} strokeWidth={1.8} />
+            <span className="status-label closed-status-label">CLOSED</span>
+            <span className="status-separator" aria-hidden="true">
+              |
+            </span>
+          </button>
           <button
             className={`status-command shortcut-command ${shortcutsOpen ? "is-active" : ""}`}
             type="button"

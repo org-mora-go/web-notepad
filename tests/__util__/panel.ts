@@ -4,6 +4,8 @@ export const groupsCommand = (page: Page) =>
   page.locator('button[aria-controls="groups-panel"]');
 export const bookmarksCommand = (page: Page) =>
   page.locator('button[aria-controls="bookmarks-panel"]');
+export const closedCommand = (page: Page) =>
+  page.locator('button[aria-controls="closed-panel"]');
 export const shortcutsCommand = (page: Page) =>
   page.locator('button[aria-controls="shortcuts-panel"]');
 

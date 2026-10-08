@@ -1,10 +1,12 @@
 export { bookmarkActiveTab } from "./bookmark-active-tab";
+export { closeActiveTabWithContent } from "./close-tab";
 export { createPinnedAndBookmarkedTabs } from "./create-pinned-and-bookmarked-tabs";
 export { confirmTabDelete, deleteTabPopup } from "./delete-tab-popup";
 export { divider, dividerDistanceFromCenter, dragDividerBy, dragDividerTo } from "./divider";
 export { expectSelectedLines, lineButtons } from "./line";
 export {
   bookmarksCommand,
+  closedCommand,
   createGroup,
   createGroups,
   groupsCommand,

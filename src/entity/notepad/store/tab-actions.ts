@@ -134,6 +134,14 @@ export const createTabActions: StateCreator<
     const group = getActiveGroup(state);
     const tab = group?.tabs.find((item) => item.id === tabId);
     if (!tab || tab.pinned) return;
+    if (tab.content) {
+      set({
+        closedTabs: [
+          { id: `closed-${crypto.randomUUID()}`, groupId: group.id, tab, closedAt: Date.now() },
+          ...state.closedTabs,
+        ],
+      });
+    }
 
     const remainingTabs = group.tabs.filter((item) => item.id !== tabId);
     if (remainingTabs.length === 0) {

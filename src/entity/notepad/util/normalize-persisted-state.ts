@@ -1,5 +1,12 @@
 import { UNGROUPED_GROUP_ID } from "../constant";
-import type { BookmarkEntry, GroupEntry, NotepadState, NoteTab, TabColor } from "../type";
+import type {
+  BookmarkEntry,
+  ClosedTabEntry,
+  GroupEntry,
+  NotepadState,
+  NoteTab,
+  TabColor,
+} from "../type";
 import { createNoteTab, sanitizeSelectedLines } from "./note-tab";
 
 const normalizeTabColor = (value: unknown, urgent?: unknown): TabColor =>
@@ -52,6 +59,19 @@ const normalizeBookmarks = (value: unknown, fallback: BookmarkEntry[]) =>
         createdAt: finiteNumberOr(bookmark.createdAt, Date.now()),
       };
     });
+
+const normalizeClosedTabs = (value: unknown): ClosedTabEntry[] =>
+  (Array.isArray(value) ? value : []).flatMap((entry) => {
+    if (!entry || typeof entry.id !== "string" || typeof entry.groupId !== "string") return [];
+    const [tab] = normalizeTabs([entry.tab], []);
+    if (!tab) return [];
+    return [{
+      id: entry.id,
+      groupId: entry.groupId,
+      tab: { ...tab, pinned: false },
+      closedAt: finiteNumberOr(entry.closedAt, Date.now()),
+    }];
+  });
 
 export function normalizePersistedState(
   persistedState: unknown,
@@ -192,6 +212,7 @@ export function normalizePersistedState(
     groups,
     activeGroupId,
     nextTabNumber,
+    closedTabs: normalizeClosedTabs(persisted.closedTabs),
   };
 
   function createLegacyGroupTab(): NoteTab {

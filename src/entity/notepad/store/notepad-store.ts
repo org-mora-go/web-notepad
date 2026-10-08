@@ -5,6 +5,7 @@ import { UNGROUPED_GROUP_ID } from "../constant";
 import type { NotepadState } from "../type";
 import { createNoteTab, normalizePersistedState } from "../util";
 import { createBookmarkActions } from "./bookmark-actions";
+import { createClosedTabActions } from "./closed-tab-actions";
 import { createGroupActions } from "./group-actions";
 import { createPaneActions } from "./pane-actions";
 import { createTabActions } from "./tab-actions";
@@ -23,9 +24,11 @@ export const useNotepadStore = create<NotepadState>()(
       ...createPaneActions(set, get, store),
       ...createBookmarkActions(set, get, store),
       ...createGroupActions(set, get, store),
+      ...createClosedTabActions(set, get, store),
       nextTabNumber: 2,
       activeGroupId: UNGROUPED_GROUP_ID,
       groups: [createGroupEntry(UNGROUPED_GROUP_ID, "Ungrouped", 0, createNoteTab(1))],
+      closedTabs: [],
     }),
     {
       name: "web-notepad-storage",

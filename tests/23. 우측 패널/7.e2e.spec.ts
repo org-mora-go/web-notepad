@@ -20,9 +20,14 @@ test("7. Escape로 우측 패널을 닫으면 하단 패널 버튼의 포커스�
       await expect(toggle).toHaveCSS("outline-style", "none");
       await expect(toggle).toHaveCSS("border-width", "0px");
 
-      const neighborId = panelId === "bookmarks-panel" ? "groups-panel" : "bookmarks-panel";
+      const visibleIds = await page.locator(".status-actions .status-command:visible").evaluateAll(
+        (commands) => commands.map((command) => command.getAttribute("aria-controls")),
+      );
+      const index = visibleIds.indexOf(panelId);
+      const fromNext = index < visibleIds.length - 1;
+      const neighborId = visibleIds[fromNext ? index + 1 : index - 1];
       await page.locator(`button[aria-controls="${neighborId}"]`).focus();
-      await page.keyboard.press(panelId === "groups-panel" ? "Tab" : "Shift+Tab");
+      await page.keyboard.press(fromNext ? "Shift+Tab" : "Tab");
       await expect(toggle).toBeFocused();
       await expect(toggle).not.toHaveCSS("outline-style", "none");
     }

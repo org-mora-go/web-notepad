@@ -1,0 +1,8 @@
+@use "../../entity/style/mixin";
+@use "./style/closed-delete-popup";
+@use "./style/closed-item";
+
+.closed {
+  @include mixin.side-panel("closed", auto auto minmax(0, 1fr), $header-gap: 12px);
+  @include mixin.side-panel-list("closed");
+}

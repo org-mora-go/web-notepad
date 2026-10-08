@@ -22,6 +22,14 @@ export type BookmarkEntry = {
   createdAt: number;
 };
 
+// A closed tab kept in the Closed panel with the group it was closed from.
+export type ClosedTabEntry = {
+  id: string;
+  groupId: string;
+  tab: NoteTab;
+  closedAt: number;
+};
+
 export type GroupEntry = {
   id: string;
   name: string;
@@ -41,6 +49,7 @@ export type NotepadState = {
   nextTabNumber: number;
   groups: GroupEntry[];
   activeGroupId: string;
+  closedTabs: ClosedTabEntry[];
   addTab: (pane?: PaneId) => void;
   selectTab: (tabId: string) => void;
   updateTab: (tabId: string, content: string) => void;
@@ -60,4 +69,6 @@ export type NotepadState = {
   renameGroup: (groupId: string, name: string) => void;
   removeGroup: (groupId: string) => void;
   selectGroup: (groupId: string) => void;
+  restoreClosedTab: (entryId: string) => void;
+  removeClosedTab: (entryId: string) => void;
 };
