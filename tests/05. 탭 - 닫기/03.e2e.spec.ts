@@ -19,7 +19,7 @@ test("3. 내용이 있는 탭은 확인 팝업에서 Delete를 선택해야 삭�
       await target.getByRole("tab").click({ button: "middle" });
     }
     await expect(popup).toBeVisible();
-    await expect(popup).toContainText("Do you want to delete this tab?");
+    await expect(popup).toContainText("Do you want to close this tab?");
     await expect(tabs).toHaveCount(2);
     await deleteButton.click();
     await expect(popup).toHaveCount(0);
