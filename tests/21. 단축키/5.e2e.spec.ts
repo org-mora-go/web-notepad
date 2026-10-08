@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("5. Option+F11/F12는 활성 탭을 좌우 패널 사이로 이동한다", async ({
+test("5. Option+F12는 활성 탭을 오른쪽 패널로, Option+F11은 왼쪽 패널로 이동한다", async ({
   page,
 }) => {
   await page.goto("http://localhost:3000");

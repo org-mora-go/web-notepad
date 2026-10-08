@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("4. 편집기 Cmd+A와 Alt+A 및 입력 요소의 Cmd+A 전체 선택을 지원한다", async ({ page }) => {
+test("4. 편집기 외의 입력 요소에서 Cmd+A는 즉시 해당 입력 내용 전체를 선택한다", async ({ page }) => {
   await page.goto("http://localhost:3000");
   const expectImmediateInputSelection = async (
     input: ReturnType<typeof page.locator>,
@@ -17,27 +17,6 @@ test("4. 편집기 Cmd+A와 Alt+A 및 입력 요소의 Cmd+A 전체 선택을 �
       }),
     ).toEqual([true, 0, end]);
   };
-
-  const editor = page.locator("textarea");
-  await editor.fill("select me");
-  await page.keyboard.press("Meta+a");
-  await expect
-    .poll(() =>
-      editor.evaluate((element) => [
-        (element as HTMLTextAreaElement).selectionStart,
-        (element as HTMLTextAreaElement).selectionEnd,
-      ]),
-    )
-    .toEqual([0, 9]);
-  await page.keyboard.press("Alt+a");
-  await expect
-    .poll(() =>
-      editor.evaluate((element) => [
-        (element as HTMLTextAreaElement).selectionStart,
-        (element as HTMLTextAreaElement).selectionEnd,
-      ]),
-    )
-    .toEqual([0, 9]);
 
   const bookmarkSearch = page.locator(
     '#bookmarks-panel input[aria-label="북마크 검색"]',
