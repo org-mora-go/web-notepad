@@ -17,6 +17,7 @@ type SidePanel = "closed" | "bookmarks" | "groups" | "shortcuts" | "global-searc
 export function useHome() {
   const hydrated = useStoreHydrated();
   const [openPanel, setOpenPanel] = useState<SidePanel | null>(null);
+  const [closedSearchQuery, setClosedSearchQuery] = useState("");
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const rightEditorRef = useRef<HTMLTextAreaElement>(null);
   const composingRef = useRef(false);
@@ -180,6 +181,8 @@ export function useHome() {
     cancelCloseTab,
     confirmCloseTab,
     openPanel,
+    closedSearchQuery,
+    setClosedSearchQuery,
     toggleSidePanel,
     closeSidePanels,
     activeGroupId,

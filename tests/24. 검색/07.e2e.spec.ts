@@ -57,7 +57,9 @@ test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 �
 
   await command.press("Enter");
   await search.fill("Archived");
-  await page.getByRole("button", { name: "닫은 탭 Archived draft 복원" }).click();
-  await expect(page.locator("textarea")).toHaveValue("Archived draft");
-  await expect(page.locator(".closed-item")).toHaveCount(0);
+  await page.getByRole("button", { name: "닫은 탭 Archived draft 검색 결과 보기" }).click();
+  await expect(page.locator("#closed-panel")).toHaveAttribute("aria-hidden", "false");
+  await expect(page.getByRole("searchbox", { name: "닫은 탭 검색" })).toHaveValue("Archived");
+  await expect(page.locator(".closed-item")).toHaveCount(1);
+  await expect(page.locator("textarea")).toHaveValue("Quarterly goals");
 });

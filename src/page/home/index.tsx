@@ -13,6 +13,8 @@ export function Home() {
     closedTabs,
     restoreClosedTab,
     removeClosedTab,
+    closedSearchQuery,
+    setClosedSearchQuery,
     pendingCloseTabId,
     cancelCloseTab,
     confirmCloseTab,
@@ -91,8 +93,10 @@ export function Home() {
       <Closed
         closedTabs={closedTabs}
         groups={groups}
+        searchQuery={closedSearchQuery}
         open={openPanel === "closed"}
         onClose={closeSidePanels}
+        onSearchQueryChange={setClosedSearchQuery}
         onRestore={(entryId) => {
           restoreClosedTab(entryId);
           closeSidePanels();
@@ -113,9 +117,9 @@ export function Home() {
           openBookmark(bookmarkId);
           closeSidePanels();
         }}
-        onRestoreClosed={(entryId) => {
-          restoreClosedTab(entryId);
-          closeSidePanels();
+        onOpenClosedSearch={(query) => {
+          setClosedSearchQuery(query);
+          toggleSidePanel("closed");
         }}
       />
       <Shortcut

@@ -16,7 +16,7 @@ type Props = {
   onClose: () => void;
   onSelectGroup: (groupId: string) => void;
   onOpenBookmark: (groupId: string, bookmarkId: string) => void;
-  onRestoreClosed: (entryId: string) => void;
+  onOpenClosedSearch: (query: string) => void;
 };
 
 export function GlobalSearch({
@@ -26,7 +26,7 @@ export function GlobalSearch({
   onClose,
   onSelectGroup,
   onOpenBookmark,
-  onRestoreClosed,
+  onOpenClosedSearch,
 }: Props) {
   const [searchQuery, setSearchQuery] = useState("");
   const query = searchQuery.trim();
@@ -122,8 +122,8 @@ export function GlobalSearch({
                     title={entry.tab.title}
                     description={entry.tab.content}
                     query={query}
-                    ariaLabel={`닫은 탭 ${entry.tab.title} 복원`}
-                    onSelect={() => onRestoreClosed(entry.id)}
+                    ariaLabel={`닫은 탭 ${entry.tab.title} 검색 결과 보기`}
+                    onSelect={() => onOpenClosedSearch(query)}
                   />
                 ))}
               </SearchResultSection>

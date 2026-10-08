@@ -14,8 +14,10 @@ import { ClosedItem } from "./component";
 type Props = {
   closedTabs: ClosedTabEntry[];
   groups: GroupEntry[];
+  searchQuery: string;
   open: boolean;
   onClose: () => void;
+  onSearchQueryChange: (query: string) => void;
   onRestore: (entryId: string) => void;
   onRemove: (entryId: string) => void;
 };
@@ -23,12 +25,13 @@ type Props = {
 export function Closed({
   closedTabs,
   groups,
+  searchQuery,
   open,
   onClose,
+  onSearchQueryChange,
   onRestore,
   onRemove,
 }: Props) {
-  const [searchQuery, setSearchQuery] = useState("");
   const [deletingEntryId, setDeletingEntryId] = useState<string | null>(null);
   // Tabs whose group was deleted are listed (and restored) under Ungrouped.
   const entries = closedTabs.map((entry) => ({
@@ -36,7 +39,7 @@ export function Closed({
     groupName: groups.find((group) => group.id === entry.groupId)?.name ?? "Ungrouped",
   }));
   const filteredEntries = entries.filter(({ entry, groupName }) =>
-    matchesSearchQuery(searchQuery, groupName, entry.tab.content),
+    matchesSearchQuery(searchQuery, groupName, entry.tab.title, entry.tab.content),
   );
 
   return (
@@ -52,7 +55,7 @@ export function Closed({
         value={searchQuery}
         ariaLabel="닫은 탭 검색"
         placeholder="Search closed tabs"
-        onChange={setSearchQuery}
+        onChange={onSearchQueryChange}
       />
       <div className="closed-list">
         {closedTabs.length === 0 ? (
