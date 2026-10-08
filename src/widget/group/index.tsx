@@ -4,14 +4,11 @@ import { Check, Pencil, Plus, Trash2, X } from "lucide-react";
 import { type FormEvent, useState } from "react";
 
 import type { GroupEntry } from "@/src/entity/notepad";
-import { UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
+import { compareGroups, UNGROUPED_GROUP_ID } from "@/src/entity/notepad";
 import { SearchField } from "@/src/feature";
 import { matchesSearchQuery } from "@/src/feature/search-field/util";
 
 import { GroupDeletePopup } from "./component";
-
-const groupNameCollator = new Intl.Collator("ko", { sensitivity: "base" });
-const koreanInitial = /^[\u1100-\u11ff\u3130-\u318f\uac00-\ud7a3]/u;
 
 type Props = {
   groups: GroupEntry[];
@@ -42,15 +39,7 @@ export function Group({
   const groupToDelete = groups.find((group) => group.id === deletingGroupId);
   const filteredGroups = groups
     .filter((group) => matchesSearchQuery(searchQuery, group.name))
-    .sort((first, second) => {
-      const firstIsUngrouped = first.id === UNGROUPED_GROUP_ID;
-      const secondIsUngrouped = second.id === UNGROUPED_GROUP_ID;
-      if (firstIsUngrouped !== secondIsUngrouped) return firstIsUngrouped ? -1 : 1;
-      const firstIsKorean = koreanInitial.test(first.name);
-      const secondIsKorean = koreanInitial.test(second.name);
-      if (firstIsKorean !== secondIsKorean) return firstIsKorean ? -1 : 1;
-      return groupNameCollator.compare(first.name, second.name);
-    });
+    .sort(compareGroups);
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();

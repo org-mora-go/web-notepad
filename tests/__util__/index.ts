@@ -13,6 +13,7 @@ export {
 } from "./panel";
 export { restoreStoredBookmark } from "./restore-stored-bookmark";
 export { moveGroupSourceTab, seedMoveGroupState } from "./seed-move-group-state";
+export { seedSortableGroups } from "./seed-sortable-groups";
 export {
   readActiveGroup,
   readStoredState,

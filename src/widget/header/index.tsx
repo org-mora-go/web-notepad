@@ -3,7 +3,7 @@
 import { Plus } from "lucide-react";
 import { type RefObject, useState } from "react";
 
-import type { GroupEntry, NoteTab } from "@/src/entity/notepad";
+import { compareGroups, type GroupEntry, type NoteTab } from "@/src/entity/notepad";
 
 import { TabContextMenu, TabItem } from "./component";
 
@@ -137,7 +137,7 @@ export function Header({
           top={contextMenu.top}
           pinned={contextTab.pinned}
           bookmarked={contextTab.bookmarked}
-          targetGroups={groups.filter((group) => group.id !== activeGroupId)}
+          targetGroups={groups.filter((group) => group.id !== activeGroupId).sort(compareGroups)}
           onMoveToGroup={(groupId) => {
             onMoveToGroup(contextTab.id, groupId);
             setContextMenu(null);

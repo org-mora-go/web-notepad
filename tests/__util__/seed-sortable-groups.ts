@@ -1,6 +1,6 @@
 import type { Page } from "@playwright/test";
 
-import { STORAGE_KEY } from "../../__constant__";
+import { STORAGE_KEY } from "../__constant__";
 
 // Seeds unsorted groups once per session (reloads keep the app state), then opens the app.
 export async function seedSortableGroups(page: Page) {
