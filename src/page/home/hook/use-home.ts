@@ -30,6 +30,7 @@ export function useHome() {
     updateTab,
     moveTab,
     moveTabToPane,
+    moveTabToGroup,
     setActivePane,
     setSplitRatio,
     cycleTabColor,
@@ -147,6 +148,16 @@ export function useHome() {
     state.addTab(pane);
   };
 
+  const moveToGroup = (tabId: string, groupId: string) => {
+    const editor = tabId === activeTabId
+      ? editorRef.current
+      : tabId === activeRightTabId ? rightEditorRef.current : null;
+    if (editor && editor.value !== tabs.find((tab) => tab.id === tabId)?.content) {
+      updateTab(tabId, editor.value);
+    }
+    moveTabToGroup(tabId, groupId);
+  };
+
   const draggingPane = draggingTabId
     ? rightIds.has(draggingTabId)
       ? "right"
@@ -188,6 +199,8 @@ export function useHome() {
   const leftPaneProps = leftActiveTab
     ? {
         tabs: leftTabs,
+        groups,
+        activeGroupId,
         activeTab: leftActiveTab,
         tabStrip: leftStrip,
         editorRef,
@@ -201,6 +214,7 @@ export function useHome() {
         onSelect: selectTab,
         onClose: requestCloseTab,
         onMove: moveTab,
+        onMoveToGroup: moveToGroup,
         onAdopt: adoptTo("left"),
         onDragStateChange: setDraggingTabId,
         onCycleTabColor: cycleTabColor,
@@ -215,6 +229,8 @@ export function useHome() {
     split && activeRightTab
       ? {
           tabs: rightTabs,
+          groups,
+          activeGroupId,
           activeTab: activeRightTab,
           tabStrip: rightStrip,
           editorRef: rightEditorRef,
@@ -227,6 +243,7 @@ export function useHome() {
           onSelect: selectTab,
           onClose: requestCloseTab,
           onMove: moveTab,
+          onMoveToGroup: moveToGroup,
           onAdopt: adoptTo("right"),
           onDragStateChange: setDraggingTabId,
           onCycleTabColor: cycleTabColor,

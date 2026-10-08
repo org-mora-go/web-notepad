@@ -3,12 +3,14 @@
 import { Plus } from "lucide-react";
 import { type RefObject, useState } from "react";
 
-import type { NoteTab } from "@/src/entity/notepad";
+import type { GroupEntry, NoteTab } from "@/src/entity/notepad";
 
 import { TabContextMenu, TabItem } from "./component";
 
 type Props = {
   tabs: NoteTab[];
+  groups: GroupEntry[];
+  activeGroupId: string;
   activeTabId: string;
   tabsScrollRef: RefObject<HTMLDivElement | null>;
   tabsOverflowing: boolean;
@@ -18,6 +20,7 @@ type Props = {
   onSelect: (tabId: string) => void;
   onClose: (tabId: string) => void;
   onMove: (fromTabId: string, toTabId: string) => void;
+  onMoveToGroup: (tabId: string, groupId: string) => void;
   onAdopt: (tabId: string) => void;
   onDragStateChange: (tabId: string | null) => void;
   onCycleTabColor: (tabId: string) => void;
@@ -30,6 +33,8 @@ type ContextMenuState = { tabId: string; left: number; top: number };
 
 export function Header({
   tabs,
+  groups,
+  activeGroupId,
   activeTabId,
   tabsScrollRef,
   tabsOverflowing,
@@ -39,6 +44,7 @@ export function Header({
   onSelect,
   onClose,
   onMove,
+  onMoveToGroup,
   onAdopt,
   onDragStateChange,
   onCycleTabColor,
@@ -131,6 +137,11 @@ export function Header({
           top={contextMenu.top}
           pinned={contextTab.pinned}
           bookmarked={contextTab.bookmarked}
+          targetGroups={groups.filter((group) => group.id !== activeGroupId)}
+          onMoveToGroup={(groupId) => {
+            onMoveToGroup(contextTab.id, groupId);
+            setContextMenu(null);
+          }}
           onTogglePin={() => {
             onTogglePin(contextTab.id);
             setContextMenu(null);

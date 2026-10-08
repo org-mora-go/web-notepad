@@ -7,6 +7,8 @@ import { PaneDivider } from "./pane-divider";
 
 export function PaneView({
   tabs,
+  groups,
+  activeGroupId,
   activeTab,
   tabStrip,
   editorRef,
@@ -21,6 +23,7 @@ export function PaneView({
   onSelect,
   onClose,
   onMove,
+  onMoveToGroup,
   onAdopt,
   onDragStateChange,
   onCycleTabColor,
@@ -43,6 +46,8 @@ export function PaneView({
         >
           <Header
             tabs={tabs}
+            groups={groups}
+            activeGroupId={activeGroupId}
             activeTabId={activeTab.id}
             tabsScrollRef={tabStrip.tabsScrollRef}
             tabsOverflowing={tabStrip.tabsOverflowing}
@@ -52,6 +57,7 @@ export function PaneView({
             onSelect={onSelect}
             onClose={onClose}
             onMove={onMove}
+            onMoveToGroup={onMoveToGroup}
             onAdopt={onAdopt}
             onDragStateChange={onDragStateChange}
             onCycleTabColor={onCycleTabColor}
