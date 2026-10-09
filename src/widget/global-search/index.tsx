@@ -114,7 +114,7 @@ export function GlobalSearch({
               </SearchResultSection>
             )}
             {closedResults.length > 0 && (
-              <SearchResultSection title="Closed tabs" className="global-search-closed">
+              <SearchResultSection title="Closed" className="global-search-closed">
                 {closedResults.map(({ entry, groupName }) => (
                   <SearchResult
                     key={entry.id}

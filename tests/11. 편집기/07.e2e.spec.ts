@@ -13,6 +13,13 @@ test("7. 자동 줄바꿈된 번호를 선택하면 원본 줄의 모든 표시 
   const editor = page.locator("textarea").first();
   const lines = lineButtons(page);
   await editor.fill(content);
+  const selectionBackgroundSize = async (lineCount: number) =>
+    editor.evaluate((element, count) => {
+      const style = getComputedStyle(element);
+      const lineHeight = Number.parseFloat(style.lineHeight);
+      const topPadding = Number.parseFloat(style.paddingTop);
+      return `100% ${count * lineHeight + topPadding}px`;
+    }, lineCount);
 
   await expect.poll(() => lines.count()).toBe(await countWrappedLines(editor));
   const wrappedCount = await lines.count();
@@ -21,7 +28,10 @@ test("7. 자동 줄바꿈된 번호를 선택하면 원본 줄의 모든 표시 
 
   await lines.first().click();
   await expectSelectedLines(page, [...Array(firstSourceLineCount).fill(true), false]);
-  await expect(editor).toHaveCSS("background-size", `100% ${firstSourceLineCount * 33 + 10}px`);
+  await expect(editor).toHaveCSS(
+    "background-size",
+    await selectionBackgroundSize(firstSourceLineCount),
+  );
 
   const storedSelection = async () => {
     const group = await readActiveGroup(page);
@@ -35,10 +45,18 @@ test("7. 자동 줄바꿈된 번호를 선택하면 원본 줄의 모든 표시 
   const desktopCount = await lines.count();
   expect(desktopCount).toBeLessThan(wrappedCount);
   await expectSelectedLines(page, [...Array(desktopCount - 2).fill(true), false]);
+  await expect(editor).toHaveCSS(
+    "background-size",
+    await selectionBackgroundSize(desktopCount - 2),
+  );
   expect(await storedSelection()).toEqual(selection);
 
   await page.setViewportSize(MOBILE_VIEWPORT);
   await expect(lines).toHaveCount(wrappedCount);
+  await expect(editor).toHaveCSS(
+    "background-size",
+    await selectionBackgroundSize(firstSourceLineCount),
+  );
   await lines.nth(1).click();
   await expect(page.locator(".line-rail .is-selected")).toHaveCount(0);
   await expect.poll(storedSelection).toEqual([]);

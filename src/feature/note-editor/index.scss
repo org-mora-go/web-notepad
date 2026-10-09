@@ -7,6 +7,10 @@
   --selected-line-background: rgba(184, 184, 176, 0.2);
   --selected-line-color: #{v.$saved};
 
+  @media (max-width: 640px) {
+    --editor-line-height: 37px;
+  }
+
   &[data-tab-color="red"] {
     --selected-line-background: rgba(242, 139, 130, 0.2);
     --selected-line-color: #{v.$tab-red};

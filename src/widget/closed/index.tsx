@@ -53,7 +53,7 @@ export function Closed({
       <SearchField
         value={searchQuery}
         ariaLabel="닫은 탭 검색"
-        placeholder="Search closed tabs"
+        placeholder="Search closed"
         onChange={onSearchQueryChange}
       />
       <div className="closed-list">

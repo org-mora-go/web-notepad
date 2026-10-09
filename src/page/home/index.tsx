@@ -55,7 +55,7 @@ export function Home() {
 
         <StatusBar
           closedOpen={openPanel === "closed"}
-          closedCount={closedTabs.length}
+          closedCount={closedTabs.filter((entry) => entry.groupId === activeGroupId).length}
           bookmarkCount={bookmarks.length}
           shortcutsOpen={openPanel === "shortcuts"}
           bookmarksOpen={openPanel === "bookmarks"}
