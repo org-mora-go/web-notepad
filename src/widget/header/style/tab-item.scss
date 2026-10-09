@@ -72,8 +72,9 @@
     }
 
     @media (max-width: 640px) {
-      min-width: 107.406px;
-      max-width: 246.65px;
+      min-width: 108.406px;
+      max-width: 247.65px;
+      height: 38px;
     }
   }
 
@@ -176,5 +177,21 @@
   .tab-close {
     width: 34px;
     height: 37px;
+  }
+
+  @media (max-width: 640px) {
+    .tab-select,
+    .tab-close {
+      height: 38px;
+    }
+
+    .tab-title {
+      font-size: 15px;
+    }
+
+    .dirty-dot::before {
+      width: 11px;
+      height: 11px;
+    }
   }
 }
