@@ -21,15 +21,23 @@ test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 �
   const ungrouped = createGroupFixture("ungrouped", "Ungrouped", [
     createTabFixture("current-tab", "Current note"),
   ]);
+  const personalGroup = createGroupFixture("personal", "Personal", [
+    createTabFixture("personal-tab", "Personal note"),
+  ]);
   await seedStoredStateOnLoad(page, {
     activeGroupId: ungrouped.id,
-    groups: [ungrouped, workGroup],
+    groups: [ungrouped, workGroup, personalGroup],
     nextTabNumber: 3,
     closedTabs: [
       createClosedTabFixture(
         "closed-work",
         workGroup.id,
         createTabFixture("closed-tab", "Archived draft"),
+      ),
+      createClosedTabFixture(
+        "closed-personal",
+        personalGroup.id,
+        createTabFixture("personal-closed-tab", "Archived personal draft"),
       ),
     ],
   });
@@ -64,9 +72,10 @@ test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 �
 
   await command.press("Enter");
   await search.fill("Archived");
+  await expect(page.locator(".global-search-closed .global-search-result")).toHaveCount(2);
   await page.getByRole("button", { name: "닫은 탭 Archived draft 검색 결과 보기" }).click();
   await expect(page.locator("#closed-panel")).toHaveAttribute("aria-hidden", "false");
   await expect(page.getByRole("searchbox", { name: "닫은 탭 검색" })).toHaveValue("Archived");
-  await expect(page.locator(".closed-item")).toHaveCount(1);
+  await expect(page.locator(".closed-item")).toHaveCount(2);
   await expect(page.locator("textarea")).toHaveValue("Quarterly goals");
 });

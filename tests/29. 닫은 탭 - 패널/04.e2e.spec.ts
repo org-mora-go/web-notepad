@@ -7,7 +7,7 @@ import {
   createGroups,
 } from "../__util__";
 
-test("4. 그룹 이름과 탭 내용을 대소문자 구분 없이 부분 검색한다", async ({ page }) => {
+test("4. 그룹 이름과 탭 내용을 대소문자 구분 없이 부분 검색하고 Closed placeholder를 표시한다", async ({ page }) => {
   await page.goto("/");
   await closeActiveTabWithContent(page, "Alpha note");
   await createGroups(page, "Work");
@@ -15,7 +15,7 @@ test("4. 그룹 이름과 탭 내용을 대소문자 구분 없이 부분 검색
   await closedCommand(page).click();
 
   const search = page.getByRole("searchbox", { name: "닫은 탭 검색" });
-  await expect(search).toHaveAttribute("placeholder", "Search closed tabs");
+  await expect(search).toHaveAttribute("placeholder", "Search closed");
   const contents = closedContents(page);
   await search.fill("ALPHA");
   await expect(contents).toHaveText(["Alpha note"]);
