@@ -71,6 +71,8 @@ test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 �
   await expect(page.locator("textarea")).toHaveValue("Quarterly goals");
 
   await command.press("Enter");
+  await search.fill("No matching term");
+  await expect(page.locator(".global-search-empty-state")).toHaveText("No search results");
   await search.fill("Archived");
   await expect(page.locator(".global-search-closed .global-search-result")).toHaveCount(2);
   await page.getByRole("button", { name: "닫은 탭 Archived draft 검색 결과 보기" }).click();

@@ -79,7 +79,7 @@ export function GlobalSearch({
           </div>
         ) : resultCount === 0 ? (
           <div className="global-search-empty-state">
-            <p>검색 결과가 없습니다</p>
+            <p>No search results</p>
           </div>
         ) : (
           <>

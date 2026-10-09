@@ -64,7 +64,7 @@ export function Closed({
           </div>
         ) : filteredEntries.length === 0 ? (
           <div className="search-empty-state">
-            <p>검색 결과가 없습니다</p>
+            <p>No search results</p>
           </div>
         ) : (
           filteredEntries.map(({ entry, groupName }) => (

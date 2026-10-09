@@ -23,5 +23,5 @@ test("4. 그룹 이름과 탭 내용을 대소문자 구분 없이 부분 검색
   await expect(contents).toHaveText(["beta note"]);
   await search.fill("missing");
   await expect(contents).toHaveCount(0);
-  await expect(page.locator("#closed-panel .search-empty-state")).toHaveText("검색 결과가 없습니다");
+  await expect(page.locator("#closed-panel .search-empty-state")).toHaveText("No search results");
 });
