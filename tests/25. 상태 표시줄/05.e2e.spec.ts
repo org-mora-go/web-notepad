@@ -6,16 +6,12 @@ test("5. 상태표시줄 아이콘 크기와 명령 간격을 PC·모바일에�
   await page.goto("/");
   const commands = page.locator(".status-controls .status-command");
 
-  for (const [viewport, expectedGap] of [[DESKTOP_VIEWPORT, "7px"], [MOBILE_VIEWPORT, "5px"]] as const) {
+  for (const [viewport, expectedGap] of [[DESKTOP_VIEWPORT, "7px"], [MOBILE_VIEWPORT, "4px"]] as const) {
     await page.setViewportSize(viewport);
-    const expectedIconSize = viewport === DESKTOP_VIEWPORT ? "16px" : "20px";
+    const expectedIconSize = viewport === DESKTOP_VIEWPORT ? "16px" : "24px";
     for (const command of await commands.all()) {
-      const isGroupCommand = await command.evaluate((element) =>
-        element.classList.contains("group-status-command"),
-      );
-      const commandGap =
-        viewport === DESKTOP_VIEWPORT || isGroupCommand ? "7px" : expectedGap;
-      await expect(command).toHaveCSS("gap", commandGap);
+      await expect(command).toHaveCSS("gap", expectedGap);
+      await expect(command).toHaveCSS("flex-direction", viewport === DESKTOP_VIEWPORT ? "row" : "column");
       await expect(command.locator("svg")).toHaveCSS("width", expectedIconSize);
       await expect(command.locator("svg")).toHaveCSS("height", expectedIconSize);
     }

@@ -44,7 +44,7 @@ test("7. CLOSED 왼쪽의 전체 검색에서 그룹·북마크·닫은 탭을 �
 
   const command = page.locator(".global-search-command");
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await expect(command.locator(".global-search-label")).toBeHidden();
+  await expect(command.locator(".global-search-label")).toBeVisible();
   await expect(command.locator("svg")).toBeVisible();
   await command.press("Enter");
 

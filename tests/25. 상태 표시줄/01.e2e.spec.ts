@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { DESKTOP_VIEWPORT, MOBILE_VIEWPORT } from "../__constant__";
 import { bookmarksCommand, chooseTabMenuItem } from "../__util__";
 
-test("1. PC에서는 BOOKMARK 라벨, 모바일에서는 북마크 아이콘과 개수를 표시한다", async ({ page }) => {
+test("1. PC와 모바일에서 CLOSED와 BOOKMARK 라벨 및 개수를 표시한다", async ({ page }) => {
   await page.goto("/");
   await chooseTabMenuItem(page, "Bookmark");
   const label = bookmarksCommand(page).locator(".status-label");
@@ -25,11 +25,15 @@ test("1. PC에서는 BOOKMARK 라벨, 모바일에서는 북마크 아이콘과 
   await expect(closedCount).toBeInViewport();
 
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await expect(label).toBeHidden();
+  await expect(label).toBeVisible();
   await expect(count).toHaveText("(1)");
   await expect(count).toBeInViewport();
   await expect(bookmarksCommand(page).locator("svg")).toBeInViewport();
-  await expect(closedLabel).toBeHidden();
+  await expect(closedLabel).toBeVisible();
   await expect(closedCount).toHaveText("(1)");
   await expect(closedCount).toBeInViewport();
+  for (const badge of [count, closedCount]) {
+    await expect(badge).toHaveCSS("position", "absolute");
+    await expect(badge).toHaveCSS("top", "0px");
+  }
 });

@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { MOBILE_VIEWPORT } from "../__constant__";
 import { bookmarksCommand } from "../__util__";
 
-test("4. 모바일에서는 SEARCH와 그룹을 양끝에 고정하고 나머지 명령은 가운데 둔다", async ({
+test("4. PC 명령 정렬을 유지하고 모바일에서는 네 메뉴를 균등 배치한다", async ({
   page,
 }) => {
   await page.goto("/");
@@ -92,11 +92,15 @@ test("4. 모바일에서는 SEARCH와 그룹을 양끝에 고정하고 나머지
   await expectMetaRightAligned();
 
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await expect(search.locator(".global-search-label")).toBeHidden();
+  await expect(search.locator(".global-search-label")).toBeVisible();
   await expect(group.locator("svg")).toHaveCount(1);
-  await expect(group.locator(".status-count")).toHaveText("(1)");
-  await expect(group.locator(".status-count")).toBeInViewport();
-  await expect(group.locator(".status-count")).toBeInViewport();
+  await expect(group.locator(".group-status-label")).toBeInViewport();
+  const commands = [search, closed, bookmark, group];
+  for (const [index, command] of commands.entries()) {
+    const bounds = (await command.boundingBox())!;
+    expect(bounds.width).toBeCloseTo(MOBILE_VIEWPORT.width / 4, 1);
+    expect(bounds.x).toBeCloseTo(index * MOBILE_VIEWPORT.width / 4, 1);
+  }
   await expectSearchLeftAligned();
   await expectMetaRightAligned();
 });

@@ -107,10 +107,8 @@
     }
   }
 
-  .global-search-label {
-    @media (max-width: 640px) {
-      display: none;
-    }
+  .group-status-label {
+    display: none;
   }
 
   .bookmark-command {
@@ -138,26 +136,39 @@
   }
 
   @media (max-width: 640px) {
-    min-height: 56px;
-    padding: 3px 15px 10px 10px;
-    font-size: 16px;
+    min-height: 64px;
+    padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+    font-size: 12px;
 
     .status-command {
-      gap: 5px;
+      position: relative;
+      width: 100%;
+      height: 51px;
+      min-width: 0;
+      flex-direction: column;
+      justify-content: center;
+      gap: 4px;
+      -webkit-tap-highlight-color: transparent;
 
       > span:not(.status-separator) {
-        font-size: 16px;
+        font-size: 12px;
+        line-height: 16px;
       }
 
       svg {
-        width: 20px;
-        height: 20px;
-        flex: 0 0 20px;
+        width: 24px;
+        height: 24px;
+        flex: 0 0 24px;
+      }
+
+      &.is-active svg {
+        fill: currentColor;
+        stroke-width: 1.5px;
       }
     }
 
     .status-command .status-separator {
-      margin: 0 6px;
+      display: none;
     }
 
     .status-meta {
@@ -166,36 +177,39 @@
 
     .status-controls {
       width: 100%;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
       flex: 1 1 auto;
-      justify-content: space-between;
     }
 
-    .global-search-command {
-      flex: 0 0 auto;
-    }
-
-    .group-status-command {
-      flex: 0 1 auto;
-      gap: 7px;
-    }
-
-    .status-scroll-area {
-      flex: 1 1 auto;
-      align-self: stretch;
+    .status-scroll-area,
+    .status-actions {
+      display: contents;
     }
 
     .status-label,
-    .global-search-label {
-      display: none;
-    }
-
-    .bookmark-command .status-separator {
-      display: none;
+    .global-search-label,
+    .group-status-label {
+      display: block;
     }
 
     .group-status-name {
-      min-width: 24px;
-      max-width: min(30vw, 90px);
+      display: none;
+    }
+
+    .status-command > .status-count:not(.status-separator) {
+      position: absolute;
+      top: 0;
+      left: calc(50% + 8px);
+      padding: 0 3px;
+      background: v.$strip;
+      border-radius: 4px;
+      font-size: 10px;
+      line-height: 14px;
+    }
+
+    .group-status-command .status-count {
+      display: none;
     }
   }
 }

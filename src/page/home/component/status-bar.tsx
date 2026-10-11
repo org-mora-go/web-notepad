@@ -149,6 +149,7 @@ export function StatusBar({
             aria-controls="groups-panel"
           >
             <Layers size={16} strokeWidth={1.8} />
+            <span className="group-status-label">GROUP</span>
             <span className="group-status-name">{activeGroupName}</span>
             <span className="status-count">({groupCount})</span>
           </button>
