@@ -1,22 +1,26 @@
 import { expect, test } from "@playwright/test";
 
 import { DESKTOP_VIEWPORT, MOBILE_VIEWPORT } from "../__constant__";
-import { createGroup, groupsCommand, groupStatusName } from "../__util__";
+import { createGroup, groupsCommand } from "../__util__";
 
-test("4. PC 그룹 이름은 180px 말줄임하고 모바일은 고정 GROUP 라벨을 표시한다", async ({ page }) => {
+test("4. PC 그룹명은 최대 351px이며 모바일과 함께 말줄임과 툴팁을 사용한다", async ({ page }) => {
   await page.goto("/");
   await groupsCommand(page).click();
-  await createGroup(page, "Very long group name for ellipsis verification");
-  const groupName = groupStatusName(page);
-
-  await page.setViewportSize(DESKTOP_VIEWPORT);
-  await expect(groupName).toHaveCSS("max-width", "180px");
-  await expect(groupName).toHaveCSS("text-overflow", "ellipsis");
-  await expect(groupName).toHaveCSS("overflow", "hidden");
-  await expect(groupName).toHaveCSS("white-space", "nowrap");
-  expect(await groupName.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
-  await page.setViewportSize(MOBILE_VIEWPORT);
-  await expect(groupName).toBeHidden();
-  await expect(page.locator(".group-status-label")).toHaveText("GROUP");
-  await expect(page.locator(".group-status-label")).toBeVisible();
+  const name = "Very long group name for desktop ellipsis verification";
+  await createGroup(page, name);
+  for (const viewport of [DESKTOP_VIEWPORT, MOBILE_VIEWPORT]) {
+    await page.setViewportSize(viewport);
+    const groupName = page.locator(viewport.width <= 640 ? ".current-group-name" : ".group-status-name");
+    await expect(groupName).toBeVisible();
+    await expect(groupName).toHaveText(name);
+    await expect(groupName).toHaveAttribute("title", name);
+    await expect(groupName).toHaveCSS("text-overflow", "ellipsis");
+    await expect(groupName).toHaveCSS("overflow", "hidden");
+    await expect(groupName).toHaveCSS("white-space", "nowrap");
+    expect(await groupName.evaluate((element) => element.scrollWidth > element.clientWidth)).toBe(true);
+    if (viewport.width > 640) {
+      await expect(groupName).toHaveCSS("max-width", "351px");
+      expect((await groupName.boundingBox())!.width).toBe(351);
+    }
+  }
 });

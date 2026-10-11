@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
 
-import { BOTH_VIEWPORTS, DESKTOP_VIEWPORT } from "../__constant__";
+import { BOTH_VIEWPORTS } from "../__constant__";
 import { bookmarksCommand } from "../__util__";
 
-test("8. PC 명령 구분자는 양옆 9px 간격으로 표시하고 모바일에서는 숨긴다", async ({ page }) => {
+test("8. PC와 모바일의 하단 메뉴 구분자를 모두 숨긴다", async ({ page }) => {
   await page.goto("/");
   const closedSeparator = page.locator(".closed-command .status-separator");
   const searchSeparator = page.locator(".global-search-command .status-separator");
@@ -18,20 +18,10 @@ test("8. PC 명령 구분자는 양옆 9px 간격으로 표시하고 모바일�
     await expect(bookmarkSeparator).toHaveCount(1);
     await expect(groupSeparator).toHaveCount(0);
     await expect(bookmarkSeparator).toHaveText("|");
-    const expectedMargin = "9px";
     for (const separator of [searchSeparator, closedSeparator, bookmarkSeparator]) {
-      await expect(separator).toHaveCSS("margin-left", expectedMargin);
-      await expect(separator).toHaveCSS("margin-right", expectedMargin);
+      await expect(separator).toBeHidden();
     }
-    if (viewport === DESKTOP_VIEWPORT) {
-      await expect(shortcut.locator(".status-separator")).toHaveCount(0);
-      await expect(visibleSeparators).toHaveCount(3);
-    } else {
-      await expect(shortcut).toBeHidden();
-      await expect(searchSeparator).toBeHidden();
-      await expect(closedSeparator).toBeHidden();
-      await expect(bookmarkSeparator).toBeHidden();
-      await expect(visibleSeparators).toHaveCount(0);
-    }
+    await expect(shortcut.locator(".status-separator")).toHaveCount(0);
+    await expect(visibleSeparators).toHaveCount(0);
   }
 });
