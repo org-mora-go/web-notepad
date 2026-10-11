@@ -2,7 +2,7 @@ import { expect, test } from "@playwright/test";
 
 import { MOBILE_VIEWPORT } from "../__constant__";
 
-test("9. 모바일에서 탭 글자와 크기 및 왼쪽 색상 아이콘을 1px 증가한다", async ({ page }) => {
+test("9. 모바일 탭 높이는 44px, 최소 너비는 114.406px, 색상 아이콘은 13px이다", async ({ page }) => {
   await page.goto("/");
 
   const tab = page.locator(".tab-item").first();
@@ -19,11 +19,11 @@ test("9. 모바일에서 탭 글자와 크기 및 왼쪽 색상 아이콘을 1px
   expect(await iconWidth()).toBe("10px");
 
   await page.setViewportSize(MOBILE_VIEWPORT);
-  await expect(tab).toHaveCSS("height", "38px");
-  await expect(tab).toHaveCSS("min-width", "108.406px");
+  await expect(tab).toHaveCSS("height", "44px");
+  await expect(tab).toHaveCSS("min-width", "114.406px");
   await expect(tab).toHaveCSS("max-width", "247.65px");
-  await expect(tab.getByRole("tab")).toHaveCSS("height", "38px");
-  await expect(tab.locator(".tab-close")).toHaveCSS("height", "38px");
+  await expect(tab.getByRole("tab")).toHaveCSS("height", "44px");
+  await expect(tab.locator(".tab-close")).toHaveCSS("height", "44px");
   await expect(title).toHaveCSS("font-size", "15px");
-  expect(await iconWidth()).toBe("11px");
+  expect(await iconWidth()).toBe("13px");
 });

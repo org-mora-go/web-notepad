@@ -35,11 +35,40 @@
     height: 100%;
     min-height: 0;
     display: grid;
-    grid-template-rows: minmax(0, 1fr) 42px;
+    grid-template-rows: minmax(0, 1fr) 48px;
     background: v.$panel;
 
     @media (max-width: 640px) {
-      grid-template-rows: minmax(0, 1fr) 56px;
+      grid-template-rows: 44px minmax(0, 1fr) calc(64px + env(safe-area-inset-bottom));
+    }
+  }
+
+  .current-group-panel {
+    min-width: 0;
+    display: none;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+    border-bottom: 1px solid v.$line;
+    background: v.$strip;
+    color: v.$muted;
+    font-size: 15px;
+
+    @media (max-width: 640px) {
+      display: flex;
+    }
+
+    svg {
+      width: 18px;
+      height: 18px;
+      flex: 0 0 18px;
+    }
+
+    .current-group-name {
+      min-width: 0;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
   }
 

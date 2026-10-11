@@ -1,7 +1,6 @@
 "use client";
 
 import { Bookmark, Ghost, Keyboard, Layers, Search } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
 
 type Props = {
   closedOpen: boolean;
@@ -36,42 +35,6 @@ export function StatusBar({
   onToggleGroups,
   onToggleGlobalSearch,
 }: Props) {
-  const scrollAreaRef = useRef<HTMLDivElement>(null);
-  const [scrollFades, setScrollFades] = useState({ left: false, right: false });
-
-  useEffect(() => {
-    const scrollArea = scrollAreaRef.current;
-    if (!scrollArea) return;
-
-    const updateScrollFades = () => {
-      const hasOverflow = scrollArea.scrollWidth > scrollArea.clientWidth + 1;
-      const nextFades = {
-        left: hasOverflow && scrollArea.scrollLeft > 1,
-        right:
-          hasOverflow &&
-          scrollArea.scrollLeft + scrollArea.clientWidth < scrollArea.scrollWidth - 1,
-      };
-      setScrollFades((current) =>
-        current.left === nextFades.left && current.right === nextFades.right
-          ? current
-          : nextFades,
-      );
-    };
-
-    updateScrollFades();
-    const observer = new ResizeObserver(updateScrollFades);
-    observer.observe(scrollArea);
-    if (scrollArea.firstElementChild instanceof HTMLElement) {
-      observer.observe(scrollArea.firstElementChild);
-    }
-    scrollArea.addEventListener("scroll", updateScrollFades, { passive: true });
-
-    return () => {
-      observer.disconnect();
-      scrollArea.removeEventListener("scroll", updateScrollFades);
-    };
-  }, []);
-
   return (
     <footer className="status-bar">
       <div className="status-meta">
@@ -84,7 +47,7 @@ export function StatusBar({
           aria-label="단축키 안내"
         >
           <Keyboard size={16} strokeWidth={1.8} />
-          <span>SHORTCUT</span>
+          <span className="status-label">SHORTCUT</span>
         </button>
         <div className="status-controls">
           <button
@@ -101,10 +64,7 @@ export function StatusBar({
               |
             </span>
           </button>
-          <div
-            ref={scrollAreaRef}
-            className={`status-scroll-area ${scrollFades.left ? "has-left-fog" : ""} ${scrollFades.right ? "has-right-fog" : ""}`}
-          >
+          <div className="status-scroll-area">
             <div className="status-actions">
               <button
                 className={`status-command closed-command ${closedOpen ? "is-active" : ""}`}
@@ -149,7 +109,8 @@ export function StatusBar({
             aria-controls="groups-panel"
           >
             <Layers size={16} strokeWidth={1.8} />
-            <span className="group-status-name">{activeGroupName}</span>
+            <span className="group-status-label">GROUP</span>
+            <span className="group-status-name" title={activeGroupName}>{activeGroupName}</span>
             <span className="status-count">({groupCount})</span>
           </button>
         </div>

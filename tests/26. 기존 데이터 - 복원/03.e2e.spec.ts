@@ -21,5 +21,7 @@ test("3. 존재하지 않는 그룹과 탭 선택을 유효한 기본 선택으�
   });
   await expect(page.locator("textarea")).toHaveValue("fallback note");
   await expect(page.locator(".body")).toHaveCount(1);
-  await expect(page.getByRole("button", { name: /Ungrouped/ })).toBeVisible();
+  const groupName = page.locator(".group-status-command .group-status-name");
+  await expect(groupName).toHaveText("Ungrouped");
+  await expect(groupName).toBeVisible();
 });

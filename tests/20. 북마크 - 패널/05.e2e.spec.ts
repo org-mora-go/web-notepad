@@ -40,6 +40,7 @@ test("5. 북마크 패널의 제목, 북마크 텍스트, 검색 입력과 빈 �
   }
 
   await search.fill("no matching bookmark");
+  await expect(panel.locator(".search-empty-state p")).toHaveText("No search results");
   await expect(panel.locator(".search-empty-state p")).toHaveCSS(
     "font-size",
     "15px",

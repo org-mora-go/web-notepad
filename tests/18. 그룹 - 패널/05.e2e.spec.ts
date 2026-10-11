@@ -34,6 +34,7 @@ test("5. 그룹 패널의 제목, 그룹 이름, 검색 결과 없음 문구와 
   }
 
   await search.fill("no matching group");
+  await expect(page.locator(".search-empty-state p")).toHaveText("No search results");
   await expect(page.locator(".search-empty-state p")).toHaveCSS(
     "font-size",
     "15px",

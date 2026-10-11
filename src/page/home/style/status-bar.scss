@@ -2,84 +2,39 @@
 
 .status-bar {
   display: flex;
-  position: relative;
   align-items: center;
-  justify-content: space-between;
   min-width: 0;
-  padding: 3px 21px 6px 21px;
+  min-height: 48px;
+  padding: 6px 16px;
   border-top: 1px solid v.$line;
   background: v.$strip;
   color: v.$muted;
   font-size: 14px;
 
   .status-meta {
+    width: 100%;
+    min-width: 0;
     display: flex;
     align-items: center;
-    gap: 0;
-    flex: 1;
-    justify-content: flex-end;
-    min-width: 0;
+    gap: 20px;
   }
 
-  .status-controls {
-    display: flex;
-    align-items: center;
-    flex: 0 1 auto;
-    justify-content: flex-end;
-    min-width: 0;
-  }
-
+  .status-controls,
+  .status-scroll-area,
   .status-actions {
-    display: flex;
-    align-items: center;
-    gap: 0;
-    width: max-content;
-    flex: 0 0 auto;
-  }
-
-  .status-scroll-area {
-    min-width: 0;
-    flex: 0 1 auto;
-    overflow-x: auto;
-    overflow-y: hidden;
-    scrollbar-width: none;
-
-    &::-webkit-scrollbar {
-      display: none;
-      width: 0;
-      height: 0;
-    }
-
-    &.has-left-fog {
-      -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 100%);
-      mask-image: linear-gradient(to right, transparent, #000 16px, #000 100%);
-    }
-
-    &.has-right-fog {
-      -webkit-mask-image: linear-gradient(to left, transparent, #000 16px, #000 100%);
-      mask-image: linear-gradient(to left, transparent, #000 16px, #000 100%);
-    }
-
-    &.has-left-fog.has-right-fog {
-      -webkit-mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-      mask-image: linear-gradient(to right, transparent, #000 16px, #000 calc(100% - 16px), transparent);
-    }
-  }
-
-  .status-separator {
-    margin: 0 10px;
-    color: v.$line;
-    flex: 0 0 auto;
-  }
-
-  .status-command .status-separator {
-    margin: 0 9px;
+    display: contents;
   }
 
   .status-command {
-    height: 24px;
+    position: relative;
+    width: max-content;
+    height: 35px;
+    min-width: 0;
+    flex: 0 0 auto;
     display: flex;
+    flex-direction: row;
     align-items: center;
+    justify-content: center;
     gap: 7px;
     padding: 0;
     border: 0;
@@ -87,6 +42,7 @@
     color: #bcbcb5;
     font-size: inherit;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
 
     &:hover,
     &.is-active {
@@ -94,108 +50,95 @@
     }
 
     > span:not(.status-separator) {
-      font-size: 14px;
+      font-size: inherit;
+      line-height: 18px;
+    }
+
+    svg {
+      width: 24px;
+      height: 24px;
+      flex: 0 0 24px;
+    }
+
+    &.is-active svg {
+      fill: currentColor;
+      stroke-width: 1.5px;
+    }
+
+    > .status-count:not(.status-separator) {
+      position: static;
+      padding: 0 3px;
+      background: v.$strip;
+      border-radius: 4px;
+      font-size: 12px;
+      line-height: 16px;
+      white-space: nowrap;
     }
   }
 
-  .shortcut-command {
-    position: absolute;
-    left: 21px;
-
-    @media (max-width: 640px) {
-      display: none;
-    }
+  .status-separator,
+  .group-status-label {
+    display: none;
   }
 
-  .global-search-label {
-    @media (max-width: 640px) {
-      display: none;
-    }
-  }
-
-  .bookmark-command {
-    flex: 0 0 auto;
+  .closed-command {
+    margin-left: auto;
   }
 
   .group-status-command {
-    flex: 0 0 auto;
-    min-width: 0;
+    flex: 0 1 auto;
   }
 
   .group-status-name {
-    display: block;
-    flex: 1 1 auto;
     min-width: 0;
-    max-width: 180px;
+    max-width: 351px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
 
-  .status-count {
-    flex: 0 0 auto;
-    white-space: nowrap;
-  }
-
   @media (max-width: 640px) {
-    min-height: 56px;
-    padding: 3px 15px 10px 10px;
-    font-size: 16px;
+    min-height: 64px;
+    padding: 6px 0 calc(6px + env(safe-area-inset-bottom));
+    font-size: 12px;
 
     .status-command {
-      gap: 5px;
+      width: 100%;
+      height: 51px;
+      flex-direction: column;
+      gap: 4px;
 
       > span:not(.status-separator) {
-        font-size: 16px;
+        line-height: 16px;
       }
 
-      svg {
-        width: 20px;
-        height: 20px;
-        flex: 0 0 20px;
+      > .status-count:not(.status-separator) {
+        position: absolute;
+        top: 0;
+        left: calc(50% + 8px);
+        font-size: 10px;
+        line-height: 14px;
       }
-    }
-
-    .status-command .status-separator {
-      margin: 0 6px;
     }
 
     .status-meta {
-      justify-content: flex-start;
+      display: grid;
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      gap: 0;
     }
 
-    .status-controls {
-      width: 100%;
-      flex: 1 1 auto;
-      justify-content: space-between;
+    .closed-command {
+      margin-left: 0;
     }
 
-    .global-search-command {
-      flex: 0 0 auto;
+    .group-status-label {
+      display: block;
     }
 
-    .group-status-command {
-      flex: 0 1 auto;
-      gap: 7px;
-    }
-
-    .status-scroll-area {
-      flex: 1 1 auto;
-      align-self: stretch;
-    }
-
-    .status-label,
-    .global-search-label {
+    .shortcut-command,
+    .group-status-name,
+    .group-status-command .status-count {
       display: none;
-    }
-
-    .bookmark-command .status-separator {
-      display: none;
-    }
-
-    .group-status-name {
-      min-width: 24px;
-      max-width: min(30vw, 90px);
     }
   }
 }

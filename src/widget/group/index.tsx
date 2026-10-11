@@ -92,7 +92,7 @@ export function Group({
       <div className="group-list">
         {filteredGroups.length === 0 ? (
           <div className="search-empty-state">
-            <p>검색 결과가 없습니다</p>
+            <p>No search results</p>
           </div>
         ) : (
           filteredGroups.map((group) => (
