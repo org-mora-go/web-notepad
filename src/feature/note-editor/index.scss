@@ -8,7 +8,7 @@
   --selected-line-color: #{v.$saved};
 
   @media (max-width: 640px) {
-    --editor-line-height: 37px;
+    --editor-line-height: 39px;
   }
 
   &[data-tab-color="red"] {

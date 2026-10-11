@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 import { MOBILE_VIEWPORT } from "../__constant__";
 import { activeTabItem } from "../__util__";
 
-test("6. 탭 최소 너비를 PC와 모바일에서 2px 늘린다", async ({ page }) => {
+test("6. 탭 최소 너비는 PC에서 130.485px, 모바일에서 114.406px이다", async ({ page }) => {
   await page.goto("/");
   const tab = activeTabItem(page);
   const readMinWidth = () =>
@@ -11,5 +11,5 @@ test("6. 탭 최소 너비를 PC와 모바일에서 2px 늘린다", async ({ pag
   expect(await readMinWidth()).toBeCloseTo(130.485, 2);
 
   await page.setViewportSize(MOBILE_VIEWPORT);
-  expect(await readMinWidth()).toBeCloseTo(108.406, 2);
+  expect(await readMinWidth()).toBeCloseTo(114.406, 2);
 });
